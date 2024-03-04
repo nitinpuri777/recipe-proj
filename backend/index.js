@@ -1,6 +1,10 @@
 import express from 'express'
+import * as url from 'url';
+import * as path from 'path';
 
-const app = express()
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const app = express() 
 const database = {
     users: [
         {
@@ -40,11 +44,20 @@ const database = {
 
 }
 
+
+
 const User = {
     findValidUser: async (body) => {
-        let isValid = (user) => (user.email === body.email && user.password === body.password) 
-        return database.users.find(isValid)
+        if (!body.token) {
+            let isValid = (user) => (user.email === body.email && user.password === body.password) 
+            return database.users.find(isValid)
+        }
+        else {
+            let isValid = (user) => (user.token === body.token)
+            return database.users.find(isValid)
+        }
     }
+    
 }
 
 const Recipe = {
@@ -55,11 +68,15 @@ const Recipe = {
     }
 }
 
-app.get('/api/recipes', (req, res) => { 
-    res.json([1,2,3,4])
-})
 
 app.use('/api', express.json())
+app.post('/api/recipes', async (req, res) => { 
+    let user = await User.findValidUser(req.body)
+    let recipes = await Recipe.findAllForUser(user)
+    return res.status(200).json({recipes, message:'Login success'})
+})
+
+
 
 app.post('/api/signin', async (req, res) => {
     console.log(req.body)
@@ -78,6 +95,10 @@ app.post('/api/signin', async (req, res) => {
             return res.status(200).json({token, message:'Login success'})
         }
     }
+})
+
+app.get('/home', (req,res) => {
+    res.sendFile('home.html');
 })
 
 

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign-in</title>
+</head>
+
+<body onload="getRecipes()">
+  <script>
+    async function getRecipes() {
+      console.log(localStorage.getItem("authToken"))
+      let url = '/api/recipes'
+      let body = {
+        token: localStorage.getItem("authToken")
+      }
+      let options = {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+      console.log(options)
+      const response = await fetch(url, options)
+      const json = await response.json()
+      console.log(json)
+      renderRecipes(json.recipes)
+
+      function renderRecipes(recipes) {
+        const recipeList = document.getElementById('recipeList')
+        recipeList.innerHTML = '';
+
+        recipes.forEach(recipe => {
+          const listItem = document.createElement('li')
+          listItem.textContent = `${recipe.name}`
+          recipeList.appendChild(listItem)
+        })
+      }
+
+    }
+
+
+  </script>
+  <h1 id="welcome-message">Welcome User</h1>
+  <h2>My Recipes</h2>
+  <ul id="recipeList">
+    <li>Pizza</li>
+    <li>Pasta</li>
+  </ul>
+</body>
+
+</html>
