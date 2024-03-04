@@ -71,9 +71,16 @@ const Recipe = {
 
 app.use('/api', express.json())
 app.post('/api/recipes', async (req, res) => { 
-    let user = await User.findValidUser(req.body)
-    let recipes = await Recipe.findAllForUser(user)
-    return res.status(200).json({recipes, message:'Login success'})
+    try {
+            let user = await User.findValidUser(req.body)
+            let recipes = await Recipe.findAllForUser(user)
+            return res.status(200).json({recipes, message:'Login success'})
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({error:'not logged in'})
+    }
+    
 })
 
 
