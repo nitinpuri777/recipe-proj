@@ -7,141 +7,145 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
     integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <title>Sign-in</title>
   <style>
-    #addRecipeForm {
-      display: none;
+    body {
+      color: white;
+      background: black;
     }
   </style>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <title>Sign-in</title>
 </head>
 
-<body onload="getRecipes()">
-  <script>
-    async function getRecipes() {
-      console.log(!localStorage.getItem("authToken"))
-      if (!localStorage.getItem("authToken")) {
-        goToSignIn()
-      }
-      else {
-        let url = '/api/recipes'
-        let body = {
-          token: localStorage.getItem("authToken")
-        }
-        let options = {
-          method: 'POST',
-          body: JSON.stringify(body),
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-        console.log(options)
-        const response = await fetch(url, options)
-        const json = await response.json()
-        console.log(json)
-        renderRecipes(json.recipes)
-      }
-    }
-
-
-    function renderRecipes(recipes) {
-      const recipeList = document.getElementById('recipeList')
-      recipeList.innerHTML = '';
-
-      recipes.forEach(recipe => {
-        const listItem = document.createElement('li')
-        listItem.textContent = `${recipe.name}`
-        const button = document.createElement('button')
-        button.textContent = 'Delete'
-        button.addEventListener("click", () => removeRecipe(recipe))
-        listItem.appendChild(button)
-        recipeList.appendChild(listItem)
-      })
-    }
-
-    function signOut() {
-      localStorage.removeItem("authToken")
-      goToSignIn()
-    }
-
-    function goToSignIn() {
-      window.location.href = '/'
-    }
-
-    function showAddRecipeForm() {
-      let form = document.getElementById('addRecipeForm');
-      let button = document.getElementById('addRecipeButton');
-      if (form.style.display === 'none') {
-        form.style.display = 'block';
-        button.innerHTML = 'Cancel';
-      }
-      else {
-        form.style.display = 'none'
-        button.innerHTML = 'Add Recipe';
-      }
-    }
-
-    async function addRecipe(event) {
-      event.preventDefault()
-      let url = '/api/addRecipe'
-      let token = localStorage.getItem("authToken")
-      let recipe = {
-        name: event.target.elements.recipeName.value
-      }
-      let body = {
-        token,
-        recipe
-      }
-      let options = {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-      const response = await fetch(url, options)
-      const json = await response.json()
-      renderRecipes(json.recipes)
-
-    }
-
-    async function removeRecipe(recipe) {
-      let url = '/api/removeRecipe'
-      let token = localStorage.getItem("authToken")
-      let body = {
-        token,
-        recipe
-      }
-      let options = {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-      console.log(options)
-      const response = await fetch(url, options)
-      const json = await response.json()
-      renderRecipes(json.recipes)
-
-    }
-
-
-  </script>
+<body>
   <h1 id="welcome-message">Welcome User</h1>
   <h2>My Recipes</h2>
-  <ul id="recipeList">
-  </ul>
-  <button id="addRecipeButton" onclick="showAddRecipeForm()">Add Recipe</button>
-  <button onclick="signOut()"> Sign Out</button>
-  <form novalidate id="addRecipeForm" onsubmit="addRecipe(event)">
-    <label>
-      <span>Recipe Name</span>
-      <input type="text" name="recipeName" label="Recipe Name">
-      <button type="submit">Submit</button>
-    </label>
+  <div id="app">
+    <ul>
+      <li v-for="recipe in recipes">
+        {{recipe.name}}
+        <button @click="deleteRecipe(recipe)">Delete</button>
+      </li>
+    </ul>
+    <button @click="toggleAddRecipeForm">{{ toggleButtonLabel }}</button>
+    <form v-if="isFormVisible" @submit.prevent="addRecipe">
+      <label>
+        <span>Recipe Name</span>
+        <input type="text" name="recipeName" v-model="addRecipeName" label="Recipe Name">
+        <button type="submit">Submit</button>
+      </label>
+    </form>
+    <button @click="signOut"> Sign Out</button>
+  </div>
+  <script>
+    let app = Vue.createApp({
+      async mounted() {
+        this.recipes = await this.fetchRecipes()
+      },
+      data() {
+        return {
+          isFormVisible: true,
+          recipes: [],
+          addRecipeName: "",
 
+        }
 
-  </form>
+      },
+      computed: {
+        toggleButtonLabel() {
+          if (this.isFormVisible) {
+            return "Cancel"
+          }
+          else {
+            return "Add Recipe"
+          }
+        }
+      },
+      methods: {
+        async fetchRecipes() {
+          if (!localStorage.getItem("authToken")) {
+            this.goToSignIn()
+          }
+          else {
+            let url = '/api/recipes'
+            let body = {
+              token: localStorage.getItem("authToken")
+            }
+            let options = {
+              method: 'POST',
+              body: JSON.stringify(body),
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            }
+            console.log(options)
+            const response = await fetch(url, options)
+            const json = await response.json()
+            return json.recipes
+          }
+        },
+        async deleteRecipe(recipe) {
+          let url = '/api/removeRecipe'
+          let token = localStorage.getItem("authToken")
+          let body = {
+            token,
+            recipe
+          }
+          let options = {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+          console.log(options)
+          const response = await fetch(url, options)
+          const json = await response.json()
+          this.recipes = json.recipes
+
+        },
+        async addRecipe(event) {
+          let url = '/api/addRecipe'
+          let token = localStorage.getItem("authToken")
+          let recipe = {
+            name: event.target.elements.recipeName.value
+          }
+          let body = {
+            token,
+            recipe
+          }
+          let options = {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+          const response = await fetch(url, options)
+          const json = await response.json()
+          this.recipes = json.recipes
+          this.addRecipeName = ""
+        },
+        toggleAddRecipeForm() {
+          if (this.isFormVisible) {
+            this.isFormVisible = false
+          }
+          else {
+            this.isFormVisible = true
+          }
+        },
+        signOut() {
+          localStorage.removeItem("authToken")
+          this.goToSignIn()
+        },
+
+        goToSignIn() {
+          window.location.href = '/'
+        }
+      }
+    })
+    app.mount('#app')
+  </script>
 </body>
 
 </html>

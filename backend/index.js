@@ -94,9 +94,9 @@ const Recipe = {
     },
 
     getMaxId: async () => {
-        return database.recipes.reduce((maxId, recipe) => {
-            return Math.max(maxId, recipe.id);
-          }, -Infinity);
+        let getMax = (valueSoFar, recipe) => {
+            return Math.max(valueSoFar, recipe.id)}
+        return database.recipes.reduce(getMax, 0);
     }
         
 
