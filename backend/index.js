@@ -56,6 +56,9 @@ const User = {
             let isValid = (user) => (user.token === body.token)
             return database.users.find(isValid)
         }
+    },
+    findId: async (user) => {
+        return user.id
     }
     
 }
@@ -65,8 +68,41 @@ const Recipe = {
     findAllForUser: async (user) => {
         let matchesUserId = recipe => recipe.userId === user.id
         return database.recipes.filter(matchesUserId)
+    },
+
+    addRecipe: async (user, recipe) => {
+        let userId = await User.findId(user)
+        let name = recipe.name
+        let id = await Recipe.getMaxId() + 1
+        let newRecipe = {
+            id,
+            name,
+            userId
+        }
+        database.recipes.push(newRecipe)
+        console.log(newRecipe)
+        return Recipe.findAllForUser(user)
+    },
+
+    removeRecipe: async (user, recipeToRemove) => {
+        let isRecipeToRemove = recipe => recipe.id == recipeToRemove.id
+        const recipeIndexToRemove = database.recipes.findIndex(isRecipeToRemove)
+        if(recipeIndexToRemove !== -1){
+            database.recipes.splice(recipeIndexToRemove, 1);
+        }
+        return Recipe.findAllForUser(user)
+    },
+
+    getMaxId: async () => {
+        return database.recipes.reduce((maxId, recipe) => {
+            return Math.max(maxId, recipe.id);
+          }, -Infinity);
     }
-}
+        
+
+
+    }
+
 
 
 app.use('/api', express.json())
@@ -74,15 +110,28 @@ app.post('/api/recipes', async (req, res) => {
     try {
             let user = await User.findValidUser(req.body)
             let recipes = await Recipe.findAllForUser(user)
-            return res.status(200).json({recipes, message:'Login success'})
+            return res.status(200).json({recipes})
         
     } catch (error) {
         console.log(error)
-        return res.status(400).json({error:'not logged in'})
+        return res.status(400).json({error})
     }
     
 })
 
+app.post('/api/addRecipe', async (req, res) => {
+    let user = await User.findValidUser(req.body)
+    console.log(req.body.recipe)
+    let recipes = await Recipe.addRecipe(user, req.body.recipe)
+    return res.status(200).json({recipes})
+})
+
+app.post('/api/removeRecipe', async (req, res) => {
+    let user = await User.findValidUser(req.body)
+    console.log(req.body.recipe)
+    let recipes = await Recipe.removeRecipe(user, req.body.recipe)
+    return res.status(200).json({recipes})
+})
 
 
 app.post('/api/signin', async (req, res) => {
