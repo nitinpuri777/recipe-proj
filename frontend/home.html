@@ -68,14 +68,11 @@
           }
           else {
             let url = '/api/recipes'
-            let body = {
-              token: localStorage.getItem("authToken")
-            }
             let options = {
-              method: 'POST',
-              body: JSON.stringify(body),
+              method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem("authToken")
               }
             }
             console.log(options)
@@ -85,17 +82,13 @@
           }
         },
         async deleteRecipe(recipe) {
-          let url = '/api/removeRecipe'
+          let url = `/api/recipes/${recipe.id}`
           let token = localStorage.getItem("authToken")
-          let body = {
-            token,
-            recipe
-          }
           let options = {
-            method: 'POST',
-            body: JSON.stringify(body),
+            method: 'DELETE',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': token
             }
           }
           console.log(options)
@@ -105,20 +98,18 @@
 
         },
         async addRecipe(event) {
-          let url = '/api/addRecipe'
+          let url = '/api/recipes'
           let token = localStorage.getItem("authToken")
           let recipe = {
             name: event.target.elements.recipeName.value
           }
-          let body = {
-            token,
-            recipe
-          }
+          let body = { recipe }
           let options = {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': token
             }
           }
           const response = await fetch(url, options)

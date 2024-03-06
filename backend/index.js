@@ -47,6 +47,11 @@ const database = {
 
 
 const User = {
+    findByToken: async(token) => {
+        let isValid = (user) => (user.token === token)
+            return database.users.find(isValid)
+    },
+
     findValidUser: async (body) => {
         if (!body.token) {
             let isValid = (user) => (user.email === body.email && user.password === body.password) 
@@ -69,7 +74,6 @@ const Recipe = {
         let matchesUserId = recipe => recipe.userId === user.id
         return database.recipes.filter(matchesUserId)
     },
-
     addRecipe: async (user, recipe) => {
         let userId = await User.findId(user)
         let name = recipe.name
@@ -84,8 +88,8 @@ const Recipe = {
         return Recipe.findAllForUser(user)
     },
 
-    removeRecipe: async (user, recipeToRemove) => {
-        let isRecipeToRemove = recipe => recipe.id == recipeToRemove.id
+    removeRecipe: async (user, recipeToRemoveId) => {
+        let isRecipeToRemove = recipe => recipe.id == recipeToRemoveId
         const recipeIndexToRemove = database.recipes.findIndex(isRecipeToRemove)
         if(recipeIndexToRemove !== -1){
             database.recipes.splice(recipeIndexToRemove, 1);
@@ -106,9 +110,12 @@ const Recipe = {
 
 
 app.use('/api', express.json())
-app.post('/api/recipes', async (req, res) => { 
+
+//Refactoring
+app.get('/api/recipes', async (req, res) => { 
     try {
-            let user = await User.findValidUser(req.body)
+            console.log(req.headers.authorization)
+            let user = await User.findByToken(req.headers.authorization)
             let recipes = await Recipe.findAllForUser(user)
             return res.status(200).json({recipes})
         
@@ -119,20 +126,22 @@ app.post('/api/recipes', async (req, res) => {
     
 })
 
-app.post('/api/addRecipe', async (req, res) => {
-    let user = await User.findValidUser(req.body)
+app.post('/api/recipes', async (req, res) => {
+    let user = await User.findByToken(req.headers.authorization)
     console.log(req.body.recipe)
     let recipes = await Recipe.addRecipe(user, req.body.recipe)
     return res.status(200).json({recipes})
 })
 
-app.post('/api/removeRecipe', async (req, res) => {
-    let user = await User.findValidUser(req.body)
-    console.log(req.body.recipe)
-    let recipes = await Recipe.removeRecipe(user, req.body.recipe)
+app.delete('/api/recipes/:id', async (req, res) => {
+    let recipeId = req.params.id
+    console.log(recipeId)
+    let user = await User.findByToken(req.headers.authorization)
+    let recipes = await Recipe.removeRecipe(user, recipeId)
     return res.status(200).json({recipes})
 })
 
+// End Refactored Routes
 
 app.post('/api/signin', async (req, res) => {
     console.log(req.body)
