@@ -44,8 +44,23 @@ const database = {
 
 }
 
+//Global Functions
+async function authenticateToken(req, res, next) {
+    console.log('authenticate called')
+    let user = await User.findByToken(req.headers.authorization);
+    if (!user) {
+        console.log('user not found')
+        res.sendStatus(403);
+    }
+    else {
+        console.log('user found ')
+        req.user = user;
+        next();
+    }
+}
 
 
+//Class Functions
 const User = {
     findByToken: async(token) => {
         let isValid = (user) => (user.token === token)
@@ -108,42 +123,38 @@ const Recipe = {
     }
 
 
+//Middleware
+app.use(express.json())
+app.use('/api', authenticateToken)
 
-app.use('/api', express.json())
 
-//Refactoring
+//Routes
 app.get('/api/recipes', async (req, res) => { 
     try {
-            console.log(req.headers.authorization)
-            let user = await User.findByToken(req.headers.authorization)
+            let user = req.user
             let recipes = await Recipe.findAllForUser(user)
             return res.status(200).json({recipes})
         
     } catch (error) {
-        console.log(error)
         return res.status(400).json({error})
     }
     
 })
 
 app.post('/api/recipes', async (req, res) => {
-    let user = await User.findByToken(req.headers.authorization)
-    console.log(req.body.recipe)
+    let user = req.user
     let recipes = await Recipe.addRecipe(user, req.body.recipe)
     return res.status(200).json({recipes})
 })
 
 app.delete('/api/recipes/:id', async (req, res) => {
     let recipeId = req.params.id
-    console.log(recipeId)
-    let user = await User.findByToken(req.headers.authorization)
+    let user = req.user
     let recipes = await Recipe.removeRecipe(user, recipeId)
     return res.status(200).json({recipes})
 })
 
-// End Refactored Routes
-
-app.post('/api/signin', async (req, res) => {
+app.post('/signin', async (req, res) => {
     console.log(req.body)
     const email = req.body.email
     const password = req.body.password
