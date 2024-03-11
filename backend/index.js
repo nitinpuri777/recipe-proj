@@ -46,16 +46,33 @@ const database = {
 
 //Global Functions
 async function authenticateToken(req, res, next) {
-    console.log('authenticate called')
-    let user = await User.findByToken(req.headers.authorization);
-    if (!user) {
-        console.log('user not found')
-        res.sendStatus(403);
+    let authHeader = req.header("Authorization")
+    if (authHeader.startsWith("Bearer ")) {
+        let authToken = authHeader.slice("Bearer ".length)
+        let user = await User.findByToken(authToken);
+        if (!user) {
+            next('USER_NOT_FOUND');
+        }
+        else {
+            req.user = user;
+            next();
+        }
+    
     }
     else {
-        console.log('user found ')
-        req.user = user;
-        next();
+        next('USER_NOT_FOUND');
+    }
+}
+
+async function handleError(err, req, res, next) {
+    switch (err) {
+        case 'USER_NOT_FOUND':
+            res.status(403).json({message: "User not authorized"})
+            break;
+    
+        default:
+            res.status(500).json({message: "Whoops!"})
+            break;
     }
 }
 
@@ -99,7 +116,6 @@ const Recipe = {
             userId
         }
         database.recipes.push(newRecipe)
-        console.log(newRecipe)
         return Recipe.findAllForUser(user)
     },
 
@@ -123,10 +139,25 @@ const Recipe = {
     }
 
 
-//Middleware
 app.use(express.json())
-app.use('/api', authenticateToken)
 
+app.post('/api/signin', async (req, res) => {
+    const email = req.body.email
+    const password = req.body.password
+
+    if (!email || !password) {
+        return res.status(400).json({error: 'Both email and pass are required'})
+    } else {
+        let validUser = await User.findValidUser(req.body) 
+        if (validUser === undefined) {
+            return res.status(400).json({error: 'Did not find a user with that email and password'})
+        } else {
+            let token = validUser.token
+            return res.status(200).json({token, message:'Login success'})
+        }
+    }
+})
+app.use('/api', authenticateToken)
 
 //Routes
 app.get('/api/recipes', async (req, res) => { 
@@ -154,32 +185,13 @@ app.delete('/api/recipes/:id', async (req, res) => {
     return res.status(200).json({recipes})
 })
 
-app.post('/signin', async (req, res) => {
-    console.log(req.body)
-    const email = req.body.email
-    const password = req.body.password
-
-    if (!email || !password) {
-        console.log('need both')
-        return res.status(400).json({error: 'Both email and pass are required'})
-    } else {
-        let validUser = await User.findValidUser(req.body) 
-        if (validUser === undefined) {
-            return res.status(400).json({error: 'Did not find a user with that email and password'})
-        } else {
-            let token = validUser.token
-            return res.status(200).json({token, message:'Login success'})
-        }
-    }
-})
-
 app.get('/home', (req,res) => {
     res.sendFile('home.html');
 })
 
-
+app.use('/api', handleError)
 app.use(express.static('frontend'))
 
 app.listen(3000, () => {
-    console.log('Server is Ready')
+    console.info('Server is Ready')
 })
