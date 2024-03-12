@@ -1,7 +1,7 @@
 import express from 'express'
-import ApiSignIn from './api/sign-in.js'
-import Middleware from './api/_middleware.js';
-import ApiRecipes from './api/recipes.js';
+import ApiSignIn from '../../backend/api/sign-in.js';
+import Middleware from '../../backend/api/_middleware.js';
+import ApiRecipes from '../../backend/api/recipes.js';
 const app = express() 
 app.use(express.json())
 app.post('/api/sign-in', ApiSignIn.post)
