@@ -90,7 +90,6 @@
                 'Authorization': `Bearer ${localStorage.getItem("authToken")}`
               }
             }
-            console.log(options)
             const response = await fetch(url, options)
             const json = await response.json()
             return json.recipes
@@ -106,7 +105,6 @@
               'Authorization': `Bearer ${token}`
             }
           }
-          console.log(options)
           const response = await fetch(url, options)
           const json = await response.json()
           this.recipes = json.recipes
@@ -115,7 +113,6 @@
         async updateRecipe(recipe) {
           let url = `/api/recipes/${recipe.id}`
           let token = localStorage.getItem("authToken")
-          console.log()
           recipe.name = this.recipeEdits.find(recipeEdit => recipeEdit.recipeId === recipe.id).editedName
           let body = { recipe }
           let options = {
@@ -130,7 +127,6 @@
             const response = await fetch(url, options)
             const json = await response.json()
             this.recipes = json.recipes
-            console.log('got here')
             this.toggleEditRecipeForm(recipe) // Why doesn't this clear my form? 
 
           } catch (error) {
@@ -168,19 +164,16 @@
         },
         toggleEditRecipeForm(recipe) {
           if (this.isRecipeEditVisible.includes(recipe.id)) {
-            console.log('hiding the form')
             this.isRecipeEditVisible = this.isRecipeEditVisible.filter(id => id !== recipe.id)
             this.recipeEdits = this.recipeEdits.filter(recipeEdit => recipeEdit.recipeId !== recipe.id);
           }
           else {
-            console.log('showing the form')
             this.isRecipeEditVisible.push(recipe.id)
             let recipeEdit = {
               recipeId: recipe.id,
               editedName: recipe.name
             }
             this.recipeEdits.push(recipeEdit)
-            console.log(this.recipeEdits)
           }
         },
         signOut() {
