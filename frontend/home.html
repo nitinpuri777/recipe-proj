@@ -26,10 +26,11 @@
         {{recipe.name}}
         <button @click="deleteRecipe(recipe)">Delete</button>
         <button @click="toggleEditRecipeForm(recipe)">Update</button>
-        <form v-if="recipe.editing" @submit.prevent="updateRecipe(recipe)">
+        <form v-if="isRecipeEditVisible.includes(recipe.id)" @submit.prevent="updateRecipe(recipe)">
           <label>
             <span>Recipe Name</span>
-            <input type="text" v-model="recipe.updatedName" name="recipeName">
+            <input type="text" v-model="recipeEdits.find(recipeEdit => recipeEdit.recipeId === recipe.id).editedName"
+              name="recipeName">
             <button type="submit">Submit</button>
           </label>
         </form>
@@ -52,9 +53,15 @@
       },
       data() {
         return {
-          isFormVisible: true,
+          isFormVisible: false,
           recipes: [],
           addRecipeName: "",
+          recipeEdits: [{
+            recipeId: -1,
+            //isEditVisible: false,
+            editedName: ""
+          }],
+          isRecipeEditVisible: []
 
         }
 
@@ -86,12 +93,6 @@
             console.log(options)
             const response = await fetch(url, options)
             const json = await response.json()
-            this.recipes = json.recipes.map(recipe => ({
-              ...recipe,
-              editing: false,
-              updatedName: recipe.name
-            }));
-
             return json.recipes
           }
         },
@@ -115,9 +116,7 @@
           let url = `/api/recipes/${recipe.id}`
           let token = localStorage.getItem("authToken")
           console.log()
-          recipe.name = recipe.updatedName
-          recipe.editing = false
-          recipe.updatedName = ""
+          recipe.name = this.recipeEdits.find(recipeEdit => recipeEdit.recipeId === recipe.id).editedName
           let body = { recipe }
           let options = {
             method: 'PUT',
@@ -127,10 +126,17 @@
               'Authorization': `Bearer ${token}`
             }
           }
-          const response = await fetch(url, options)
-          const json = await response.json()
-          this.recipes = json.recipes
-          this.addRecipeName = ""
+          try {
+            const response = await fetch(url, options)
+            const json = await response.json()
+            this.recipes = json.recipes
+            console.log('got here')
+            this.toggleEditRecipeForm(recipe) // Why doesn't this clear my form? 
+
+          } catch (error) {
+            console.error('Error updating the recipe:', error)
+          }
+
         },
         async addRecipe(event) {
           let url = '/api/recipes'
@@ -161,7 +167,21 @@
           }
         },
         toggleEditRecipeForm(recipe) {
-          recipe.editing = !recipe.editing
+          if (this.isRecipeEditVisible.includes(recipe.id)) {
+            console.log('hiding the form')
+            this.isRecipeEditVisible = this.isRecipeEditVisible.filter(id => id !== recipe.id)
+            this.recipeEdits = this.recipeEdits.filter(recipeEdit => recipeEdit.recipeId !== recipe.id);
+          }
+          else {
+            console.log('showing the form')
+            this.isRecipeEditVisible.push(recipe.id)
+            let recipeEdit = {
+              recipeId: recipe.id,
+              editedName: recipe.name
+            }
+            this.recipeEdits.push(recipeEdit)
+            console.log(this.recipeEdits)
+          }
         },
         signOut() {
           localStorage.removeItem("authToken")
