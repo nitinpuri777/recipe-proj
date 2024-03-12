@@ -25,14 +25,14 @@
       <li v-for="recipe in recipes">
         {{recipe.name}}
         <button @click="deleteRecipe(recipe)">Delete</button>
-        <button @click="updateRecipe(recipe)">Update</button>
-        <!-- <form @submit.prevent="updateRecipe(recipe, event)">
+        <button @click="toggleEditRecipeForm(recipe)">Update</button>
+        <form v-if="recipe.editing" @submit.prevent="updateRecipe(recipe)">
           <label>
             <span>Recipe Name</span>
-            <input type="text" name="recipeName">
+            <input type="text" v-model="recipe.updatedName" name="recipeName">
             <button type="submit">Submit</button>
           </label>
-        </form> -->
+        </form>
       </li>
     </ul>
     <button @click="toggleAddRecipeForm">{{ toggleButtonLabel }}</button>
@@ -86,6 +86,12 @@
             console.log(options)
             const response = await fetch(url, options)
             const json = await response.json()
+            this.recipes = json.recipes.map(recipe => ({
+              ...recipe,
+              editing: false,
+              updatedName: recipe.name
+            }));
+
             return json.recipes
           }
         },
@@ -109,7 +115,9 @@
           let url = `/api/recipes/${recipe.id}`
           let token = localStorage.getItem("authToken")
           console.log()
-          recipe.name = recipe.name + '1'
+          recipe.name = recipe.updatedName
+          recipe.editing = false
+          recipe.updatedName = ""
           let body = { recipe }
           let options = {
             method: 'PUT',
@@ -151,6 +159,9 @@
           else {
             this.isFormVisible = true
           }
+        },
+        toggleEditRecipeForm(recipe) {
+          recipe.editing = !recipe.editing
         },
         signOut() {
           localStorage.removeItem("authToken")
