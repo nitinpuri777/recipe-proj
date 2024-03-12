@@ -28,6 +28,20 @@ const Recipe = {
       return Recipe.findAllForUser(user)
   },
 
+  updateRecipe: async (user, recipeId, recipeUpdate) => {
+    let isRecipeToUpdate = recipe => recipe.id == recipeId
+    const originalRecipe = database.recipes.find(isRecipeToUpdate)
+    const originalRecipeIndex = database.recipes.findIndex(isRecipeToUpdate)
+    if(originalRecipe){
+      let updatedRecipe = {...originalRecipe, ...recipeUpdate}
+      database.recipes[originalRecipeIndex] = updatedRecipe
+    }
+    else {
+      return null
+    }
+    return Recipe.findAllForUser(user)
+  },
+
   getMaxId: async () => {
       let getMax = (valueSoFar, recipe) => {
           return Math.max(valueSoFar, recipe.id)}

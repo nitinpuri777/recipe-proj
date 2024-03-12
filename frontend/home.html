@@ -25,6 +25,14 @@
       <li v-for="recipe in recipes">
         {{recipe.name}}
         <button @click="deleteRecipe(recipe)">Delete</button>
+        <button @click="updateRecipe(recipe)">Update</button>
+        <!-- <form @submit.prevent="updateRecipe(recipe, event)">
+          <label>
+            <span>Recipe Name</span>
+            <input type="text" name="recipeName">
+            <button type="submit">Submit</button>
+          </label>
+        </form> -->
       </li>
     </ul>
     <button @click="toggleAddRecipeForm">{{ toggleButtonLabel }}</button>
@@ -96,6 +104,25 @@
           const json = await response.json()
           this.recipes = json.recipes
 
+        },
+        async updateRecipe(recipe) {
+          let url = `/api/recipes/${recipe.id}`
+          let token = localStorage.getItem("authToken")
+          console.log()
+          recipe.name = recipe.name + '1'
+          let body = { recipe }
+          let options = {
+            method: 'PUT',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          }
+          const response = await fetch(url, options)
+          const json = await response.json()
+          this.recipes = json.recipes
+          this.addRecipeName = ""
         },
         async addRecipe(event) {
           let url = '/api/recipes'

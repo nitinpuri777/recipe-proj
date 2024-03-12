@@ -24,10 +24,19 @@ export const delete_ = async (req, res) => {
   return res.status(200).json({recipes})
 }
 
+export const put = async (req, res) => {
+  let recipeId = req.params.id
+  let user = req.user
+  let recipes = await Recipe.updateRecipe(user, recipeId, req.body.recipe)
+  console.log(recipes)
+  return res.status(200).json({recipes})
+}
+
 const ApiRecipes = {
   get,
   post,
-  delete_
+  delete_,
+  put
 }
 
 export default ApiRecipes
