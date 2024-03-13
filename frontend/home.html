@@ -25,24 +25,24 @@
       <li v-for="recipe in recipes">
         {{recipe.name}}
         <button @click="deleteRecipe(recipe)">Delete</button>
-        <button @click="toggleEditRecipeForm(recipe)">Update</button>
-        <form v-if="isRecipeEditVisible.includes(recipe.id)" @submit.prevent="updateRecipe(recipe)">
-          <label>
-            <span>Recipe Name</span>
-            <input type="text" v-model="recipeEdits.find(recipeEdit => recipeEdit.recipeId === recipe.id).editedName"
-              name="recipeName">
-            <button type="submit">Submit</button>
-          </label>
-        </form>
+        <button @click="showEditForm(recipe)">Update</button>
       </li>
     </ul>
     <button @click="toggleAddRecipeForm">{{ toggleButtonLabel }}</button>
-    <form v-if="isFormVisible" @submit.prevent="addRecipe">
+    <form v-if="isAddFormVisible" @submit.prevent="addRecipe">
       <label>
         <span>Recipe Name</span>
         <input type="text" name="recipeName" v-model="addRecipeName" label="Recipe Name">
         <button type="submit">Submit</button>
       </label>
+    </form>
+    <form v-if="isEditFormVisible" @submit.prevent="editRecipe">
+      <label>
+        <span>Recipe Name</span>
+        <input type="text" name="recipeName" v-model="editRecipeName" label="Recipe Name">
+      </label>
+      <button type="submit">Submit</button>
+      <button @click="hideEditForm" type="button">Cancel</button>
     </form>
     <button @click="signOut"> Sign Out</button>
   </div>
@@ -53,26 +53,28 @@
       },
       data() {
         return {
-          isFormVisible: false,
-          recipes: [],
+          isAddFormVisible: false,
           addRecipeName: "",
-          recipeEdits: [{
-            recipeId: -1,
-            //isEditVisible: false,
-            editedName: ""
-          }],
-          isRecipeEditVisible: []
-
+          recipes: [],
+          editRecipeName: "",
+          editRecipeId: null
         }
 
       },
       computed: {
         toggleButtonLabel() {
-          if (this.isFormVisible) {
+          if (this.isAddFormVisible) {
             return "Cancel"
           }
           else {
             return "Add Recipe"
+          }
+        },
+        isEditFormVisible() {
+          if (this.editRecipeId === null) {
+            return false
+          } else {
+            return true
           }
         }
       },
@@ -110,10 +112,12 @@
           this.recipes = json.recipes
 
         },
-        async updateRecipe(recipe) {
-          let url = `/api/recipes/${recipe.id}`
+        async editRecipe() {
+          let url = `/api/recipes/${this.editRecipeId}`
           let token = localStorage.getItem("authToken")
-          recipe.name = this.recipeEdits.find(recipeEdit => recipeEdit.recipeId === recipe.id).editedName
+          let recipe = {
+            name: this.editRecipeName
+          }
           let body = { recipe }
           let options = {
             method: 'PUT',
@@ -127,7 +131,7 @@
             const response = await fetch(url, options)
             const json = await response.json()
             this.recipes = json.recipes
-            this.toggleEditRecipeForm(recipe) // Why doesn't this clear my form? 
+            this.hideEditForm()
 
           } catch (error) {
             console.error('Error updating the recipe:', error)
@@ -155,26 +159,20 @@
           this.addRecipeName = ""
         },
         toggleAddRecipeForm() {
-          if (this.isFormVisible) {
-            this.isFormVisible = false
+          if (this.isAddFormVisible) {
+            this.isAddFormVisible = false
           }
           else {
-            this.isFormVisible = true
+            this.isAddFormVisible = true
           }
         },
-        toggleEditRecipeForm(recipe) {
-          if (this.isRecipeEditVisible.includes(recipe.id)) {
-            this.isRecipeEditVisible = this.isRecipeEditVisible.filter(id => id !== recipe.id)
-            this.recipeEdits = this.recipeEdits.filter(recipeEdit => recipeEdit.recipeId !== recipe.id);
-          }
-          else {
-            this.isRecipeEditVisible.push(recipe.id)
-            let recipeEdit = {
-              recipeId: recipe.id,
-              editedName: recipe.name
-            }
-            this.recipeEdits.push(recipeEdit)
-          }
+        showEditForm(recipe) {
+          this.editRecipeId = recipe.id
+          this.editRecipeName = recipe.name
+        },
+        hideEditForm() {
+          this.editRecipeId = null
+          this.editRecipeName = ""
         },
         signOut() {
           localStorage.removeItem("authToken")
