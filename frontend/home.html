@@ -200,7 +200,7 @@
             const response = await fetch(url, options)
             const json = await response.json()
             this.recipes = json.recipes
-            this.hideEditForm()
+            this.hideForm()
 
           } catch (error) {
             console.error('Error updating the recipe:', error)
