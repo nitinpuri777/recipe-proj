@@ -32,7 +32,6 @@
 				email: event.target.elements.email.value,
 				password: event.target.elements.password.value
 			}
-			console.log(body)
 			let options = {
 				method: 'POST',
 				body: JSON.stringify(body),
@@ -40,7 +39,6 @@
 					'Content-Type': 'application/json',
 				}
 			}
-			console.log(options)
 			const response = await fetch(url, options)
 			const json = await response.json()
 			if (json.token != null) {
@@ -48,7 +46,6 @@
 				window.location.href = '/home.html'
 			}
 		}
-		console.log(json)
 	</script>
 
 </body>
