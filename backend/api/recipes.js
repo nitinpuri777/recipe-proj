@@ -28,7 +28,7 @@ export const put = async (req, res) => {
   let recipeId = req.params.id
   let user = req.user
   let recipes = await Recipe.updateRecipe(user, recipeId, req.body.recipe)
-  console.log(recipes)
+  console.log("test")
   return res.status(200).json({recipes})
 }
 

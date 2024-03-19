@@ -11,9 +11,10 @@
 
 <body>
 
-  <div id="app" class="row height_fill stretch">
+  <div id="app" class="row height_fill align_top scroll">
+
     <!-- Sidebar -->
-    <aside class="column border_right gap_16 shrink_none">
+    <aside class="column border_right gap_16 shrink_none position_sticky top_0 height_fill">
       <a class="font_32 pad_16">Recipe Wizard</a>
       <div class="column gap_fill fill">
         <div class="column">
@@ -26,92 +27,58 @@
         </div>
       </div>
     </aside>
+
     <!-- Main Content -->
-    <div class="row gap_16 pad_16 wrap">
-      <div v-for="recipe in recipes">
-        <recipe-box :recipe="recipe" @delete-recipe="deleteRecipe"></recipe-box>
+    <main class="row gap_16 pad_16 wrap">
+      <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm"
+        @delete-recipe="deleteRecipe"></recipe-box>
+      <div @click="showAddForm" class="row align_center width_150px height_150px border recipe_link">
+        <span>Add Recipe</span>
       </div>
-      <div @click="toggleAddRecipeForm" class="row align_center width_150px height_150px border recipe_link"><span>Add
-          Recipe</span></div>
-    </div>
+    </main>
+
     <!-- Right Overlay -->
-    <button @click="toggleAddRecipeForm" class="right_overlay__backdrop position_fixed top"
+    <button @click="hideForm" class="right_overlay__backdrop position_fixed top"
       :class="rightOverlayBackdropClasses"></button>
     <div class="column width_240px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white"
       :class="rightOverlayClasses">
-      <span> Right Column </span>
-      <form v-if="isAddFormVisible" @submit.prevent="addRecipe">
-        <label>
-          <span>Recipe Name</span>
-          <input type="text" name="recipeName" v-model="addRecipeName" label="Recipe Name">
-          <button type="submit">Submit</button>
+      <span class="font_24 pad_left_16"> {{ toggleColumnHeader }} </span>
+      <!-- Add Form -->
+      <form class="column gap_16 pad_16 wrap" v-if="isAddFormVisible" @submit.prevent="addRecipe">
+        <label class="column gap_8">
+          <span class="font_bold">Recipe Name</span>
+          <input class="rounded border pad_8" type="text" name="recipeName" v-model="editRecipeName"
+            label="Recipe Name">
         </label>
+        <div class="row align_right gap_8">
+          <button class="row button rounded border" @click="hideForm" type="button">Cancel</button>
+          <button class="row button rounded border" type="submit">Submit</button>
+        </div>
+      </form>
+      <!-- Edit Form -->
+      <form class="column gap_8 pad_16 wrap" v-if="isEditFormVisible" @submit.prevent="editRecipe">
+        <label class="column gap_8">
+          <span class="font_bold">Recipe Name</span>
+          <input class="rounded border pad_8" type="text" name="recipeName" v-model="editRecipeName"
+            label="Recipe Name">
+        </label>
+        <div class="row align_right gap_8">
+          <button class="row button rounded border" @click="hideForm" type="button">Cancel</button>
+          <button class="row button rounded border" type="submit">Submit</button>
+        </div>
+
       </form>
     </div>
   </div>
 
-  <!-- <button-counter verb="tickled"></button-counter>
-      <button-counter verb="jangled"></button-counter>
-      <button-counter verb="elmed"></button-counter>
-      <ul>f
-        <li v-for="recipe in recipes">
-          {{recipe.name}}
-          <button @click="deleteRecipe(recipe)">Delete</button>
-          <button @click="showEditForm(recipe)">Update</button>
-        </li>
-      </ul>
-      <button @click="toggleAddRecipeForm">{{ toggleButtonLabel }}</button>
-      <form v-if="isAddFormVisible" @submit.prevent="addRecipe">
-        <label>
-          <span>Recipe Name</span>
-          <input type="text" name="recipeName" v-model="addRecipeName" label="Recipe Name">
-          <button type="submit">Submit</button>
-        </label>
-      </form>
-      <form v-if="isEditFormVisible" @submit.prevent="editRecipe">
-        <label>
-          <span>Recipe Name</span>
-          <input type="text" name="recipeName" v-model="editRecipeName" label="Recipe Name">
-        </label>
-        <button type="submit">Submit</button>
-        <button @click="hideEditForm" type="button">Cancel</button>
-      </form>
-      <button @click="signOut"> Sign Out</button> -->
-
   <script>
-    const ButtonCounter = {
-      props: ['verb'],
-      data() {
-        return {
-          count: 0
-        }
-      },
-      computed: {
-        units() {
-          if (this.count === 1) {
-            return "time"
-          } else {
-            return "times"
-          }
-        }
-      },
-      template: `
-    <button class="btn btn-primary" @click="count++">
-      You {{verb}} me {{ count }} {{ units }}.
-    </button>`
-    }
     const RecipeBox = {
       props: ['recipe'],
-      data() {
-        return {
-          recipeName: ""
-        }
-      },
       template: `<div class="row align_center width_150px height_150px border ">
           <div class="column gap_16 align_center">
             <div class="row fill ">{{recipe.name}}</div>
             <div class="row align_center gap_8">
-              <span class="recipe_link">edit</span>
+              <span @click="showEditForm(recipe)" class="recipe_link">edit</span>
               <span @click="deleteRecipe(recipe)" class="recipe_link">delete</span>
             </div>
           </div>
@@ -119,17 +86,18 @@
       methods: {
         deleteRecipe(recipe) {
           this.$emit("delete-recipe", recipe);
+        },
+        showEditForm(recipe) {
+          this.$emit("show-edit-form", recipe);
         }
       }
     }
-
 
     let app = Vue.createApp({
       async mounted() {
         this.recipes = await this.fetchRecipes()
       },
       components: {
-        ButtonCounter,
         RecipeBox
       },
       data() {
@@ -138,20 +106,24 @@
           addRecipeName: "",
           recipes: [],
           editRecipeName: "",
-          editRecipeId: null
+          editRecipeId: null,
         }
 
       },
       computed: {
-        toggleButtonLabel() {
-          if (this.isAddFormVisible) {
-            return "Cancel"
+        toggleColumnHeader() {
+          if (this.isAddFormVisible === true) {
+            return "Add Recipe"
+
+          }
+          if (this.isEditFormVisible === true) {
+            return "Edit Recipe"
           }
           else {
-            return "Add Recipe"
+            return ""
           }
-        },
-        isEditFormVisible() {
+        }
+        , isEditFormVisible() {
           if (this.editRecipeId === null) {
             return false
           } else {
@@ -195,7 +167,7 @@
           }
         },
         async deleteRecipe(recipe) {
-          let url = `/api/recipes/${recipe.id} `
+          let url = `/api/recipes/${recipe.id}`
           let token = localStorage.getItem("authToken")
           let options = {
             method: 'DELETE',
@@ -255,19 +227,15 @@
           this.recipes = json.recipes
           this.addRecipeName = ""
         },
-        toggleAddRecipeForm() {
-          if (this.isAddFormVisible) {
-            this.isAddFormVisible = false
-          }
-          else {
-            this.isAddFormVisible = true
-          }
+        showAddForm() {
+          this.isAddFormVisible = true
         },
         showEditForm(recipe) {
           this.editRecipeId = recipe.id
           this.editRecipeName = recipe.name
         },
-        hideEditForm() {
+        hideForm() {
+          this.isAddFormVisible = false
           this.editRecipeId = null
           this.editRecipeName = ""
         },
