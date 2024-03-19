@@ -43,11 +43,11 @@
     <div class="column width_240px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white"
       :class="rightOverlayClasses">
       <span class="font_24 pad_left_16"> {{ toggleColumnHeader }} </span>
-      <!-- Add Form -->
-      <form class="column gap_16 pad_16 wrap" v-if="isAddFormVisible" @submit.prevent="addRecipe">
+      <!-- Add/Edit Form -->
+      <form class="column gap_16 pad_16 wrap" v-if="isFormVisible" @submit.prevent="addOrEditRecipe">
         <label class="column gap_8">
           <span class="font_bold">Recipe Name</span>
-          <input class="rounded border pad_8" type="text" name="recipeName" v-model="editRecipeName"
+          <input class="rounded border pad_8" type="text" name="recipeName" v-model="recipeNameInput"
             label="Recipe Name">
         </label>
         <div class="row align_right gap_8">
@@ -55,19 +55,7 @@
           <button class="row button rounded border" type="submit">Submit</button>
         </div>
       </form>
-      <!-- Edit Form -->
-      <form class="column gap_8 pad_16 wrap" v-if="isEditFormVisible" @submit.prevent="editRecipe">
-        <label class="column gap_8">
-          <span class="font_bold">Recipe Name</span>
-          <input class="rounded border pad_8" type="text" name="recipeName" v-model="editRecipeName"
-            label="Recipe Name">
-        </label>
-        <div class="row align_right gap_8">
-          <button class="row button rounded border" @click="hideForm" type="button">Cancel</button>
-          <button class="row button rounded border" type="submit">Submit</button>
-        </div>
 
-      </form>
     </div>
   </div>
 
@@ -103,10 +91,9 @@
       data() {
         return {
           isAddFormVisible: false,
-          addRecipeName: "",
           recipes: [],
-          editRecipeName: "",
           editRecipeId: null,
+          recipeNameInput: ""
         }
 
       },
@@ -129,6 +116,9 @@
           } else {
             return true
           }
+        },
+        isFormVisible() {
+          return (this.isEditFormVisible || this.isAddFormVisible)
         },
         rightOverlayClasses() {
           if (this.isAddFormVisible || this.isEditFormVisible) {
@@ -181,11 +171,19 @@
           this.recipes = json.recipes
 
         },
+        async addOrEditRecipe() {
+          if (this.isEditFormVisible) {
+            this.editRecipe();
+          }
+          else {
+            this.addRecipe();
+          }
+        },
         async editRecipe() {
           let url = `/api/recipes/${this.editRecipeId} `
           let token = localStorage.getItem("authToken")
           let recipe = {
-            name: this.editRecipeName
+            name: this.recipeNameInput
           }
           let body = { recipe }
           let options = {
@@ -207,11 +205,11 @@
           }
 
         },
-        async addRecipe(event) {
+        async addRecipe() {
           let url = '/api/recipes'
           let token = localStorage.getItem("authToken")
           let recipe = {
-            name: event.target.elements.recipeName.value
+            name: this.recipeNameInput
           }
           let body = { recipe }
           let options = {
@@ -233,12 +231,12 @@
         },
         showEditForm(recipe) {
           this.editRecipeId = recipe.id
-          this.editRecipeName = recipe.name
+          this.recipeNameInput = recipe.name
         },
         hideForm() {
           this.isAddFormVisible = false
           this.editRecipeId = null
-          this.editRecipeName = ""
+          this.recipeNameInput = ""
         },
         signOut() {
           localStorage.removeItem("authToken")
