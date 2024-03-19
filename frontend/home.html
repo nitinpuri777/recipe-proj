@@ -226,6 +226,7 @@
           const json = await response.json()
           this.recipes = json.recipes
           this.addRecipeName = ""
+          this.hideForm();
         },
         showAddForm() {
           this.isAddFormVisible = true
