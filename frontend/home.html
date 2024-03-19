@@ -42,7 +42,7 @@
       :class="rightOverlayBackdropClasses"></button>
     <div class="column width_240px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white"
       :class="rightOverlayClasses">
-      <span class="font_24 pad_left_16"> {{ toggleColumnHeader }} </span>
+      <span class="font_24 pad_left_16"> {{ overlayHeader }} </span>
       <!-- Add/Edit Form -->
       <form class="column gap_16 pad_16 wrap" v-if="isFormVisible" @submit.prevent="addOrEditRecipe">
         <label class="column gap_8">
@@ -90,7 +90,7 @@
       },
       data() {
         return {
-          isAddFormVisible: false,
+          overlayType: "none",
           recipes: [],
           editRecipeId: null,
           recipeNameInput: ""
@@ -98,30 +98,23 @@
 
       },
       computed: {
-        toggleColumnHeader() {
-          if (this.isAddFormVisible === true) {
+        overlayHeader() {
+          if (this.overlayType === "add") {
             return "Add Recipe"
 
           }
-          if (this.isEditFormVisible === true) {
+          if (this.overlayType === "edit") {
             return "Edit Recipe"
           }
           else {
             return ""
           }
-        }
-        , isEditFormVisible() {
-          if (this.editRecipeId === null) {
-            return false
-          } else {
-            return true
-          }
         },
         isFormVisible() {
-          return (this.isEditFormVisible || this.isAddFormVisible)
+          return (this.overlayType !== "none")
         },
         rightOverlayClasses() {
-          if (this.isAddFormVisible || this.isEditFormVisible) {
+          if (this.isFormVisible) {
             return ""
           }
           else {
@@ -129,7 +122,7 @@
           }
         },
         rightOverlayBackdropClasses() {
-          if (this.isAddFormVisible || this.isEditFormVisible) {
+          if (this.isFormVisible) {
             return ""
           }
           else {
@@ -172,7 +165,7 @@
 
         },
         async addOrEditRecipe() {
-          if (this.isEditFormVisible) {
+          if (this.overlayType === "edit") {
             this.editRecipe();
           }
           else {
@@ -227,14 +220,15 @@
           this.hideForm();
         },
         showAddForm() {
-          this.isAddFormVisible = true
+          this.overlayType = "add"
         },
         showEditForm(recipe) {
+          this.overlayType = "edit"
           this.editRecipeId = recipe.id
           this.recipeNameInput = recipe.name
         },
         hideForm() {
-          this.isAddFormVisible = false
+          this.overlayType = "none"
           this.editRecipeId = null
           this.recipeNameInput = ""
         },
