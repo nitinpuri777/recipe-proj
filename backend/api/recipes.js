@@ -1,4 +1,3 @@
-
 import Recipe from "../models/recipe.js"
 
 export const get = async (req, res) => { 

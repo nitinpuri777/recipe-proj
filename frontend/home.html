@@ -45,6 +45,20 @@
       <span class="font_24 pad_left_16"> {{ overlayHeader }} </span>
       <!-- Add/Edit Form -->
       <form class="column gap_16 pad_16 wrap" v-if="isFormVisible" @submit.prevent="addOrEditRecipe">
+        <!-- Scrape URL Input -->
+
+        <label class="column gap_8">
+          <span class="font_bold">URL to Scrape</span>
+          <div class="row gap_8">
+            <input class="rounded border pad_8" type="text" name="recipeName" v-model="urlToScrapeInput"
+              label="Url to Scrape">
+            <button type="button" @click="scrapeRecipe(urlToScrapeInput)" class="button rounded border">Fetch
+              Details</button>
+          </div>
+        </label>
+
+
+        <!-- Recipe Name Input -->
         <label class="column gap_8">
           <span class="font_bold">Recipe Name</span>
           <input class="rounded border pad_8" type="text" name="recipeName" v-model="recipeNameInput"
@@ -124,7 +138,7 @@
           recipeNameInput: "",
           recipeIngredientsInput: [""],
           recipeStepsInput: [""],
-          recipeIngredientInputCount: 0
+          urlToScrapeInput: "",
         }
 
       },
@@ -162,6 +176,28 @@
         }
       },
       methods: {
+        async scrapeRecipe(scrapeUrl) {
+          let url = '/api/scrape'
+          let token = localStorage.getItem("authToken")
+          let scrapeDetails = {
+            url: scrapeUrl
+          }
+          let body = { scrapeDetails }
+          let options = {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          }
+          const response = await fetch(url, options)
+          const json = await response.json()
+          this.recipeIngredientsInput = json.recipe.ingredients
+          this.recipeStepsInput = json.recipe.steps
+          this.recipeNameInput = json.recipe.name
+          this.urlToScrapeInput = ""
+        },
         async fetchRecipes() {
           if (!localStorage.getItem("authToken")) {
             this.goToSignIn()
@@ -268,7 +304,7 @@
           this.recipeIngredientsInput.push("")
         },
         removeIngredientInput(ingredientIndex) {
-          this.recipeIngredientInput.splice(ingredientIndex, 1)
+          this.recipeIngredientsInput.splice(ingredientIndex, 1)
         },
         addStepInput(event) {
           this.recipeStepsInput.push("")
