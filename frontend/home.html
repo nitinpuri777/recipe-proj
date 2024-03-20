@@ -40,7 +40,7 @@
     <!-- Right Overlay -->
     <button @click="hideForm" class="right_overlay__backdrop position_fixed top"
       :class="rightOverlayBackdropClasses"></button>
-    <div class="column width_320px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white"
+    <div class="column width_480px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white"
       :class="rightOverlayClasses">
       <span class="font_24 pad_left_16"> {{ overlayHeader }} </span>
       <!-- Add/Edit Form -->
@@ -50,19 +50,34 @@
           <input class="rounded border pad_8" type="text" name="recipeName" v-model="recipeNameInput"
             label="Recipe Name">
         </label>
-        <label class="column gap_8">
+        <!-- Ingredients Input -->
+        <div class="column gap_8">
           <span class="font_bold">Ingredients</span>
-          <div class="row" v-for="(ingredient,index) in recipeIngredientsInput">
+          <div class="row gap_8 align_center" v-for="(ingredient,index) in recipeIngredientsInput">
             <input class="rounded border pad_8 fill" type="text" name="recipeName"
               v-model="recipeIngredientsInput[index]">
+            <button type="button" @click="removeIngredientInput(index)" class="button rounded border">x</button>
           </div>
-          <input v-if="recipeIngredientsInput.length ===0" class="rounded border pad_8 fill" type="text"
-            name="recipeName" v-model="recipeIngredientsInput[1]">
-          <div class="row align_right">
+          <div class="row align_left">
             <button type="button" @click="addIngredientInput"
               class="button rounded border pad_left_16 pad_right_16">+</button>
           </div>
-        </label>
+        </div>
+        <!-- Steps Input -->
+        <div class="column gap_8">
+          <span class="font_bold">Steps</span>
+          <div class="row gap_8 align_top" v-for="(step,index) in recipeStepsInput">
+            <div class="pad_top_8">{{index + 1}}.</div>
+            <textarea rows="4" class="rounded border pad_8 fill" name="recipeName"
+              v-model="recipeStepsInput[index]"></textarea>
+            <div class="pad_top_8"> <button type="button" @click="removeStepInput(index)"
+                class="button rounded border">x</button></div>
+          </div>
+          <div class="row align_left">
+            <button type="button" @click="addStepInput"
+              class="button rounded border pad_left_16 pad_right_16">+</button>
+          </div>
+        </div>
         <div class="row align_right gap_8">
           <button class="row button rounded border" @click="hideForm" type="button">Cancel</button>
           <button class="row button rounded border" type="submit">Submit</button>
@@ -108,7 +123,7 @@
           editRecipeId: null,
           recipeNameInput: "",
           recipeIngredientsInput: [""],
-          recipeStepsInput: [{}],
+          recipeStepsInput: [""],
           recipeIngredientInputCount: 0
         }
 
@@ -247,19 +262,26 @@
           this.editRecipeId = recipe.id
           this.recipeNameInput = recipe.name
           this.recipeIngredientsInput = (recipe.ingredients || [""])
+          this.recipeStepsInput = (recipe.steps || [""])
         },
         addIngredientInput(event) {
-          event.stopPropagation()
           this.recipeIngredientsInput.push("")
         },
         removeIngredientInput(ingredientIndex) {
           this.recipeIngredientInput.splice(ingredientIndex, 1)
+        },
+        addStepInput(event) {
+          this.recipeStepsInput.push("")
+        },
+        removeStepInput(stepIndex) {
+          this.recipeStepsInput.splice(stepIndex, 1)
         },
         hideForm() {
           this.overlayType = "none"
           this.editRecipeId = null
           this.recipeNameInput = ""
           this.recipeIngredientsInput = [""]
+          this.recipeStepsInput = [""]
         },
         signOut() {
           localStorage.removeItem("authToken")

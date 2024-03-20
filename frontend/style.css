@@ -105,8 +105,10 @@ body {
 /* Fixed Height/Width */
 .width_240px { width: 240px; }
 .width_320px { width: 320px; }
+.width_480px { width: 480px; }
 .width_150px { width: 150px; }
 .width_fill { width:100%; }
+.height_80px { height:80px; }
 .height_150px { height: 150px; }
 .height_fill { height:100%; }
 
