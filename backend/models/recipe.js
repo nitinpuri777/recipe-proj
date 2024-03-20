@@ -8,13 +8,12 @@ const Recipe = {
   },
   addRecipe: async (user, recipe) => {
       let userId = await User.findId(user)
-      let name = recipe.name
       let id = await Recipe.getMaxId() + 1
-      let newRecipe = {
+      let blankRecipeForUser = {
           id,
-          name,
           userId
       }
+      let newRecipe = {...blankRecipeForUser, ...recipe}
       database.recipes.push(newRecipe)
       return Recipe.findAllForUser(user)
   },

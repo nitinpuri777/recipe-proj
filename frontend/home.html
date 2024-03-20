@@ -40,7 +40,7 @@
     <!-- Right Overlay -->
     <button @click="hideForm" class="right_overlay__backdrop position_fixed top"
       :class="rightOverlayBackdropClasses"></button>
-    <div class="column width_240px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white"
+    <div class="column width_320px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white"
       :class="rightOverlayClasses">
       <span class="font_24 pad_left_16"> {{ overlayHeader }} </span>
       <!-- Add/Edit Form -->
@@ -49,6 +49,19 @@
           <span class="font_bold">Recipe Name</span>
           <input class="rounded border pad_8" type="text" name="recipeName" v-model="recipeNameInput"
             label="Recipe Name">
+        </label>
+        <label class="column gap_8">
+          <span class="font_bold">Ingredients</span>
+          <div class="row" v-for="(ingredient,index) in recipeIngredientsInput">
+            <input class="rounded border pad_8 fill" type="text" name="recipeName"
+              v-model="recipeIngredientsInput[index]">
+          </div>
+          <input v-if="recipeIngredientsInput.length ===0" class="rounded border pad_8 fill" type="text"
+            name="recipeName" v-model="recipeIngredientsInput[1]">
+          <div class="row align_right">
+            <button type="button" @click="addIngredientInput"
+              class="button rounded border pad_left_16 pad_right_16">+</button>
+          </div>
         </label>
         <div class="row align_right gap_8">
           <button class="row button rounded border" @click="hideForm" type="button">Cancel</button>
@@ -93,7 +106,10 @@
           overlayType: "none",
           recipes: [],
           editRecipeId: null,
-          recipeNameInput: ""
+          recipeNameInput: "",
+          recipeIngredientsInput: [""],
+          recipeStepsInput: [{}],
+          recipeIngredientInputCount: 0
         }
 
       },
@@ -176,7 +192,9 @@
           let url = `/api/recipes/${this.editRecipeId} `
           let token = localStorage.getItem("authToken")
           let recipe = {
-            name: this.recipeNameInput
+            name: this.recipeNameInput,
+            ingredients: this.recipeIngredientsInput,
+            steps: this.recipeStepsInput
           }
           let body = { recipe }
           let options = {
@@ -202,7 +220,9 @@
           let url = '/api/recipes'
           let token = localStorage.getItem("authToken")
           let recipe = {
-            name: this.recipeNameInput
+            name: this.recipeNameInput,
+            ingredients: this.recipeIngredientsInput,
+            steps: this.recipeStepsInput,
           }
           let body = { recipe }
           let options = {
@@ -226,11 +246,20 @@
           this.overlayType = "edit"
           this.editRecipeId = recipe.id
           this.recipeNameInput = recipe.name
+          this.recipeIngredientsInput = (recipe.ingredients || [""])
+        },
+        addIngredientInput(event) {
+          event.stopPropagation()
+          this.recipeIngredientsInput.push("")
+        },
+        removeIngredientInput(ingredientIndex) {
+          this.recipeIngredientInput.splice(ingredientIndex, 1)
         },
         hideForm() {
           this.overlayType = "none"
           this.editRecipeId = null
           this.recipeNameInput = ""
+          this.recipeIngredientsInput = [""]
         },
         signOut() {
           localStorage.removeItem("authToken")
