@@ -110,9 +110,11 @@ body {
 .width_fill { width:100%; }
 .height_80px { height:80px; }
 .height_150px { height: 150px; }
+.height_240px { height:240px; }
+.height_320px { height: 320px; }
 .height_fill { height:100%; }
 
-/* Testing GPT suggestion for overlay right column */
+
 .position_relative {
   position: relative;
 }
@@ -178,24 +180,55 @@ body {
 .right_overlay--hidden {transform: translateX(100%)}
 
 .right_overlay__backdrop { 
-  background-color: black;
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  opacity:0.5;
+  background-color: rgba(0, 0, 0, 0.5);
   visibility:visible;
-  transition: opacity 300ms ease-in-out, visibility 300ms ease-in-out;
+  transition: background-color 300ms ease-in-out, visibility 300ms ease-in-out;
 }
 
 .right_overlay__backdrop--hidden {
   visibility: hidden;
-  opacity: 0; 
+  background-color: rgba(0, 0, 0, 0); 
+}
+
+.modal {
+  transition: visibility 300ms ease-in-out, opacity 300ms ease-in-out;
+}
+.modal--hidden { 
+  visibility: hidden;
+  opacity:0;
+}
+
+.modal_overlay {
+  transition: transform 300ms ease-in-out;
+}
+
+.modal_overlay--hidden {
+  transform: translateY(75%);
+}
+
+.modal_overlay__backdrop { 
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .button {
   background-color: pink;
+  cursor:pointer;
+  padding: 8px;
+}
+
+.button__secondary {
+  background-color: white;
+  border: solid 1px black;
   cursor:pointer;
   padding: 8px;
 }

@@ -12,7 +12,6 @@
 <body>
 
   <div id="app" class="row height_fill align_top scroll">
-
     <!-- Sidebar -->
     <aside class="column border_right gap_16 shrink_none position_sticky top_0 height_fill">
       <a class="font_32 pad_16">Recipe Wizard</a>
@@ -31,7 +30,7 @@
     <!-- Main Content -->
     <main class="row gap_16 pad_16 wrap">
       <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm"
-        @delete-recipe="deleteRecipe"></recipe-box>
+        @delete-recipe="showDeleteConfirm"></recipe-box>
       <div @click="showAddForm" class="row align_center width_150px height_150px border recipe_link">
         <span>Add Recipe</span>
       </div>
@@ -97,10 +96,24 @@
         </div>
         <div class="row align_right gap_8">
           <button class="row button rounded border" @click="hideForm" type="button">Cancel</button>
-          <button class="row button rounded border" type="submit">Submit</button>
+          <button class="row button rounded border" type="submit">Save</button>
         </div>
       </form>
 
+    </div>
+    <!-- Delete Confirm Modal -->
+    <div class="modal row align_center width_fill height_fill position_fixed" :class="modalClasses">
+      <!-- modal backdrop -->
+      <button @click="hideDeleteConfirm" class="modal_overlay__backdrop"></button>
+      <!-- modal content -->
+      <div class="modal_overlay column bg_white border pad_16 gap_16 position_relative" :class="modalOverlayClasses">
+        <div class="row font_32">Delete Recipe</div>
+        <div class="row font_bold"> Are you sure you want to delete {{recipeToDelete.name}}?</div>
+        <div class="row gap_16 align_right">
+          <button @click="hideDeleteConfirm" type="button" class="button__secondary">Cancel</button>
+          <button @click="deleteRecipe(recipeToDelete)" type="button" class="button">Delete</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -136,12 +149,14 @@
       data() {
         return {
           overlayType: "none",
+          showDelete: false,
           recipes: [],
           editRecipeId: null,
           recipeNameInput: "",
           recipeIngredientsInput: [""],
           recipeStepsInput: [""],
           urlToScrapeInput: "",
+          recipeToDelete: {}
         }
 
       },
@@ -175,6 +190,22 @@
           }
           else {
             return "right_overlay__backdrop--hidden"
+          }
+        },
+        modalClasses() {
+          if (this.showDelete) {
+            return ""
+          }
+          else {
+            return "modal--hidden"
+          }
+        },
+        modalOverlayClasses() {
+          if (this.showDelete) {
+            return ""
+          }
+          else {
+            return "modal_overlay--hidden"
           }
         }
       },
@@ -219,6 +250,13 @@
             return json.recipes
           }
         },
+        showDeleteConfirm(recipe) {
+          this.showDelete = true
+          this.recipeToDelete = recipe
+        },
+        hideDeleteConfirm() {
+          this.showDelete = false
+        },
         async deleteRecipe(recipe) {
           let url = `/api/recipes/${recipe.id}`
           let token = localStorage.getItem("authToken")
@@ -232,6 +270,7 @@
           const response = await fetch(url, options)
           const json = await response.json()
           this.recipes = json.recipes
+          this.hideDeleteConfirm()
 
         },
         async addOrEditRecipe() {
