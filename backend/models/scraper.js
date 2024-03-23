@@ -2,13 +2,9 @@ import * as cheerio from 'cheerio';
 const Scraper = {
 getRecipe: async function(url) {
     let recipeContent = await this.findRecipe(url)
-    console.log(`Recipe Object ${recipeContent}`)
     let parsedName = this.parseName(recipeContent)
-    console.log(parsedName)
     let parsedIngredients = this.parseIngredients(recipeContent)
-    console.log(parsedIngredients)
     let parsedSteps = this.parseSteps(recipeContent)
-    console.log(parsedSteps)
     const recipe = {
         name: parsedName,
         ingredients: parsedIngredients,
