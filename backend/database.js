@@ -21,7 +21,7 @@ const database = {
       {
           id:1,
           name: "Pizza",
-          userId: 1,
+            userId:1,
           ingredients: ["1000g flour", "200g Cheese"],
           steps: ["Make the dough", "Spread the dough out", "Put the sauce on the pizza","Put the cheese on the pizza"]
       },

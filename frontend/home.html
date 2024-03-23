@@ -27,7 +27,6 @@
         </div>
       </div>
     </aside>
-    `
     <!-- Main Content -->
     <main class="row gap_16 pad_16 wrap">
       <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm"
@@ -127,6 +126,7 @@
             <div class="row align_center gap_8">
               <span @click="showEditForm(recipe)" class="recipe_link">edit</span>
               <span @click="deleteRecipe(recipe)" class="recipe_link">delete</span>
+              <span @click="goToRecipe(recipe.id)" class="recipe_link">view</span>
             </div>
           </div>
         </div>`,
@@ -369,6 +369,10 @@
 
         goToSignIn() {
           window.location.href = '/'
+        },
+
+        goToRecipe(recipeId) {
+          window.location.href = '/recipe.html?recipeId=1'
         }
       }
     })
