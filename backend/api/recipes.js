@@ -10,6 +10,19 @@ export const get = async (req, res) => {
       return res.status(400).json({error})
   }
 }
+export const find = async (req, res) => { 
+  try {
+          let userId = req.user.id
+          let recipeId = parseInt(req.params.id)
+          let recipe = await Recipe.findRecipe(recipeId, userId)
+          return res.status(200).json({recipe})
+      
+  } catch (error) {
+      //Should try to figure out how to get middleware error handling working
+      return res.status(400).json({error})
+  }
+}
+
 export const post = async (req, res) => {
   let user = req.user
   let recipes = await Recipe.addRecipe(user, req.body.recipe)
@@ -34,7 +47,8 @@ const ApiRecipes = {
   get,
   post,
   delete_,
-  put
+  put,
+  find
 }
 
 export default ApiRecipes

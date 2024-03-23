@@ -14,7 +14,7 @@ async function authenticateToken(req, res, next) {
   
   }
   else {
-      next('USER_NOT_FOUND');
+       ;
   }
 }
 
@@ -23,7 +23,9 @@ async function handleError(err, req, res, next) {
       case 'USER_NOT_FOUND':
           res.status(403).json({message: "User not authorized"})
           break;
-          
+    case 'RECIPE_NOT_FOUND':
+        res.status(403).json({message: "Recipe not found"})
+        break;   
       default:
           res.status(500).json({message: "Whoops!"})
           break;

@@ -6,6 +6,17 @@ const Recipe = {
       let matchesUserId = recipe => recipe.userId === user.id
       return database.recipes.filter(matchesUserId)
   },
+  findRecipe: async (recipeId, userId) => {
+    console.log(recipeId +" " + userId)
+    let matchesUserIdAndRecipeId = recipe => (userId === recipe.userId && recipe.id === parseInt(recipeId))
+    let foundRecipe = database.recipes.find(matchesUserIdAndRecipeId)
+    if (foundRecipe){
+      return foundRecipe
+    }
+    else {
+      throw 'RECIPE_NOT_FOUND';
+    }
+  },
   addRecipe: async (user, recipe) => {
       let userId = await User.findId(user)
       let id = await Recipe.getMaxId() + 1

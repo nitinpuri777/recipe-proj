@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      {{recipe.name}}
+    </div>
+    <div v-for="ingredient in recipe.ingredients">
+      {{ingredient}}
+    </div>
+    <div v-for="step in recipe.steps">
+      {{step}}
+    </div>
+  </div>
+  <script>
+    let app = Vue.createApp({
+      mounted: async function () {
+        let url = new URL(window.location)
+        let recipeId = parseInt(url.searchParams.get('recipeId'))
+        this.recipe = await this.fetchRecipe(recipeId)
+      },
+      data: function () {
+        return {
+          recipe: {
+          }
+        }
+      },
+      methods: {
+        fetchRecipe: async function (recipeId) {
+          if (!localStorage.getItem("authToken")) {
+            this.goToSignIn()
+          }
+          else {
+            let url = `/api/recipe/${recipeId}`
+            let options = {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+              }
+            }
+            const response = await fetch(url, options)
+            const json = await response.json()
+            return json.recipe
+          }
+        }
+      }
+    })
+    app.mount('#app');
+  </script>
+
+</body>
+
+</html>

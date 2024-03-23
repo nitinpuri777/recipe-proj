@@ -12,6 +12,7 @@ app.post('/api/recipes', ApiRecipes.post)
 app.delete('/api/recipes/:id', ApiRecipes.delete_)
 app.put('/api/recipes/:id', ApiRecipes.put)
 app.post('/api/scrape', ApiScrape.post)
+app.get('/api/recipe/:id', ApiRecipes.find)
 app.use('/api', Middleware.handleError)
 app.use(express.static('frontend'))
 
