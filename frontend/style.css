@@ -233,6 +233,14 @@ body {
   padding: 8px;
 }
 
+.bullets {
+  list-style: square inside; 
+}
+
+.numbers {
+  list-style: decimal inside; 
+}
+
 .rounded {
   border-radius:8px;
 }

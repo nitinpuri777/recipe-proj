@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
   <title>Document</title>
@@ -11,14 +12,22 @@
 
 <body>
   <div id="app">
-    <div>
-      {{recipe.name}}
-    </div>
-    <div v-for="ingredient in recipe.ingredients">
-      {{ingredient}}
-    </div>
-    <div v-for="step in recipe.steps">
-      {{step}}
+    <div class="column gap_16 pad_left_16 pad_top_16">
+      <div class="font_32">
+        {{recipe.name}}
+      </div>
+      <div class="column gap_16">
+        <div class="font_24">Ingredients</div>
+        <ul class="bullets column gap_8">
+          <li v-for="ingredient in recipe.ingredients">{{ingredient}}</li>
+        </ul>
+      </div>
+      <div class="column gap_16">
+        <div class="font_24">Steps</div>
+        <ol class="numbers column gap_8">
+          <li v-for="step in recipe.steps">{{step}}</li>
+          </ul>
+      </div>
     </div>
   </div>
   <script>
