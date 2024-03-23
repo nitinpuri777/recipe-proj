@@ -126,7 +126,7 @@
             <div class="row align_center gap_8">
               <span @click="showEditForm(recipe)" class="recipe_link">edit</span>
               <span @click="deleteRecipe(recipe)" class="recipe_link">delete</span>
-              <span @click="goToRecipe(recipe.id)" class="recipe_link">view</span>
+              <a :href="'/recipe.html?recipeId=' + recipe.id" class="recipe_link">view</a>
             </div>
           </div>
         </div>`,
@@ -369,10 +369,6 @@
 
         goToSignIn() {
           window.location.href = '/'
-        },
-
-        goToRecipe(recipeId) {
-          window.location.href = '/recipe.html?recipeId=1'
         }
       }
     })
