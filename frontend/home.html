@@ -13,11 +13,15 @@
 <body>
 
   <div id="app" class="row height_fill align_top scroll">
-    <!-- Sidebar -->
+    <!-- Sidebar Component -->
     <sidebar @sign-out="signOut"></sidebar>
+
     <!-- Main Content -->
-    <!-- <recipe-list :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
-      @show-edit-form="showEditForm"></recipe-list> -->
+    <!-- The idea here was that I would use RouterView and then pass either RecipeList or RecipeDetail depending on the route. -->
+    <!-- Commented out to test if components rendered correctly
+      <recipe-list :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
+      @show-edit-form="showEditForm"></recipe-list> 
+    -->
     <recipe-detail :recipe="recipeToView"></recipe-detail>
     <!-- Right Overlay -->
     <!-- Backdrop -->
