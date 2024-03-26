@@ -5,6 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3.4.21/dist/vue.esm-browser.js",
+        "vue/server-renderer": "https://play.vuejs.org/server-renderer.esm-browser.js",
+        "vue-router": "https://unpkg.com/vue-router@4.3.0/dist/vue-router.esm-browser.js",
+        "@vue/devtools-api": "https://unpkg.com/@vue/devtools-api@6.6.1/lib/esm/index.js"
+      },
+      "scopes": {}
+    }
+  </script>
   <script src='./app.js' type="module"></script>
 </head>
 
@@ -20,8 +31,8 @@
     <!-- Commented out to test if components rendered correctly -->
     <recipe-list :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
       @show-edit-form="showEditForm"></recipe-list>
-
     <!-- <recipe-detail :recipe="recipeToView"></recipe-detail> -->
+    <!-- <router-view></router-view> -->
 
 
 
@@ -48,6 +59,7 @@
   </div>
 
   <script type="module">
+
     import App from './app.js'
     App.mount('#app')
   </script>

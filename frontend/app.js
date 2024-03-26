@@ -1,9 +1,21 @@
-import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+import { createApp } from 'vue'
+// import { createRouter, createWebHistory } from 'vue-router'
 import Sidebar from './components/sidebar.js'
 import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
 import RightOverlay from './components/right-overlay.js'
 import DeleteModal from './components/delete-modal.js'
+
+
+// const routes = [
+//   { path: '/home', component: RecipeList },
+//   { path: '/recipe/:id', component: RecipeDetail, props: true }
+// ];
+
+// const router = createRouter({
+//   history: createWebHistory(),
+//   routes
+// });
 
 const App = createApp({
   async mounted() {
@@ -233,6 +245,9 @@ const App = createApp({
     }
   }
 })
+
+// App.use(router)
+// App.mount('#app')
 
 export default App
 
