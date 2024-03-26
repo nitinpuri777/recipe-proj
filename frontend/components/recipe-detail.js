@@ -17,6 +17,18 @@ const RecipeDetail = {
       </ol>
   </div>
 </div>`,
+mounted() {
+  // When the component is mounted, fetch the recipe data
+  this.fetchRecipe();
+},
+methods: {
+  async fetchRecipe() {
+    // Extract the recipeId from the route params
+    const recipeId = this.$route.params.id;
+    // Emit an event to notify the parent component to fetch the recipe
+    this.$emit('fetch-recipe', recipeId);
+  }
+},
 
 }
 

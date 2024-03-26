@@ -2,52 +2,68 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
-		integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ=="
-		crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3.4.21/dist/vue.esm-browser.js",
+        "vue/server-renderer": "https://play.vuejs.org/server-renderer.esm-browser.js",
+        "vue-router": "https://unpkg.com/vue-router@4.3.0/dist/vue-router.esm-browser.js",
+        "@vue/devtools-api": "https://unpkg.com/@vue/devtools-api@6.6.1/lib/esm/index.js"
+      },
+      "scopes": {}
+    }
+  </script>
+  <script src='./app.js' type="module"></script>
 </head>
 
 <body>
-	<h1>Hello from Frontend</h1>
-	<form novalidate onsubmit="onSignInFormSubmit(event)">
-		<h3>Sign in</h3>
-		<label>
-			<span>Email:</span>
-			<input type="email" name="email" autocomplete="off">
-		</label>
-		<label>
-			<span>Password:</span>
-			<input type="password" name="password">
-		</label>
-		<button type="submit">Sign in</button>
-	</form>
-	<script>
-		async function onSignInFormSubmit(event) {
-			event.preventDefault()
-			let url = '/api/sign-in'
-			let body = {
-				email: event.target.elements.email.value,
-				password: event.target.elements.password.value
-			}
-			let options = {
-				method: 'POST',
-				body: JSON.stringify(body),
-				headers: {
-					'Content-Type': 'application/json',
-				}
-			}
-			const response = await fetch(url, options)
-			const json = await response.json()
-			if (json.token != null) {
-				localStorage.setItem("authToken", json.token);
-				window.location.href = '/home.html'
-			}
-		}
-	</script>
 
+  <div id="app" class="row height_fill align_top scroll">
+    <!-- Sidebar Component -->
+    <sidebar @sign-out="signOut"></sidebar>
+
+
+    <!-- Main Content -->
+    <!-- The idea here was that I would use RouterView and then pass either RecipeList or RecipeDetail depending on the route. -->
+    <!-- Commented out to test if components rendered correctly -->
+    <!-- <recipe-list :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
+      @show-edit-form="showEditForm"></recipe-list> -->
+    <!-- <recipe-detail :recipe="recipeToView"></recipe-detail> -->
+    <router-view :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
+      @show-edit-form="showEditForm" :recipe="recipeToView" @fetch-recipe="fetchRecipe"></router-view>
+
+
+
+    <!-- Right Column -->
+    <right-overlay v-model="overlayInput" @hide-form="hideForm" @scrape-recipe="scrapeRecipe"
+      @add-or-edit-recipe="addOrEditRecipe"></right-overlay>
+
+
+    <!-- Delete Confirm Modal -->
+    <!-- Delete Confirm Modal -->
+    <div class="modal row align_center width_fill height_fill position_fixed" :class="modalClasses">
+      <!-- modal backdrop -->
+      <button @click="hideDeleteConfirm" class="modal_overlay__backdrop"></button>
+      <!-- modal content -->
+      <div class="modal_overlay column bg_white border pad_16 gap_16 position_relative" :class="modalOverlayClasses">
+        <div class="row font_32">Delete Recipe</div>
+        <div class="row font_bold"> Are you sure you want to delete {{recipeToDelete.name}}?</div>
+        <div class="row gap_16 align_right">
+          <button @click="hideDeleteConfirm" type="button" class="button__secondary">Cancel</button>
+          <button @click="deleteRecipe(recipeToDelete)" type="button" class="button">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <script type="module">
+
+    import App from './app.js'
+    App.mount('#app')
+  </script> -->
 </body>
 
 </html>

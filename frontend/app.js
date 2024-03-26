@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-// import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Sidebar from './components/sidebar.js'
 import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
@@ -7,20 +7,21 @@ import RightOverlay from './components/right-overlay.js'
 import DeleteModal from './components/delete-modal.js'
 
 
-// const routes = [
-//   { path: '/home', component: RecipeList },
-//   { path: '/recipe/:id', component: RecipeDetail, props: true }
-// ];
+const routes = [
+  { path: '/home', component: RecipeList },
+  { path: '/recipe/:id', component: RecipeDetail},
+  { path: '/:catchAll(.*)', redirect: '/home' },
+];
 
-// const router = createRouter({
-//   history: createWebHistory(),
-//   routes
-// });
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+});
 
 const App = createApp({
   async mounted() {
     this.recipes = await this.fetchRecipes()
-    this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
+    //this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
   },
   components: {
     Sidebar,
@@ -121,6 +122,7 @@ const App = createApp({
         }
         const response = await fetch(url, options)
         const json = await response.json()
+        this.recipeToView = json.recipe
         return json.recipe
       }
     },
@@ -246,8 +248,8 @@ const App = createApp({
   }
 })
 
-// App.use(router)
-// App.mount('#app')
+App.use(router)
+App.mount('#app')
 
 export default App
 
