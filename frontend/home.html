@@ -5,37 +5,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/style.css">
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+  <script src='./app.js' type="module"></script>
+  <script src="./router.js" type="module"></script>
   <title>Sign-in</title>
 </head>
 
 <body>
 
   <div id="app" class="row height_fill align_top scroll">
-    <!-- Sidebar -->
-    <aside class="column border_right gap_16 shrink_none position_sticky top_0 height_fill">
-      <a class="font_32 pad_16">Recipe Wizard</a>
-      <div class="column gap_fill fill">
-        <div class="column">
-          <a href="#button1" class="pad_16 sidebar_link">Button 1</a>
-          <a href="#button2" class="pad_16 sidebar_link">Button 2</a>
-          <a href="#button3" class="pad_16 sidebar_link">Button 3</a>
-        </div>
-        <div class="column">
-          <a @click="signOut" class="pad_16 sidebar_link">Sign Out</a>
-        </div>
-      </div>
-    </aside>
-    <!-- Main Content -->
-    <main class="row gap_16 pad_16 wrap">
-      <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm"
-        @delete-recipe="showDeleteConfirm"></recipe-box>
-      <div @click="showAddForm" class="row align_center width_150px height_150px border recipe_link">
-        <span>Add Recipe</span>
-      </div>
-    </main>
+    <!-- Sidebar Component -->
+    <sidebar @sign-out="signOut"></sidebar>
 
+    <!-- Main Content -->
+    <!-- The idea here was that I would use RouterView and then pass either RecipeList or RecipeDetail depending on the route. -->
+    <!-- Commented out to test if components rendered correctly
+      <recipe-list :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
+      @show-edit-form="showEditForm"></recipe-list> 
+    -->
+    <recipe-detail :recipe="recipeToView"></recipe-detail>
     <!-- Right Overlay -->
     <!-- Backdrop -->
     <button @click="hideForm" class="right_overlay__backdrop position_fixed top"
@@ -117,262 +104,12 @@
     </div>
   </div>
 
-  <script>
-    const RecipeBox = {
-      props: ['recipe'],
-      template: `<div class="row align_center width_150px height_150px border ">
-          <div class="column gap_16 align_center">
-            <div class="row fill ">{{recipe.name}}</div>
-            <div class="row align_center gap_8">
-              <span @click="showEditForm(recipe)" class="recipe_link">edit</span>
-              <span @click="deleteRecipe(recipe)" class="recipe_link">delete</span>
-              <a :href="'/recipe.html?recipeId=' + recipe.id" class="recipe_link">view</a>
-            </div>
-          </div>
-        </div>`,
-      methods: {
-        deleteRecipe(recipe) {
-          this.$emit("delete-recipe", recipe);
-        },
-        showEditForm(recipe) {
-          this.$emit("show-edit-form", recipe);
-        }
-      }
-    }
+  <script type="module">
 
-    let app = Vue.createApp({
-      async mounted() {
-        this.recipes = await this.fetchRecipes()
-      },
-      components: {
-        RecipeBox
-      },
-      data() {
-        return {
-          overlayType: "none",
-          showDelete: false,
-          recipes: [],
-          editRecipeId: null,
-          recipeNameInput: "",
-          recipeIngredientsInput: [""],
-          recipeStepsInput: [""],
-          urlToScrapeInput: "",
-          recipeToDelete: {}
-        }
-
-      },
-      computed: {
-        overlayHeader() {
-          if (this.overlayType === "add") {
-            return "Add Recipe"
-
-          }
-          if (this.overlayType === "edit") {
-            return "Edit Recipe"
-          }
-          else {
-            return ""
-          }
-        },
-        isFormVisible() {
-          return (this.overlayType !== "none")
-        },
-        rightOverlayClasses() {
-          if (this.isFormVisible) {
-            return ""
-          }
-          else {
-            return "right_overlay--hidden"
-          }
-        },
-        rightOverlayBackdropClasses() {
-          if (this.isFormVisible) {
-            return ""
-          }
-          else {
-            return "right_overlay__backdrop--hidden"
-          }
-        },
-        modalClasses() {
-          if (this.showDelete) {
-            return ""
-          }
-          else {
-            return "modal--hidden"
-          }
-        },
-        modalOverlayClasses() {
-          if (this.showDelete) {
-            return ""
-          }
-          else {
-            return "modal_overlay--hidden"
-          }
-        }
-      },
-      methods: {
-        async scrapeRecipe(scrapeUrl) {
-          let url = '/api/scrape'
-          let token = localStorage.getItem("authToken")
-          let scrapeDetails = {
-            url: scrapeUrl
-          }
-          let body = { scrapeDetails }
-          let options = {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
-          }
-          const response = await fetch(url, options)
-          const json = await response.json()
-          this.recipeIngredientsInput = json.recipe.ingredients
-          this.recipeStepsInput = json.recipe.steps
-          this.recipeNameInput = json.recipe.name
-          this.urlToScrapeInput = ""
-        },
-        async fetchRecipes() {
-          if (!localStorage.getItem("authToken")) {
-            this.goToSignIn()
-          }
-          else {
-            let url = '/api/recipes'
-            let options = {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem("authToken")}`
-              }
-            }
-            const response = await fetch(url, options)
-            const json = await response.json()
-            return json.recipes
-          }
-        },
-        showDeleteConfirm(recipe) {
-          this.showDelete = true
-          this.recipeToDelete = recipe
-        },
-        hideDeleteConfirm() {
-          this.showDelete = false
-        },
-        async deleteRecipe(recipe) {
-          let url = `/api/recipes/${recipe.id}`
-          let token = localStorage.getItem("authToken")
-          let options = {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token} `
-            }
-          }
-          const response = await fetch(url, options)
-          const json = await response.json()
-          this.recipes = json.recipes
-          this.hideDeleteConfirm()
-
-        },
-        async addOrEditRecipe() {
-          if (this.overlayType === "edit") {
-            this.editRecipe();
-          }
-          else {
-            this.addRecipe();
-          }
-        },
-        async editRecipe() {
-          let url = `/api/recipes/${this.editRecipeId} `
-          let token = localStorage.getItem("authToken")
-          let recipe = {
-            name: this.recipeNameInput,
-            ingredients: this.recipeIngredientsInput,
-            steps: this.recipeStepsInput
-          }
-          let body = { recipe }
-          let options = {
-            method: 'PUT',
-            body: JSON.stringify(body),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token} `
-            }
-          }
-          try {
-            const response = await fetch(url, options)
-            const json = await response.json()
-            this.recipes = json.recipes
-            this.hideForm()
-
-          } catch (error) {
-            console.error('Error updating the recipe:', error)
-          }
-
-        },
-        async addRecipe() {
-          let url = '/api/recipes'
-          let token = localStorage.getItem("authToken")
-          let recipe = {
-            name: this.recipeNameInput,
-            ingredients: this.recipeIngredientsInput,
-            steps: this.recipeStepsInput,
-          }
-          let body = { recipe }
-          let options = {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
-          }
-          const response = await fetch(url, options)
-          const json = await response.json()
-          this.recipes = json.recipes
-          this.addRecipeName = ""
-          this.hideForm();
-        },
-        showAddForm() {
-          this.overlayType = "add"
-        },
-        showEditForm(recipe) {
-          this.overlayType = "edit"
-          this.editRecipeId = recipe.id
-          this.recipeNameInput = recipe.name
-          this.recipeIngredientsInput = (recipe.ingredients || [""])
-          this.recipeStepsInput = (recipe.steps || [""])
-        },
-        addIngredientInput(event) {
-          this.recipeIngredientsInput.push("")
-        },
-        removeIngredientInput(ingredientIndex) {
-          this.recipeIngredientsInput.splice(ingredientIndex, 1)
-        },
-        addStepInput(event) {
-          this.recipeStepsInput.push("")
-        },
-        removeStepInput(stepIndex) {
-          this.recipeStepsInput.splice(stepIndex, 1)
-        },
-        hideForm() {
-          this.overlayType = "none"
-          this.editRecipeId = null
-          this.recipeNameInput = ""
-          this.recipeIngredientsInput = [""]
-          this.recipeStepsInput = [""]
-        },
-        signOut() {
-          localStorage.removeItem("authToken")
-          this.goToSignIn()
-        },
-
-        goToSignIn() {
-          window.location.href = '/'
-        }
-      }
-    })
-    app.mount('#app')
+    import App from './app.js'
+    import Router from './router.js'
+    App.use(Router)
+    App.mount('#app')
   </script>
 </body>
 
