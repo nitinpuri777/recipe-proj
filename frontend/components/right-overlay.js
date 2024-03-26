@@ -99,7 +99,6 @@ const RightOverlay = {
       }
     },
     overlayHeader() {
-      console.log("Received modelValue prop:", this.modelValue);
       if (this.overlayType === "add") {
         return "Add Recipe"
 

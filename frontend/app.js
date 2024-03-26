@@ -32,7 +32,6 @@ const App = createApp({
       recipeToDelete: {},
       recipeToView: {}
     }
-    console.log("Initialized overlayInput:", data.overlayInput);
     return data;
 
   },
