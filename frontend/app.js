@@ -2,6 +2,8 @@ import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 import Sidebar from './components/sidebar.js'
 import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
+import RightOverlay from './components/right-overlay.js'
+import DeleteModal from './components/delete-modal.js'
 
 const App = createApp({
   async mounted() {
@@ -11,55 +13,30 @@ const App = createApp({
   components: {
     Sidebar,
     RecipeList,
-    RecipeDetail
+    RecipeDetail,
+    RightOverlay,
+    DeleteModal
   },
   data() {
-    return {
-      overlayType: "none",
+    const data = {
       showDelete: false,
       recipes: [],
       editRecipeId: null,
-      recipeNameInput: "",
-      recipeIngredientsInput: [""],
-      recipeStepsInput: [""],
-      urlToScrapeInput: "",
+      overlayInput: {
+        overlayType: "none",
+        recipeNameInput: "",
+        recipeIngredientsInput: [""],
+        recipeStepsInput: [""],
+        urlToScrapeInput: "",
+      },
       recipeToDelete: {},
       recipeToView: {}
     }
+    console.log("Initialized overlayInput:", data.overlayInput);
+    return data;
 
   },
   computed: {
-    overlayHeader() {
-      if (this.overlayType === "add") {
-        return "Add Recipe"
-
-      }
-      if (this.overlayType === "edit") {
-        return "Edit Recipe"
-      }
-      else {
-        return ""
-      }
-    },
-    isFormVisible() {
-      return (this.overlayType !== "none")
-    },
-    rightOverlayClasses() {
-      if (this.isFormVisible) {
-        return ""
-      }
-      else {
-        return "right_overlay--hidden"
-      }
-    },
-    rightOverlayBackdropClasses() {
-      if (this.isFormVisible) {
-        return ""
-      }
-      else {
-        return "right_overlay__backdrop--hidden"
-      }
-    },
     modalClasses() {
       if (this.showDelete) {
         return ""
@@ -95,9 +72,9 @@ const App = createApp({
       }
       const response = await fetch(url, options)
       const json = await response.json()
-      this.recipeIngredientsInput = json.recipe.ingredients
-      this.recipeStepsInput = json.recipe.steps
-      this.recipeNameInput = json.recipe.name
+      this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
+      this.overlayInput.recipeStepsInput = json.recipe.steps
+      this.overlayInput.recipeNameInput = json.recipe.name
       this.urlToScrapeInput = ""
     },
     async fetchRecipes() {
@@ -160,7 +137,7 @@ const App = createApp({
 
     },
     async addOrEditRecipe() {
-      if (this.overlayType === "edit") {
+      if (this.overlayInput.overlayType === "edit") {
         this.editRecipe();
       }
       else {
@@ -171,9 +148,9 @@ const App = createApp({
       let url = `/api/recipes/${this.editRecipeId} `
       let token = localStorage.getItem("authToken")
       let recipe = {
-        name: this.recipeNameInput,
-        ingredients: this.recipeIngredientsInput,
-        steps: this.recipeStepsInput
+        name: this.overlayInput.recipeNameInput,
+        ingredients: this.overlayInput.recipeIngredientsInput,
+        steps: this.overlayInput.recipeStepsInput
       }
       let body = { recipe }
       let options = {
@@ -199,9 +176,9 @@ const App = createApp({
       let url = '/api/recipes'
       let token = localStorage.getItem("authToken")
       let recipe = {
-        name: this.recipeNameInput,
-        ingredients: this.recipeIngredientsInput,
-        steps: this.recipeStepsInput,
+        name: this.overlayInput.recipeNameInput,
+        ingredients: this.overlayInput.recipeIngredientsInput,
+        steps: this.overlayInput.recipeStepsInput,
       }
       let body = { recipe }
       let options = {
@@ -219,33 +196,33 @@ const App = createApp({
       this.hideForm();
     },
     showAddForm() {
-      this.overlayType = "add"
+      this.overlayInput.overlayType = "add"
     },
     showEditForm(recipe) {
-      this.overlayType = "edit"
+      this.overlayInput.overlayType = "edit"
       this.editRecipeId = recipe.id
-      this.recipeNameInput = recipe.name
-      this.recipeIngredientsInput = (recipe.ingredients || [""])
-      this.recipeStepsInput = (recipe.steps || [""])
+      this.overlayInput.recipeNameInput = recipe.name
+      this.overlayInput.recipeIngredientsInput = (recipe.ingredients || [""])
+      this.overlayInput.recipeStepsInput = (recipe.steps || [""])
     },
     addIngredientInput(event) {
-      this.recipeIngredientsInput.push("")
+      this.overlayInput.recipeIngredientsInput.push("")
     },
     removeIngredientInput(ingredientIndex) {
-      this.recipeIngredientsInput.splice(ingredientIndex, 1)
+      this.overlayInput.recipeIngredientsInput.splice(ingredientIndex, 1)
     },
     addStepInput(event) {
-      this.recipeStepsInput.push("")
+      this.overlayInput.recipeStepsInput.push("")
     },
     removeStepInput(stepIndex) {
-      this.recipeStepsInput.splice(stepIndex, 1)
+      this.overlayInput.recipeStepsInput.splice(stepIndex, 1)
     },
     hideForm() {
-      this.overlayType = "none"
+      this.overlayInput.overlayType = "none"
       this.editRecipeId = null
-      this.recipeNameInput = ""
-      this.recipeIngredientsInput = [""]
-      this.recipeStepsInput = [""]
+      this.overlayInput.recipeNameInput = ""
+      this.overlayInput.recipeIngredientsInput = [""]
+      this.overlayInput.recipeStepsInput = [""]
     },
     signOut() {
       localStorage.removeItem("authToken")
