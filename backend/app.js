@@ -15,5 +15,6 @@ app.post('/api/scrape', ApiScrape.post)
 app.get('/api/recipe/:id', ApiRecipes.find)
 app.use('/api', Middleware.handleError)
 app.use(express.static('frontend'))
+app.get('*', Middleware.loadContent)
 
 export default app

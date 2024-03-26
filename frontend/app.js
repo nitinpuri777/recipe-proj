@@ -10,7 +10,7 @@ const App = createApp({
     this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
   },
   components: {
-    RecipeBox,
+  
     Sidebar,
     RecipeList,
     RecipeDetail
