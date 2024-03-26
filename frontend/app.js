@@ -1,5 +1,4 @@
 import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
-import RecipeBox from './components/recipe-box.js'
 import Sidebar from './components/sidebar.js'
 import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
@@ -10,7 +9,6 @@ const App = createApp({
     this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
   },
   components: {
-  
     Sidebar,
     RecipeList,
     RecipeDetail
