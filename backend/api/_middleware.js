@@ -1,4 +1,10 @@
 import User from "../models/user.js";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 async function authenticateToken(req, res, next) {
   let authHeader = req.header("Authorization")
   if (authHeader.startsWith("Bearer ")) {
@@ -31,5 +37,9 @@ async function handleError(err, req, res, next) {
           break;
   }
 }
-const Middleware = {authenticateToken, handleError}
+
+async function loadContent(req,res,next) {
+  res.sendFile(join(__dirname, '../../frontend', 'index.html'));
+}
+const Middleware = {authenticateToken, handleError, loadContent}
 export default Middleware
