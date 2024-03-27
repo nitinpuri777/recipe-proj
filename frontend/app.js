@@ -5,11 +5,13 @@ import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
 import RightOverlay from './components/right-overlay.js'
 import DeleteModal from './components/delete-modal.js'
+import SignInPage from './pages/sign-in.js'
 
 
 const routes = [
   { path: '/home', component: RecipeList },
   { path: '/recipe/:id', component: RecipeDetail},
+  { path: `/sign-in`, component: SignInPage},
   { path: '/:catchAll(.*)', redirect: '/home' },
 ];
 

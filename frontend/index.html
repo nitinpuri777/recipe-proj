@@ -26,13 +26,7 @@
     <!-- Sidebar Component -->
     <sidebar @sign-out="signOut"></sidebar>
 
-
-    <!-- Main Content -->
-    <!-- The idea here was that I would use RouterView and then pass either RecipeList or RecipeDetail depending on the route. -->
-    <!-- Commented out to test if components rendered correctly -->
-    <!-- <recipe-list :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
-      @show-edit-form="showEditForm"></recipe-list> -->
-    <!-- <recipe-detail :recipe="recipeToView"></recipe-detail> -->
+    <!-- Main View -->
     <router-view :recipes="recipes" @show-add-form="showAddForm" @show-delete-confirm="showDeleteConfirm"
       @show-edit-form="showEditForm" :recipe="recipeToView" @fetch-recipe="fetchRecipe"></router-view>
 
@@ -43,7 +37,6 @@
       @add-or-edit-recipe="addOrEditRecipe"></right-overlay>
 
 
-    <!-- Delete Confirm Modal -->
     <!-- Delete Confirm Modal -->
     <div class="modal row align_center width_fill height_fill position_fixed" :class="modalClasses">
       <!-- modal backdrop -->
@@ -59,12 +52,6 @@
       </div>
     </div>
   </div>
-
-  <!-- <script type="module">
-
-    import App from './app.js'
-    App.mount('#app')
-  </script> -->
 </body>
 
 </html>

@@ -226,6 +226,10 @@ body {
   padding: 8px;
 }
 
+.button:hover {
+  background-color: rgb(253, 153, 170);
+}
+
 .button__secondary {
   background-color: white;
   border: solid 1px black;
