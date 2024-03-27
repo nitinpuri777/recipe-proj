@@ -12,7 +12,7 @@ const DeleteModal = {
     </div>
   </div>
 </div>`,
-  props:['recipe'],
+  props:['recipe', 'modalClasses', 'modalOverlayClasses'],
   methods: {
     hideDeleteConfirm() {
       this.$emit("hide-delete-confirm")

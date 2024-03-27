@@ -7,12 +7,11 @@ import RightOverlay from './components/right-overlay.js'
 import DeleteModal from './components/delete-modal.js'
 import SignInPage from './pages/sign-in.js'
 
-
 const routes = [
-  { path: '/home', component: RecipeList },
-  { path: '/recipe/:id', component: RecipeDetail},
+  { path: '/app', component: RecipeList },
+  { path: '/app/recipe/:id', component: RecipeDetail},
   { path: `/sign-in`, component: SignInPage},
-  { path: '/:catchAll(.*)', redirect: '/home' },
+  { path: '/:catchAll(.*)', redirect: '/app' },
 ];
 
 const router = createRouter({
@@ -30,7 +29,8 @@ const App = createApp({
     RecipeList,
     RecipeDetail,
     RightOverlay,
-    DeleteModal
+    DeleteModal,
+    SignInPage
   },
   data() {
     const data = {
