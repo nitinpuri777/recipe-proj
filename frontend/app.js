@@ -35,7 +35,7 @@ const router = createRouter({
 
 const App = createApp({
   async mounted() {
-    this.loadRecipes()
+    //this.loadRecipes()
     //this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
   },
   components: {
@@ -80,7 +80,7 @@ const App = createApp({
       else {
         return "modal_overlay--hidden"
       }
-    }
+    },
   },
   methods: {
     loadRecipes: async function() { 

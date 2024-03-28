@@ -10,12 +10,18 @@ const RecipeBox = {
         </div>
       </div>
     </div>`,
+  mounted: async function() {
+    this.loadRecipes()
+  },
   methods: {
     deleteRecipe(recipe) {
       this.$emit("delete-recipe", recipe);
     },
     showEditForm(recipe) {
       this.$emit("show-edit-form", recipe);
+    },
+    loadRecipes() {
+      this.$emit("load-recipes")
     }
   }
 }

@@ -28,7 +28,7 @@
 
     <router-view :recipes="recipes" :recipe="recipeToView" @show-add-form="showAddForm"
       @show-delete-confirm="showDeleteConfirm" @show-edit-form="showEditForm" @fetch-recipe="fetchRecipe"
-      @sign-in-submit="signInSubmit"></router-view>
+      @sign-in-submit="signInSubmit" @load-recipes="loadRecipes"></router-view>
     <!-- Right Column -->
     <router-view name="right" v-model="overlayInput" @hide-form="hideForm" @scrape-recipe="scrapeRecipe"
       @add-or-edit-recipe="addOrEditRecipe"></router-view>

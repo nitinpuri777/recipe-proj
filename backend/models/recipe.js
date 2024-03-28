@@ -7,7 +7,6 @@ const Recipe = {
       return database.recipes.filter(matchesUserId)
   },
   findRecipe: async (recipeId, userId) => {
-    console.log(recipeId +" " + userId)
     let matchesUserIdAndRecipeId = recipe => (userId === recipe.userId && recipe.id === parseInt(recipeId))
     let foundRecipe = database.recipes.find(matchesUserIdAndRecipeId)
     if (foundRecipe){
