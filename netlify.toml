@@ -8,7 +8,6 @@
   status = 200
   to = "/.netlify/functions/api/:splat"
 [[redirects]]
-  force = true
   from = "/*"
   status = 200
   to = "/index.html"
