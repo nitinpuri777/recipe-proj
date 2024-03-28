@@ -279,8 +279,6 @@ const App = createApp({
 })
 
 router.beforeEach(async (to, from) => {
-  console.log(localStorage.getItem("authToken"))
-  console.log(from.path +" -> " + to.path)
   if(!localStorage.getItem("authToken") && to.path !=='/sign-in') {
     return {path: '/sign-in'}
   } 

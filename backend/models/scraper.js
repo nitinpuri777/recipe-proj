@@ -79,11 +79,9 @@ parseRecipeObject: async function(url) {
     ldJsons.each((index, element) => {
         const content = $(element).html();
         if (content) {
-            console.log(`content: ${content}`)
             jsonValues.push(JSON.parse(content));
         }
     });
-    console.log(`JsonValues: ${jsonValues}`)
     let recipe = {}
     jsonValues.some(object => {
         if(object['@graph']){
