@@ -24,17 +24,14 @@
 
   <div id="app" class="row height_fill align_top scroll">
     <!-- Sidebar Component -->
-    <sidebar @sign-out="signOut"></sidebar>
+    <router-view name="left" @sign-out="signOut"></router-view>
 
-    <!-- Main View -->
     <router-view :recipes="recipes" :recipe="recipeToView" @show-add-form="showAddForm"
-      @show-delete-confirm="showDeleteConfirm" @show-edit-form="showEditForm" @fetch-recipe="fetchRecipe"></router-view>
-
-
-
+      @show-delete-confirm="showDeleteConfirm" @show-edit-form="showEditForm" @fetch-recipe="fetchRecipe"
+      @sign-in-submit="signInSubmit"></router-view>
     <!-- Right Column -->
-    <right-overlay v-model="overlayInput" @hide-form="hideForm" @scrape-recipe="scrapeRecipe"
-      @add-or-edit-recipe="addOrEditRecipe"></right-overlay>
+    <router-view name="right" v-model="overlayInput" @hide-form="hideForm" @scrape-recipe="scrapeRecipe"
+      @add-or-edit-recipe="addOrEditRecipe"></router-view>
 
 
     <!-- Delete Confirm Modal -->

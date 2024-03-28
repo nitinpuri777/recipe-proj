@@ -8,8 +8,22 @@ import DeleteModal from './components/delete-modal.js'
 import SignInPage from './pages/sign-in.js'
 
 const routes = [
-  { path: '/app', component: RecipeList },
-  { path: '/app/recipe/:id', component: RecipeDetail},
+  { 
+    path: '/app', 
+    components: {
+      default:RecipeList,
+      left:Sidebar,
+      right:RightOverlay
+    }
+  },
+  { 
+    path: '/app/recipe/:id', 
+    components: {
+      default: RecipeDetail,
+      left:Sidebar,
+      right:RightOverlay
+    }
+  },
   { path: `/sign-in`, component: SignInPage},
   { path: '/:catchAll(.*)', redirect: '/app' },
 ];
@@ -21,7 +35,7 @@ const router = createRouter({
 
 const App = createApp({
   async mounted() {
-    this.recipes = await this.fetchRecipes()
+    this.loadRecipes()
     //this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
   },
   components: {
@@ -69,6 +83,9 @@ const App = createApp({
     }
   },
   methods: {
+    loadRecipes: async function() { 
+      this.recipes = await this.fetchRecipes()
+    },
     async scrapeRecipe(scrapeUrl) {
       let url = '/api/scrape'
       let token = localStorage.getItem("authToken")
@@ -91,11 +108,28 @@ const App = createApp({
       this.overlayInput.recipeNameInput = json.recipe.name
       this.urlToScrapeInput = ""
     },
+    signInSubmit: async function(email, password) {
+			let url = '/api/sign-in'
+			let body = {
+				email: email,
+				password: password
+			}
+			let options = {
+				method: 'POST',
+				body: JSON.stringify(body),
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			}
+			const response = await fetch(url, options)
+			const json = await response.json()
+			if (json.token != null) {
+				localStorage.setItem("authToken", json.token);
+				router.push('/app')
+        this.loadRecipes()
+			}
+		},
     async fetchRecipes() {
-      if (!localStorage.getItem("authToken")) {
-        this.goToSignIn()
-      }
-      else {
         let url = '/api/recipes'
         let options = {
           method: 'GET',
@@ -107,13 +141,8 @@ const App = createApp({
         const response = await fetch(url, options)
         const json = await response.json()
         return json.recipes
-      }
     },
     fetchRecipe: async function (recipeId) {
-      if (!localStorage.getItem("authToken")) {
-        this.goToSignIn()
-      }
-      else {
         let url = `/api/recipe/${recipeId}`
         let options = {
           method: 'GET',
@@ -126,7 +155,6 @@ const App = createApp({
         const json = await response.json()
         this.recipeToView = json.recipe
         return json.recipe
-      }
     },
     showDeleteConfirm(recipe) {
       this.showDelete = true
@@ -245,9 +273,17 @@ const App = createApp({
     },
 
     goToSignIn() {
-      window.location.href = '/'
+      router.push('/sign-in')
     }
   }
+})
+
+router.beforeEach(async (to, from) => {
+  console.log(localStorage.getItem("authToken"))
+  console.log(from.path +" -> " + to.path)
+  if(!localStorage.getItem("authToken") && to.path !=='/sign-in') {
+    return {path: '/sign-in'}
+  } 
 })
 
 App.use(router)
