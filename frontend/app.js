@@ -35,7 +35,7 @@ const router = createRouter({
 
 const App = createApp({
   async mounted() {
-    //this.loadRecipes()
+    this.loadRecipes()
     //this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
   },
   components: {
