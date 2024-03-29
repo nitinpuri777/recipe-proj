@@ -39,6 +39,7 @@ async function handleError(err, req, res, next) {
 }
 
 async function loadContent(req,res,next) {
+  console.log(__dirname)
   res.sendFile(join(__dirname, '../../frontend', 'index.html'));
 }
 const Middleware = {authenticateToken, handleError, loadContent}
