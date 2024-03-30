@@ -1,25 +1,34 @@
-import database from '../database.js'
+import { Model } from 'sequelize';
 
-const User = {
-  findByToken: async(token) => {
-      let isValid = (user) => (user.token === token)
-          return database.users.find(isValid)
-  },
-
-  findValidUser: async (body) => {
-      if (!body.token) {
-          let isValid = (user) => (user.email === body.email && user.password === body.password) 
-          return database.users.find(isValid)
+class User extends Model {
+  static async findByToken(token) {
+    return await User.findOne({
+      where: {
+        token: token
       }
-      else {
-          let isValid = (user) => (user.token === body.token)
-          return database.users.find(isValid)
-      }
-  },
-  findId: async (user) => {
-      return user.id
+    })
   }
-  
+  static async findValidUser(body) {
+    if (!body.token) {
+      return await User.findOne({
+        where: {
+          email: body.email,
+          password: body.password
+        }
+      });
+    } else {
+      return await User.findOne({
+        where: {
+          token: body.token
+        }
+      });
+    }
+  }
+  static async findId(user) {
+    return User.id
+  }
+
 }
+
 
 export default User
