@@ -3,7 +3,8 @@ import ApiSignIn from './api/sign-in.js'
 import Middleware from './api/_middleware.js';
 import ApiRecipes from './api/recipes.js';
 import ApiScrape from './api/scrape.js';
-import { Sequelize, DataTypes } from 'sequelize';
+// import { Sequelize, DataTypes } from 'sequelize';
+const { Sequelize, DataTypes } = await import('sequelize');
 import User from './models/user.js';
 import Recipe from './models/recipe.js';
 
