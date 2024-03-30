@@ -18,20 +18,20 @@ User.init({
   password: DataTypes.STRING,
   token: DataTypes.STRING
 }, { sequelize, modelName: 'user' });
-// Recipe.init({
-//   name: DataTypes.STRING,
-//   // Storing ingredients and steps as JSON strings
-//   ingredients: DataTypes.JSON,
-//   steps: DataTypes.JSON,
-//   userId: {
-//     type: DataTypes.INTEGER,
-//     allowNull: false,
-//     references: {
-//       model: 'Users', // Assuming 'Users' is the table name for your User model
-//       key: 'id',
-//     }
-//   }
-// }, { sequelize, modelName: 'recipe' });
+Recipe.init({
+  name: DataTypes.STRING,
+  // Storing ingredients and steps as JSON strings
+  ingredients: DataTypes.JSON,
+  steps: DataTypes.JSON,
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Users', // Assuming 'Users' is the table name for your User model
+      key: 'id',
+    }
+  }
+}, { sequelize, modelName: 'recipe' });
 
 
 sequelize.sync();
