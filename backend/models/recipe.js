@@ -1,49 +1,64 @@
-import { Model } from 'sequelize'
-
-class Recipe extends Model {
-  static async findAllForUser(user) {
-      return await Recipe.findAll({
-        where: {
-          userId: user.id
-        }
-      })
-  }
-  static async findRecipe(recipeId, userId) {
-    let foundRecipe = await Recipe.findOne({
-      where: {
-        id: recipeId,
-        userId: userId
-      }
-    })
+import database from '../database.js'
+import User from './user.js'
+const Recipe = {
+  //findAllForUser: (user) => database.recipes.filter(recipe => recipe.userId === user.id)
+  findAllForUser: async (user) => {
+      let matchesUserId = recipe => recipe.userId === user.id
+      return database.recipes.filter(matchesUserId)
+  },
+  findRecipe: async (recipeId, userId) => {
+    let matchesUserIdAndRecipeId = recipe => (userId === recipe.userId && recipe.id === parseInt(recipeId))
+    let foundRecipe = database.recipes.find(matchesUserIdAndRecipeId)
     if (foundRecipe){
       return foundRecipe
     }
     else {
       throw 'RECIPE_NOT_FOUND';
     }
-  }
-  static async addRecipe(user, recipe) {
-      let userId = user.id
-      let blankRecipeForUser = { userId }
+  },
+  addRecipe: async (user, recipe) => {
+      let userId = await User.findId(user)
+      let id = await Recipe.getMaxId() + 1
+      let blankRecipeForUser = {
+          id,
+          userId
+      }
       let newRecipe = {...blankRecipeForUser, ...recipe}
-      Recipe.create(newRecipe)
-      return await Recipe.findAllForUser(user)
-  }
-  static async removeRecipe(user, recipeToRemoveId) {
-      let recipeToRemove = await Recipe.findByPk(recipeToRemoveId)
-      if(recipeToRemove) {
-        recipeToRemove.destroy()
+      database.recipes.push(newRecipe)
+      return Recipe.findAllForUser(user)
+  },
+
+  removeRecipe: async (user, recipeToRemoveId) => {
+      let isRecipeToRemove = recipe => recipe.id == recipeToRemoveId
+      const recipeIndexToRemove = database.recipes.findIndex(isRecipeToRemove)
+      if(recipeIndexToRemove !== -1){
+          database.recipes.splice(recipeIndexToRemove, 1);
       }
       return Recipe.findAllForUser(user)
-  }
+  },
 
-  static async updateRecipe(user, recipeId, recipeUpdate) {
-    let recipeToUpdate = await Recipe.findByPk(recipeId)
-    if(recipeToUpdate) {
-      recipeToUpdate.update(recipeUpdate)
+  updateRecipe: async (user, recipeId, recipeUpdate) => {
+    let isRecipeToUpdate = recipe => recipe.id == recipeId
+    const originalRecipe = database.recipes.find(isRecipeToUpdate)
+    const originalRecipeIndex = database.recipes.findIndex(isRecipeToUpdate)
+    if(originalRecipe){
+      let updatedRecipe = {...originalRecipe, ...recipeUpdate}
+      database.recipes[originalRecipeIndex] = updatedRecipe
+    }
+    else {
+      return null
     }
     return Recipe.findAllForUser(user)
+  },
+
+  getMaxId: async () => {
+      let getMax = (valueSoFar, recipe) => {
+          return Math.max(valueSoFar, recipe.id)}
+      return database.recipes.reduce(getMax, 0);
   }
-}
+      
+
+
+  }
 
 export default Recipe
