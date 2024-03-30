@@ -108,6 +108,7 @@ body {
 .width_480px { width: 480px; }
 .width_150px { width: 150px; }
 .width_fill { width:100%; }
+.max_width_480px { max-width: 480px; }
 .height_80px { height:80px; }
 .height_150px { height: 150px; }
 .height_240px { height:240px; }

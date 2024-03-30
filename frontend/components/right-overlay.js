@@ -5,7 +5,7 @@ const RightOverlay = {
     :class="rightOverlayBackdropClasses"></button>
   <!-- Right Column -->
   <div
-    class="column width_480px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white scroll"
+    class="column width_fill max_width_480px height_fill gap_16 border_left position_fixed right_overlay top_0 right_0 bg_white scroll"
     :class="rightOverlayClasses">
     <span class="font_24 pad_left_16"> {{ overlayHeader }} </span>
     <!-- Add/Edit Form -->
