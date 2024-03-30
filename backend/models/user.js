@@ -25,7 +25,7 @@ class User extends Model {
     }
   }
   static async findId(user) {
-    return User.id
+    return user.id
   }
 
 }
