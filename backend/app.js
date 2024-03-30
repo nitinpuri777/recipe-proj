@@ -5,6 +5,7 @@ import ApiRecipes from './api/recipes.js';
 import ApiScrape from './api/scrape.js';
 import { Sequelize, DataTypes } from 'sequelize';
 import User from './models/user.js';
+import Recipe from './models/recipe.js';
 
 //sequelize
 const sequelize = new Sequelize({
@@ -17,6 +18,21 @@ User.init({
   password: DataTypes.STRING,
   token: DataTypes.STRING
 }, { sequelize, modelName: 'user' });
+Recipe.init({
+  name: DataTypes.STRING,
+  // Storing ingredients and steps as JSON strings
+  ingredients: DataTypes.JSON,
+  steps: DataTypes.JSON,
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Users', // Assuming 'Users' is the table name for your User model
+      key: 'id',
+    }
+  }
+}, { sequelize, modelName: 'recipe' });
+
 
 sequelize.sync();
 //sequelize
