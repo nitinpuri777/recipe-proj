@@ -6,6 +6,9 @@ import RecipeDetail from './components/recipe-detail.js'
 import RightOverlay from './components/right-overlay.js'
 import DeleteModal from './components/delete-modal.js'
 import SignInPage from './pages/sign-in.js'
+import StytchAuthUI from './components/auth/stytch-auth-ui.js'
+import Authenticate from './components/auth/authenticate.js'
+import stytchClient from './components/auth/stytch-client.js'
 
 const routes = [
   { 
@@ -24,7 +27,8 @@ const routes = [
       right:RightOverlay
     }
   },
-  { path: `/sign-in`, component: SignInPage},
+  { path: `/sign-in`, component: StytchAuthUI},
+  { path: `/authenticate`, component: Authenticate},
   { path: '/:catchAll(.*)', redirect: '/app' },
 ];
 
@@ -44,7 +48,8 @@ const App = createApp({
     RecipeDetail,
     RightOverlay,
     DeleteModal,
-    SignInPage
+    SignInPage,
+    StytchAuthUI
   },
   data() {
     const data = {
@@ -129,6 +134,9 @@ const App = createApp({
         this.loadRecipes()
 			}
 		},
+    goToApp: function() {
+      router.push('/app')
+    },
     async fetchRecipes() {
         let url = '/api/recipes'
         let options = {
@@ -268,7 +276,7 @@ const App = createApp({
       this.overlayInput.recipeStepsInput = [""]
     },
     signOut() {
-      localStorage.removeItem("authToken")
+      stytchClient.session.revoke();
       this.goToSignIn()
     },
 
@@ -279,7 +287,7 @@ const App = createApp({
 })
 
 router.beforeEach(async (to, from) => {
-  if(!localStorage.getItem("authToken") && to.path !=='/sign-in') {
+  if(!stytchClient.session.getSync() && to.path !=='/sign-in' && to.path !=='/authenticate') {
     return {path: '/sign-in'}
   } 
 })

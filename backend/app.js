@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import pg from 'pg'
 import express from 'express'
+import cookieParser from 'cookie-parser'
 import ApiSignIn from './api/sign-in.js'
 import Middleware from './api/_middleware.js';
 import ApiRecipes from './api/recipes.js';
@@ -19,27 +20,27 @@ const sequelize = new Sequelize({
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false // Note: This disables SSL certificate verification. Use with caution and only if you understand the security implications.
+      rejectUnauthorized: false 
     }
   },
-  logging: false // Disabling logging; set to console.log to see generated SQL queries
+  logging: false 
 })
 User.init({
   name: DataTypes.STRING,
   email: DataTypes.STRING,
   password: DataTypes.STRING,
-  token: DataTypes.STRING
+  token: DataTypes.STRING,
+  stytchUserId: DataTypes.STRING
 }, { sequelize, modelName: 'user' });
 Recipe.init({
   name: DataTypes.STRING,
-  // Storing ingredients and steps as JSON strings
   ingredients: DataTypes.JSON,
   steps: DataTypes.JSON,
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users', // Assuming 'Users' is the table name for your User model
+      model: 'users',
       key: 'id',
     }
   }
@@ -51,8 +52,14 @@ sequelize.sync();
 
 const app = express() 
 app.use(express.json())
+app.use(cookieParser())
+app.get('/env', (req, res) => {
+  res.json({
+    VUE_APP_STYTCH_PUBLIC_TOKEN: process.env.VUE_APP_STYTCH_PUBLIC_TOKEN
+  });
+});
+app.use('/api', Middleware.authenticateSession)
 app.post('/api/sign-in', ApiSignIn.post)
-app.use('/api', Middleware.authenticateToken)
 app.get('/api/recipes', ApiRecipes.get)
 app.post('/api/recipes', ApiRecipes.post)
 app.delete('/api/recipes/:id', ApiRecipes.delete_)

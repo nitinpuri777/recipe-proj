@@ -10,9 +10,6 @@ const RecipeBox = {
         </div>
       </div>
     </div>`,
-  mounted: async function() {
-    this.loadRecipes()
-  },
   methods: {
     deleteRecipe(recipe) {
       this.$emit("delete-recipe", recipe);
@@ -20,9 +17,6 @@ const RecipeBox = {
     showEditForm(recipe) {
       this.$emit("show-edit-form", recipe);
     },
-    loadRecipes() {
-      this.$emit("load-recipes")
-    }
   }
 }
 
@@ -35,6 +29,9 @@ const RecipeList = {
         <span>Add Recipe</span>
       </div>
     </main>`,
+      mounted: async function() {
+        this.loadRecipes()
+      },
       methods: {
         showAddForm: function () {
           this.$emit("show-add-form");
@@ -44,6 +41,9 @@ const RecipeList = {
         },
         showEditForm: function(recipe) {
           this.$emit("show-edit-form", recipe);
+        },
+        loadRecipes() {
+          this.$emit("load-recipes")
         }
       },
       components: {
