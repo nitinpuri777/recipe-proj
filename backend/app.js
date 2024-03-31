@@ -1,17 +1,27 @@
+import 'dotenv/config'
 import express from 'express'
 import ApiSignIn from './api/sign-in.js'
 import Middleware from './api/_middleware.js';
 import ApiRecipes from './api/recipes.js';
 import ApiScrape from './api/scrape.js';
-import { Sequelize, DataTypes } from 'sequelize';
+import { Sequelize, DataTypes, } from 'sequelize';
 import User from './models/user.js';
 import Recipe from './models/recipe.js';
 
-//sequelize
 const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database.sqlite'
-});
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  username: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  dialect: 'postgres', 
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false // Note: This disables SSL certificate verification. Use with caution and only if you understand the security implications.
+    }
+  },
+  logging: false // Disabling logging; set to console.log to see generated SQL queries
+})
 User.init({
   name: DataTypes.STRING,
   email: DataTypes.STRING,
@@ -27,7 +37,7 @@ Recipe.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Users', // Assuming 'Users' is the table name for your User model
+      model: 'users', // Assuming 'Users' is the table name for your User model
       key: 'id',
     }
   }

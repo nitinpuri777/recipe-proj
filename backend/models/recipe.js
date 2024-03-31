@@ -26,13 +26,13 @@ class Recipe extends Model {
       let userId = user.id
       let blankRecipeForUser = { userId }
       let newRecipe = {...blankRecipeForUser, ...recipe}
-      Recipe.create(newRecipe)
+      await Recipe.create(newRecipe)
       return await Recipe.findAllForUser(user)
   }
   static async removeRecipe(user, recipeToRemoveId) {
       let recipeToRemove = await Recipe.findByPk(recipeToRemoveId)
       if(recipeToRemove) {
-        recipeToRemove.destroy()
+        await recipeToRemove.destroy()
       }
       return Recipe.findAllForUser(user)
   }
@@ -40,7 +40,7 @@ class Recipe extends Model {
   static async updateRecipe(user, recipeId, recipeUpdate) {
     let recipeToUpdate = await Recipe.findByPk(recipeId)
     if(recipeToUpdate) {
-      recipeToUpdate.update(recipeUpdate)
+      await recipeToUpdate.update(recipeUpdate)
     }
     return Recipe.findAllForUser(user)
   }
