@@ -9,21 +9,23 @@ const StytchAuthUI = {
   methods: {
     initializeStytch() {
       const stytch = stytchClient
+      let hostname = window.location.origin
+      let redirectURL = `${hostname}/authenticate`
       stytch.mountLogin({
         elementId: '#stytch-auth-ui',
         config: {
           products: ['emailMagicLinks'],
           emailMagicLinksOptions: {
-            loginRedirectURL: 'http://localhost:3000/authenticate',
+            loginRedirectURL: redirectURL,
             loginExpirationMinutes: 30,
-            signupRedirectURL: 'http://localhost:3000/authenticate',
+            signupRedirectURL: redirectURL,
             signupExpirationMinutes: 30,
             createUserAsPending: true,
           },
           // oauthOptions: {
           //   providers: [{ type: 'google' }],
-          //   loginRedirectURL: 'http://localhost:3000/authenticate',
-          //   signupRedirectURL: 'http://localhost:3000/authenticate',
+          //   loginRedirectURL: redirectURL,
+          //   signupRedirectURL: redirectURL,
           // },
         },
       })
