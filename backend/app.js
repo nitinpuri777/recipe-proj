@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import 'pg'
+import pg from 'pg'
 import express from 'express'
 import ApiSignIn from './api/sign-in.js'
 import Middleware from './api/_middleware.js';
@@ -14,7 +14,8 @@ const sequelize = new Sequelize({
   database: process.env.PGDATABASE,
   username: process.env.PGUSER,
   password: process.env.PGPASSWORD,
-  dialect: 'postgres', 
+  dialect: 'postgres',
+  dialectModule: pg,
   dialectOptions: {
     ssl: {
       require: true,
