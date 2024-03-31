@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import 'pg'
 import express from 'express'
 import ApiSignIn from './api/sign-in.js'
 import Middleware from './api/_middleware.js';
