@@ -53,7 +53,7 @@ sequelize.sync();
 const app = express() 
 app.use(express.json())
 app.use(cookieParser())
-app.get('/env', (req, res) => {
+app.get('/api/env', (req, res) => {
   res.json({
     VUE_APP_STYTCH_PUBLIC_TOKEN: process.env.VUE_APP_STYTCH_PUBLIC_TOKEN
   });
