@@ -14,7 +14,7 @@ const StytchAuthUI = {
       stytch.mountLogin({
         elementId: '#stytch-auth-ui',
         config: {
-          products: ['emailMagicLinks'],
+          products: ['oauth','emailMagicLinks'],
           emailMagicLinksOptions: {
             loginRedirectURL: redirectURL,
             loginExpirationMinutes: 30,
@@ -22,11 +22,11 @@ const StytchAuthUI = {
             signupExpirationMinutes: 30,
             createUserAsPending: true,
           },
-          // oauthOptions: {
-          //   providers: [{ type: 'google' }],
-          //   loginRedirectURL: redirectURL,
-          //   signupRedirectURL: redirectURL,
-          // },
+          oauthOptions: {
+            providers: [{ type: 'google' }],
+            loginRedirectURL: redirectURL,
+            signupRedirectURL: redirectURL,
+          },
         },
       })
     }
