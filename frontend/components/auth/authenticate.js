@@ -32,7 +32,10 @@ const Authenticate = {
             .authenticate(token, {
               session_duration_minutes: 60
             })
-            .then(() => console.log('Successful authentication: OAuth'))
+            .then(() => {
+              console.log('Successful authentication: OAuth')
+              this.$emit('auth-success')
+            })
             .catch((err) => {
               console.error(err)
               alert('OAuth authentication failed. See console for details.')
