@@ -23,7 +23,6 @@ const routes = [
     path: '/app/recipe/:id', 
     components: {
       default: RecipeDetail,
-      left:Sidebar,
       right:RightOverlay
     }
   },
