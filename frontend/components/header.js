@@ -6,7 +6,7 @@ const Header = {
     </div>
     <div class="row align_right width_fill">
       <div class="row shrink_none align_center">
-      <a @click="signOut" class="pad_8 recipe_link border">Sign Out</a>
+      <a @click="signOut" class="pad_8 button rounded border">Sign Out</a>
       </div>
     </div>
   </div>`,

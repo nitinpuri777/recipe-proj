@@ -20,11 +20,14 @@
   <script src="/app.js" type="module">
   </script>
   <script type="module" src="https://www.unpkg.com/@stytch/vanilla-js@2.0/dist/index.esm.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <div id="app" class="column height_fill align_top scroll">
+  <div id="app" class="column height_fill align_top scroll nunito-font">
     <!-- Sidebar Component -->
 
     <router-view name="top" @sign-out="signOut"></router-view>

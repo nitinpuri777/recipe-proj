@@ -1,3 +1,24 @@
+:root{
+/* Colors */
+--white: hsla(0, 0%, 100%, 1);
+--cadet-gray: hsla(197, 11%, 57%, 1);
+--antiflash-white: hsla(180, 3%, 93%, 1);
+--prussian-blue: hsla(210, 38%, 20%, 1);
+--desert-sand: hsla(23, 73%, 86%, 1);
+
+--color_text: var(--prussian-blue);
+--color_background: var(--white);
+--color_border: var(--prussian-blue);
+--color_button_primary: var(--prussian-blue);
+--color_button_primary_text: var(--white);
+/* --color_button_primary_background_hover: var(--desert-sand);
+--color_button_primary_text_hover: var(--prussian-blue); */
+--color_button_primary_background_hover: var(--cadet-gray);
+--color_button_primary_text_hover: var(--white);
+--color_button_secondary: var(--white);
+--color_button_text_secondary: var(--prussian-blue);
+}
+
 /* RESETS copied from Jangle */
 html {
   height: 100%;
@@ -20,6 +41,7 @@ body {
   text-decoration: inherit;
   text-align: inherit;
 }
+
 
 /* Layout */
 .row {
@@ -157,23 +179,27 @@ body {
   border-left: transparent solid 8px;
 }
 
-.sidebar_link--selected {
-  border-left: hotpink solid 8px;
-  background-color: pink;
-}
-
 .sidebar_link:hover {
-  background-color: pink;
+  background-color: var(--color_button_primary_background_hover);
+  color: var(--color_button_primary_text_hover);
   cursor:pointer;
 }
 
 /* Recipe Link */
 .recipe_link:hover { 
-  background-color: pink;
+  background-color: var(--color_button_primary_background_hover);
+  color: var(--color_button_primary_text_hover);
   cursor: pointer;
 }
 
 /* TYPOGRAPHY */
+.nunito-font {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
 .font_32 { font-size:32px }
 .font_24 { font-size:24px }
 .font_bold { font-weight: bold;}
@@ -225,18 +251,22 @@ body {
 }
 
 .button {
-  background-color: pink;
+  background-color: var(--color_button_primary);
+  color: var(--color_button_primary_text);
   cursor:pointer;
   padding: 8px;
 }
 
 .button:hover {
-  background-color: rgb(253, 153, 170);
+  background-color: var(--color_button_primary_background_hover);
+  color: var(--color_button_primary_text_hover);
+
 }
 
 .button__secondary {
-  background-color: white;
-  border: solid 1px black;
+  background-color: var(--color_button_secondary);
+  color: var(--color_button_text_secondary);
+  border: solid 1px var(--color_border);
   cursor:pointer;
   padding: 8px;
 }
@@ -250,6 +280,6 @@ body {
 }
 
 .rounded {
-  border-radius:8px;
+  border-radius:4px;
 }
 

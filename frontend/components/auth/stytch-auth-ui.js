@@ -28,6 +28,46 @@ const StytchAuthUI = {
             signupRedirectURL: redirectURL,
           },
         },
+        styles: {
+          "container": {
+            "backgroundColor": "#FFFFFF",
+            "borderColor": "#ADBCC5",
+            "borderRadius": "8px",
+            "width": "400px"
+          },
+          "colors": {
+            "primary": "#1f3245",
+            "secondary": "#84969d",
+            "success": "#0C5A56",
+            "error": "#f3c2a3"
+          },
+          "buttons": {
+            "primary": {
+              "backgroundColor": "#1f3245",
+              "textColor": "#FFFFFF",
+              "borderColor": "#1f3245",
+              "borderRadius": "4px"
+            },
+            "secondary": {
+              "backgroundColor": "#FFFFFF",
+              "textColor": "#1f3245",
+              "borderColor": "#1f3245",
+              "borderRadius": "4px"
+            }
+          },
+          "inputs": {
+            "backgroundColor": "#FFFFFF00",
+            "borderColor": "#1f3245",
+            "borderRadius": "4px",
+            "placeholderColor": "#84969d",
+            "textColor": "#1f3245"
+          },
+          "fontFamily": "Nunito",
+          "hideHeaderText": false,
+          "logo": {
+            "logoImageUrl": "https://recipeace.xyz/assets/logo-stacked.png"
+          }
+        }
       })
     }
   },
