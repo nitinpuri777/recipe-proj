@@ -1,6 +1,6 @@
 const Sidebar = {
-  template: `    <aside class="column border_right gap_16 shrink_none position_sticky top_0 height_fill">
-  <a class="font_32 pad_16">Recipe Wizard</a>
+  template: `<aside class="column border_right gap_16 shrink_none position_sticky top_0 height_fill">
+  <img src="/assets/logo.svg" class="width_240px pad_16"></img>
   <div class="column gap_fill fill">
     <div class="column">
       <a href="#button1" class="pad_16 sidebar_link">Button 1</a>
