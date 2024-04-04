@@ -6,7 +6,7 @@ const RecipeBox = {
         <div class="row align_center gap_8">
           <span @click="showEditForm(recipe)" class="recipe_link">edit</span>
           <span @click="deleteRecipe(recipe)" class="recipe_link">delete</span>
-          <router-link :to="'/app/recipe/' + recipe.id">view</router-link>
+          <router-link :to="'/app/recipe/' + recipe.id" class="recipe_link">view</router-link>
         </div>
       </div>
     </div>`,

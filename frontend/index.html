@@ -24,9 +24,10 @@
 
 <body>
 
-  <div id="app" class="row height_fill align_top scroll">
+  <div id="app" class="column height_fill align_top scroll">
     <!-- Sidebar Component -->
-    <router-view name="left" @sign-out="signOut"></router-view>
+
+    <router-view name="top" @sign-out="signOut"></router-view>
 
     <router-view :recipes="recipes" :recipe="recipeToView" @show-add-form="showAddForm"
       @show-delete-confirm="showDeleteConfirm" @show-edit-form="showEditForm" @fetch-recipe="fetchRecipe"
@@ -34,6 +35,7 @@
     <!-- Right Column -->
     <router-view name="right" v-model="overlayInput" @hide-form="hideForm" @scrape-recipe="scrapeRecipe"
       @add-or-edit-recipe="addOrEditRecipe"></router-view>
+
 
 
     <!-- Delete Confirm Modal -->

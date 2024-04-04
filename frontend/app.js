@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import Sidebar from './components/sidebar.js'
+import Header from './components/header.js'
 import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
 import RightOverlay from './components/right-overlay.js'
@@ -15,7 +15,7 @@ const routes = [
     path: '/app', 
     components: {
       default:RecipeList,
-      left:Sidebar,
+      top:Header,
       right:RightOverlay
     }
   },
@@ -23,6 +23,7 @@ const routes = [
     path: '/app/recipe/:id', 
     components: {
       default: RecipeDetail,
+      top:Header,
       right:RightOverlay
     }
   },
@@ -42,7 +43,7 @@ const App = createApp({
     //this.recipeToView = await this.fetchRecipe(this.recipes[0].id)
   },
   components: {
-    Sidebar,
+    Header,
     RecipeList,
     RecipeDetail,
     RightOverlay,

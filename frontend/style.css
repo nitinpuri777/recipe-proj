@@ -101,6 +101,8 @@ body {
 .border { border: 1px black solid; }
 .border_right { border-right: 1px black solid; }
 .border_left { border-left: 1px black solid; }
+.border_top { border-top: 1px black solid; }
+.border_bottom { border-bottom: 1px black solid; }
 
 /* Fixed Height/Width */
 .width_240px { width: 240px; }
