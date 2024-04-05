@@ -26,7 +26,7 @@ const RecipeList = {
       <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm"
         @delete-recipe="showDeleteConfirm"></recipe-box>
       <div @click="showAddForm" class="row rounded align_center width_150px height_150px border recipe_link">
-        <span>Add Recipe</span>
+        <span>Add Recipe</span>  
       </div>
     </main>`,
       mounted: async function() {

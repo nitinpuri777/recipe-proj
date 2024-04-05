@@ -17,9 +17,9 @@ const StytchAuthUI = {
           products: ['oauth','emailMagicLinks'],
           emailMagicLinksOptions: {
             loginRedirectURL: redirectURL,
-            loginExpirationMinutes: 30,
+            loginExpirationMinutes: 10080,
             signupRedirectURL: redirectURL,
-            signupExpirationMinutes: 30,
+            signupExpirationMinutes: 10080,
             createUserAsPending: true,
           },
           oauthOptions: {
