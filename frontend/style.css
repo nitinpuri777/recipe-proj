@@ -7,6 +7,7 @@
 --desert-sand: hsla(23, 73%, 86%, 1);
 
 --color_text: var(--prussian-blue);
+--color_text_hover: var(--cadet-gray);
 --color_background: var(--white);
 --color_border: var(--prussian-blue);
 --color_button_primary: var(--prussian-blue);
@@ -17,6 +18,8 @@
 --color_button_primary_text_hover: var(--white);
 --color_button_secondary: var(--white);
 --color_button_text_secondary: var(--prussian-blue);
+--color_svg_primary: invert(14%) sepia(5%) saturate(5902%) hue-rotate(170deg) brightness(94%) contrast(87%);
+--color_svg_primary_hover: invert(64%) sepia(2%) saturate(2469%) hue-rotate(147deg) brightness(90%) contrast(93%);
 }
 
 /* RESETS copied from Jangle */
@@ -174,21 +177,21 @@ body {
 }
 /* End GPT Suggestion for right column */
 
-/* Sidebar Links */
-.sidebar_link {
-  border-left: transparent solid 8px;
-}
-
-.sidebar_link:hover {
-  background-color: var(--color_button_primary_background_hover);
-  color: var(--color_button_primary_text_hover);
-  cursor:pointer;
-}
-
 /* Recipe Link */
+.recipe_link { 
+  font-weight: 600;
+}
 .recipe_link:hover { 
-  background-color: var(--color_button_primary_background_hover);
-  color: var(--color_button_primary_text_hover);
+  color: var(--color_text_hover);
+  cursor: pointer;
+}
+
+.icon {
+  filter: var(--color_svg_primary)
+}
+
+.icon:hover {
+  filter: var(--color_svg_primary_hover);
   cursor: pointer;
 }
 

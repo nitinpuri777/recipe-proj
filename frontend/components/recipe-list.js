@@ -2,14 +2,17 @@ const RecipeBox = {
   props: ['recipe'],
   template: 
   `<div class="row align_center rounded width_150px height_150px border ">
-      <div class="column gap_16 align_center">
-        <div class="row fill ">
-          {{recipe.name}}
+      <div class="column gap_fill height_fill width_fill align_bottom">
+        <div class="row align_center">
+        <router-link :to="'/app/recipe/' + recipe.id" class="recipe_link">{{recipe.name}}</router-link>
         </div>
-        <div class="row align_center gap_8">
-          <span @click="showEditForm(recipe)" class="recipe_link">edit</span>
-          <span @click="deleteRecipe(recipe)" class="recipe_link">delete</span>
-          <router-link :to="'/app/recipe/' + recipe.id" class="recipe_link">view</router-link>
+        <div class="row gap_fill width_fill">
+          <div class="row align_left">
+            <img src="/assets/icons/trash-2.svg" @click="deleteRecipe(recipe)" class="pad_left_8 pad_bottom_8 icon"></img>
+          </div>
+          <div class="row align_right">
+          <img src="/assets/icons/edit.svg" @click="showEditForm(recipe)" class="pad_right_8 pad_bottom_8 icon"></img>
+          </div>
         </div>
       </div>
     </div>`,
