@@ -1,8 +1,11 @@
 const RecipeBox = {
   props: ['recipe'],
-  template: `<div class="row align_center rounded width_150px height_150px border ">
+  template: 
+  `<div class="row align_center rounded width_150px height_150px border ">
       <div class="column gap_16 align_center">
-        <div class="row fill ">{{recipe.name}}</div>
+        <div class="row fill ">
+          {{recipe.name}}
+        </div>
         <div class="row align_center gap_8">
           <span @click="showEditForm(recipe)" class="recipe_link">edit</span>
           <span @click="deleteRecipe(recipe)" class="recipe_link">delete</span>
