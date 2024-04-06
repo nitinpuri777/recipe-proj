@@ -40,12 +40,19 @@ findRecipe: async function(url) {
 
 searchForRecipeObject: function(content){ 
     //if content is null, undefined, or not an object that we can parse return null
+    console.log(content['@type'])
     if (!content || typeof content !== 'object') {
         return null;
     }
     //if the content passed has key @type or type where value is 'Recipe' then return this content, it's the recipe!
     if (content['@type'] === 'Recipe' || content['type'] === 'Recipe') {
         return content;
+    }
+    //if content has key @type but refers to multiple types check if one of the types is Recipe
+    if (Array.isArray(content['@type'])) {
+        if(content['@type'].includes("Recipe")) {
+            return content
+        }
     }
 
     //otherwise let's iterate through each property in content and call this function recursively to see if those refer to object we want
@@ -127,6 +134,7 @@ parseSteps: function(recipe) {
     }
     return recipeSteps
 }
+
 
 }
 

@@ -16,7 +16,6 @@ async function authenticateSession(req, res, next) {
           next('USER_NOT_FOUND');
         }
         else {
-            console.log(user)
             req.user = user;
             next();
         }
