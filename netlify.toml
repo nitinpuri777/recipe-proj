@@ -13,4 +13,4 @@
   to = "/index.html"
 [build]
   command = "npm run migrate-prod"
-  publish = "frontend/"
+  publish = "frontend/" 
