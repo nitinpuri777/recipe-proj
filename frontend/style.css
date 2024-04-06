@@ -1,6 +1,7 @@
 :root{
 /* Colors */
 --white: hsla(0, 0%, 100%, 1);
+--celadon: hsla(123, 32%, 72%, 1);
 --cadet-gray: hsla(197, 11%, 57%, 1);
 --antiflash-white: hsla(180, 3%, 93%, 1);
 --prussian-blue: hsla(210, 38%, 20%, 1);
@@ -18,8 +19,8 @@
 --color_button_primary_text_hover: var(--white);
 --color_button_secondary: var(--white);
 --color_button_text_secondary: var(--prussian-blue);
---color_svg_primary: invert(14%) sepia(5%) saturate(5902%) hue-rotate(170deg) brightness(94%) contrast(87%);
---color_svg_primary_hover: invert(64%) sepia(2%) saturate(2469%) hue-rotate(147deg) brightness(90%) contrast(93%);
+--color_svg_primary_hover: invert(14%) sepia(5%) saturate(5902%) hue-rotate(170deg) brightness(94%) contrast(87%);
+--color_svg_primary: invert(64%) sepia(2%) saturate(2469%) hue-rotate(147deg) brightness(90%) contrast(93%);
 }
 
 /* RESETS copied from Jangle */
@@ -130,15 +131,19 @@ body {
 .border_bottom { border-bottom: 1px black solid; }
 
 /* Fixed Height/Width */
+.width_28px { width: 28px; }
 .width_240px { width: 240px; }
 .width_320px { width: 320px; }
 .width_480px { width: 480px; }
-.width_150px { width: 150px; }
+.width_160px { width: 160px; }
+.width_188px { width: 188px; }
 .width_fill { width:100%; }
 .max_width_fill { max-width:100%; }
 .max_width_480px { max-width: 480px; }
+.height_28px { height:28px; }
 .height_80px { height:80px; }
-.height_150px { height: 150px; }
+.height_160px { height: 160px; }
+.height_188px { height: 188px; }
 .height_240px { height:240px; }
 .height_320px { height: 320px; }
 .height_fill { height:100%; }
@@ -182,6 +187,19 @@ body {
   font-weight: 600;
 }
 .recipe_link:hover { 
+  color: var(--color_text_hover);
+  cursor: pointer;
+}
+
+.recipe_box {
+  aspect-ratio: 1 / 1;
+  min-width: 160px
+}
+
+.add_recipe { 
+  font-weight: 600;
+}
+.add_recipe:hover { 
   color: var(--color_text_hover);
   cursor: pointer;
 }

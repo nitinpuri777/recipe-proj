@@ -26,14 +26,14 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:export-bgcolor="#ffffff03"
+     inkscape:export-bgcolor="#ffffffff"
      inkscape:zoom="0.84096521"
-     inkscape:cx="399.54091"
-     inkscape:cy="97.507007"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="1440"
-     inkscape:window-y="25"
+     inkscape:cx="506.56079"
+     inkscape:cy="97.507006"
+     inkscape:window-width="1440"
+     inkscape:window-height="787"
+     inkscape:window-x="0"
+     inkscape:window-y="205"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
@@ -514,15 +514,49 @@
          style="stroke-width:0.127755" />
     </g>
     <text
-       xml:space="preserve"
-       style="font-size:48.0807px;fill:#0c2641;fill-opacity:1;stroke-width:0.42929"
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#0c2641;stroke-width:0.42929"
        x="57.51144"
        y="116.42254"
-       id="text726"><tspan
-         sodipodi:role="line"
-         id="tspan726"
-         x="57.51144"
-         y="116.42254"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill-opacity:1;stroke-width:0.42929">recipeace</tspan></text>
+       id="text9">r</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#0c2641;stroke-width:0.42929"
+       x="79.011141"
+       y="116.42254"
+       id="text8">e</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#0c2641;stroke-width:0.42929"
+       x="102.77648"
+       y="116.42254"
+       id="text7">c</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#0c2641;stroke-width:0.42929"
+       x="124.64604"
+       y="116.42254"
+       id="text6">i</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#86969c;stroke-width:0.42929;fill-opacity:1"
+       x="134.44805"
+       y="116.42254"
+       id="text5">p</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#86969c;stroke-width:0.42929;fill-opacity:1"
+       x="159.18434"
+       y="116.42254"
+       id="text4">e</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#86969c;stroke-width:0.42929;fill-opacity:1"
+       x="182.94967"
+       y="116.42254"
+       id="text3">a</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#86969c;stroke-width:0.42929;fill-opacity:1"
+       x="207.54716"
+       y="116.42254"
+       id="text2">c</text>
+    <text
+       style="font-weight:bold;font-size:46.2359px;font-family:'Modulus Pro';-inkscape-font-specification:'Modulus Pro, Bold';fill:#86969c;stroke-width:0.42929;fill-opacity:1"
+       x="229.09307"
+       y="116.42254"
+       id="text1">e</text>
   </g>
 </svg>
