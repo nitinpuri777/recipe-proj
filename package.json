@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/index.js"
+    "start": "node backend/index.js",
+    "migrate-dev": "sequelize-cli db:migrate --env development",
+    "migrate-prod": "sequelize-cli db:migrate --env production"
   },
   "keywords": [],
   "author": "",
