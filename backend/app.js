@@ -36,6 +36,9 @@ Recipe.init({
   name: DataTypes.STRING,
   ingredients: DataTypes.JSON,
   steps: DataTypes.JSON,
+  image_url: DataTypes.STRING,
+  hostname: DataTypes.STRING,
+  url: DataTypes.STRING,
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,

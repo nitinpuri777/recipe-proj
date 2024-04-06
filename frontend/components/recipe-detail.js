@@ -1,9 +1,21 @@
+import { html } from "../globals.js";
 const RecipeDetail = {
   props:['recipe'],
-  template: `<div class="column gap_16 pad_left_16 pad_top_16">
-  <div class="font_32">
-    {{recipe.name}}
-  </div>
+  template: 
+  html`<div class="column gap_16 pad_left_16 pad_top_16">
+  <div class="row gap_16">
+    <div>
+      <img :src="recipe.image_url" class="width_160px">
+    </div>
+    <div class="column gap_16">
+      <div class="font_32">
+      {{recipe.name}}
+      </div>
+      <div class="font_16">
+        From <a :href="recipe.url"> {{recipe.hostname}}</a>
+      </div>
+    </div>
+</div>
   <div class="column gap_16">
     <div class="font_24">Ingredients</div>
     <ul class="bullets column gap_8">

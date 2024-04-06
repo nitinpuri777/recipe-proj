@@ -1,5 +1,7 @@
+import { html } from "../globals.js";
 const RightOverlay = {
-  template:`<!-- Backdrop -->
+  template:
+  html`<!-- Backdrop -->
   <div>
   <button @click="hideForm" class="right_overlay__backdrop position_fixed top"
     :class="rightOverlayBackdropClasses"></button>
@@ -28,6 +30,10 @@ const RightOverlay = {
         <span class="font_bold">Recipe Name</span>
         <input class="rounded border pad_8" type="text" name="recipeName" v-model="modelValue.recipeNameInput"
           label="Recipe Name">
+      </label>
+      <label class="column gap_8">
+        <span class="font_bold">Image Url</span>
+        <img :src="modelValue.imageUrl" class="width_160px">
       </label>
       <!-- Ingredients Input -->
       <div class="column gap_8">
@@ -74,6 +80,7 @@ const RightOverlay = {
       this.$emit("scrape-recipe", urlToScrapeInput)
     },
     addOrEditRecipe: function() {
+
       this.$emit("add-or-edit-recipe")
     },
     removeIngredientInput: function(index) {

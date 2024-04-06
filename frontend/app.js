@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { parseHostname } from './globals.js'
 import Header from './components/header.js'
 import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
@@ -58,6 +59,8 @@ const App = createApp({
         recipeIngredientsInput: [""],
         recipeStepsInput: [""],
         urlToScrapeInput: "",
+        hostname: "",
+        imageUrl: ""
       },
       recipeToDelete: {},
       recipeToView: {}
@@ -107,6 +110,8 @@ const App = createApp({
       this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
       this.overlayInput.recipeStepsInput = json.recipe.steps
       this.overlayInput.recipeNameInput = json.recipe.name
+      this.overlayInput.imageUrl = json.recipe.imageUrl
+      this.overlayInput.hostname = parseHostname(scrapeUrl)
       this.urlToScrapeInput = ""
     },
     signInSubmit: async function(email, password) {
@@ -157,6 +162,7 @@ const App = createApp({
         }
         const response = await fetch(url, options)
         const json = await response.json()
+        console.log(json.recipe)
         this.recipeToView = json.recipe
         return json.recipe
     },
@@ -197,7 +203,10 @@ const App = createApp({
       let recipe = {
         name: this.overlayInput.recipeNameInput,
         ingredients: this.overlayInput.recipeIngredientsInput,
-        steps: this.overlayInput.recipeStepsInput
+        steps: this.overlayInput.recipeStepsInput,
+        imageUrl: this.overlayInput.imageUrl,
+        hostname: this.overlayInput.hostname,
+        fullUrl: this.overlayInput.urlToScrapeInput
       }
       let body = { recipe }
       let options = {
@@ -226,7 +235,11 @@ const App = createApp({
         name: this.overlayInput.recipeNameInput,
         ingredients: this.overlayInput.recipeIngredientsInput,
         steps: this.overlayInput.recipeStepsInput,
+        image_url: this.overlayInput.imageUrl,
+        hostname: this.overlayInput.hostname,
+        url: this.overlayInput.urlToScrapeInput
       }
+      console.log(recipe)
       let body = { recipe }
       let options = {
         method: 'POST',
@@ -270,6 +283,8 @@ const App = createApp({
       this.overlayInput.recipeNameInput = ""
       this.overlayInput.recipeIngredientsInput = [""]
       this.overlayInput.recipeStepsInput = [""]
+      this.overlayInput.imageUrl = ""
+      this.overlayInput.urlToScrapeInput = ""
     },
     signOut() {
       stytchClient.session.revoke();

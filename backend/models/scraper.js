@@ -2,14 +2,18 @@ import * as cheerio from 'cheerio';
 const Scraper = {
 getRecipe: async function(url) {
     let recipeContent = await this.findRecipe(url)
+    console.log(recipeContent)
+    let parsedImageUrl = this.parseImageUrl(recipeContent)
     let parsedName = this.parseName(recipeContent)
     let parsedIngredients = this.parseIngredients(recipeContent)
     let parsedSteps = this.parseSteps(recipeContent)
     const recipe = {
         name: parsedName,
         ingredients: parsedIngredients,
-        steps: parsedSteps
+        steps: parsedSteps,
+        imageUrl: parsedImageUrl
     }
+    console.log(recipe)
     return recipe
 
 
@@ -40,7 +44,6 @@ findRecipe: async function(url) {
 
 searchForRecipeObject: function(content){ 
     //if content is null, undefined, or not an object that we can parse return null
-    console.log(content['@type'])
     if (!content || typeof content !== 'object') {
         return null;
     }
@@ -76,6 +79,39 @@ searchForRecipeObject: function(content){
     }
     return null;
 },
+findFirstImageString(obj) {
+    // Define the common image file extensions
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'];
+  
+    // Helper function to check if a string ends with any of the image extensions
+    function isImageString(str) {
+      return imageExtensions.some(extension => str.endsWith(extension));
+    }
+  
+    // Recursive function to search for image string
+    function search(obj) {
+      // Iterate over the object's properties
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          const value = obj[key];
+  
+          // Check if the property value is a string and if it references an image
+          if (typeof value === 'string' && isImageString(value)) {
+            return value; // Return the first image string found
+          } else if (typeof value === 'object' && value !== null) {
+            // If the property is an object, recurse into it
+            const result = search(value);
+            if (result) return result; // Return the found image string, if any
+          }
+        }
+      }
+      // Return null if no image string is found in the current object
+      return null;
+    }
+  
+    // Start the search from the root object
+    return search(obj);
+  },
 
 parseRecipeObject: async function(url) {
     let response = await fetch(url)
@@ -133,7 +169,10 @@ parseSteps: function(recipe) {
         recipeSteps = ['No ingredients found']
     }
     return recipeSteps
-}
+},
+parseImageUrl: function(recipe) {
+    return this.findFirstImageString(recipe)
+},
 
 
 }
