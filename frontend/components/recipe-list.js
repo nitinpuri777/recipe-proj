@@ -6,7 +6,7 @@ const RecipeBox = {
       <div class="column gap_fill height_fill width_fill align_bottom">
       <div class="column gap_8">
           <div class="row align_center">
-          <router-link :to="'/app/recipe/' + recipe.id" class="recipe_link">{{recipe.name}}</router-link>
+          <router-link :to="'/app/recipe/' + recipe.id" class="recipe_link font_bold">{{recipe.name}}</router-link>
           </div>
           <div class="row gap_fill width_fill">
             <div class="row align_left">

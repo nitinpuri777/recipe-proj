@@ -9,6 +9,8 @@
 
 --color_text: var(--prussian-blue);
 --color_text_hover: var(--cadet-gray);
+--color_text_secondary: var(--cadet-gray);
+--color_text_secondary_hover: var(--prussian-blue);
 --color_background: var(--white);
 --color_border: var(--prussian-blue);
 --color_button_primary: var(--prussian-blue);
@@ -148,6 +150,10 @@ body {
 .height_320px { height: 320px; }
 .height_fill { height:100%; }
 
+.crop_center {
+  object-fit: cover;
+  object-position: 50% 50%;
+}
 
 .position_relative {
   position: relative;
@@ -183,12 +189,23 @@ body {
 /* End GPT Suggestion for right column */
 
 /* Recipe Link */
-.recipe_link { 
-  font-weight: 600;
-}
 .recipe_link:hover { 
   color: var(--color_text_hover);
   cursor: pointer;
+}
+
+.secondary_link { 
+  color: var(--color_text_secondary);
+  cursor: pointer;
+}
+
+.secondary_link:hover {
+  cursor: pointer;
+}
+
+.dotted_underline {
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }
 
 .recipe_box {
@@ -196,9 +213,6 @@ body {
   min-width: 160px
 }
 
-.add_recipe { 
-  font-weight: 600;
-}
 .add_recipe:hover { 
   color: var(--color_text_hover);
   cursor: pointer;
@@ -222,8 +236,9 @@ body {
 }
 
 .font_32 { font-size:32px }
+.font_28 { font-size:28px }
 .font_24 { font-size:24px }
-.font_bold { font-weight: bold;}
+.font_bold { font-weight: 600;}
 
 .right_overlay {
   transition: transform 300ms ease-in-out;
