@@ -1,51 +1,12 @@
 import { createApp } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
 import { parseHostname } from './globals.js'
-import Header from './components/header.js'
-import RecipeList from './components/recipe-list.js'
-import RecipeDetail from './components/recipe-detail.js'
-import RightOverlay from './components/right-overlay.js'
 import DeleteModal from './components/delete-modal.js'
-import StytchAuthUI from './components/auth/stytch-auth-ui.js'
-import Authenticate from './components/auth/authenticate.js'
+import router from './router.js'
 import stytchClient from './components/auth/stytch-client.js'
-
-const routes = [
-  { 
-    path: '/app', 
-    components: {
-      default:RecipeList,
-      top:Header,
-      right:RightOverlay
-    }
-  },
-  { 
-    path: '/app/recipe/:id', 
-    name: 'recipeDetail',
-    components: {
-      default: RecipeDetail,
-      // top:Header,
-      right:RightOverlay
-    }
-  },
-  { path: `/sign-in`, component: StytchAuthUI},
-  { path: `/authenticate`, component: Authenticate},
-  { path: '/:catchAll(.*)', redirect: '/app' },
-];
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes
-});
 
 const App = createApp({
   components: {
-    Header,
-    RecipeList,
-    RecipeDetail,
-    RightOverlay,
     DeleteModal,
-    StytchAuthUI
   },
   data() {
     const data = {
@@ -298,12 +259,6 @@ const App = createApp({
       router.push('/sign-in')
     }
   }
-})
-
-router.beforeEach(async (to, from) => {
-  if(!stytchClient.session.getSync() && to.path !=='/sign-in' && to.path !=='/authenticate') {
-    return {path: '/sign-in'}
-  } 
 })
 
 App.use(router)

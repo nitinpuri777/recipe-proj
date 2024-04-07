@@ -6,11 +6,11 @@ const RecipeDetail = {
   <div class="column gap_16 width_fill pad_left_16 pad_top_16 pad_right_16">
     <div class="row width_fill gap_fill">
       <div class="row align_left">
-        <img src="/assets/icons/arrow-left.svg" class="height_32px width_32px icon" @click="goBack">
+        <img src="/assets/icons/arrow-left.svg" class="height_28px width_28px icon" @click="goBack">
       </div>  
       <div class="row align_right gap_16">
-        <img src="/assets/icons/edit-2.svg" class="height_32px width_32px icon" @click="showEditForm(recipe)">
-        <img src="/assets/icons/trash-2.svg" class="height_32px width_32px icon" @click="showDeleteConfirm(recipe)">
+        <img src="/assets/icons/edit-2.svg" class="height_28px width_28px icon" @click="showEditForm(recipe)">
+        <img src="/assets/icons/trash-2.svg" class="height_28px width_28px icon" @click="showDeleteConfirm(recipe)">
       </div>
     </div> 
   <div class="row gap_16">

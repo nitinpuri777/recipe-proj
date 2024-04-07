@@ -34,17 +34,16 @@ const RecipeBox = {
 const RecipeList = {
       props: ['recipes'],
       template: html`
-      <div class="row width_fill"> 
-        <div class="row align_right width_fill pad_16">
-          
-            <img @click="showAddForm" class="height_32px width_32px icon" src="/assets/icons/plus-circle.svg">
-          
+      <div>
+        <div class="row width_fill"> 
+          <div class="row align_right width_fill pad_16">
+            <img @click="showAddForm" class="height_32px width_32px icon" src="/assets/icons/plus-circle.svg">  
+          </div>
         </div>
-      </div>
-      <main class="grid grid_gap_16 pad_left_16 pad_right_16 pad_bottom_16">
-      <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm"
-        @delete-recipe="showDeleteConfirm"></recipe-box>
-    </main>`,
+        <main class="grid grid_gap_16 pad_left_16 pad_right_16 pad_bottom_16">
+          <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm" @delete-recipe="showDeleteConfirm"></recipe-box>
+        </main>
+      </div>`,
       mounted: async function() {
         this.loadRecipes()
       },
