@@ -131,6 +131,7 @@ body {
 .border_left { border-left: 1px black solid; }
 .border_top { border-top: 1px black solid; }
 .border_bottom { border-bottom: 1px black solid; }
+.border_color_gray { border-color: var(--antiflash-white);}
 
 /* Fixed Height/Width */
 .test {
