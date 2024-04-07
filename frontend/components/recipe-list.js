@@ -34,6 +34,7 @@ const RecipeBox = {
 const RecipeList = {
       props: ['recipes'],
       template: html`
+      <div class="column max_width_1200px width_fill">
       <div class="row width_fill"> 
         <div class="row align_right width_fill pad_16">
           
@@ -44,7 +45,8 @@ const RecipeList = {
       <main class="grid grid_gap_16 pad_left_16 pad_right_16 pad_bottom_16">
       <recipe-box v-for="recipe in recipes" :recipe="recipe" @show-edit-form="showEditForm"
         @delete-recipe="showDeleteConfirm"></recipe-box>
-    </main>`,
+    </main>
+    </div>`,
       mounted: async function() {
         this.loadRecipes()
       },

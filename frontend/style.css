@@ -150,6 +150,7 @@ body {
 .width_fill { width:100%; }
 .max_width_fill { max-width:100%; }
 .max_width_480px { max-width: 480px; }
+.max_width_1200px { max-width: 1200px; }
 .min_height_59px { min-height:59px; }
 .height_28px { height:28px; }
 .height_32px { height:32px; }
@@ -356,30 +357,31 @@ body {
 
 /* Grid */
 .grid {
+  /**
+   * User input values.
+   */
+  --grid-layout-gap: 16px;
+  --grid-item--min-width: 160px;
+
+  /**
+   * Calculated values.
+   */
+  --gap-count: calc(var(--grid-column-count) - 1);
+  --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+  /* --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count)); */
+  --grid-item--max-width: 240px;
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  justify-content: start;
-}
-
-.grid_gap_16 {
-  grid-gap: 16px;
-}
-
-@media (min-width: 800px) {
-  .grid-item {
-    max-width: calc((100% / 3) - (2 * 16px)); /* Adjusts the width to never grow beyond a third of the container minus the gaps */
-  }
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+  grid-gap: var(--grid-layout-gap);
 }
 
 
 .tile_grid {
   /* Using padding-top for maintaining aspect ratio; adjust the percentage as needed */
-  padding-top: calc((200px / 320px) * 100%);
-  position: relative;
-  width: 100%;
-  max-width: 320px;
+  padding-top: calc((200px / 240px) * 100%);
+  max-width: 1fr;
   min-width: 160px;
-  height: auto;
   border-radius: 10px; /* Adjust as per your design */
 }
 
