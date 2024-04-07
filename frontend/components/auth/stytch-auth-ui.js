@@ -5,7 +5,7 @@ const StytchAuthUI = {
       this.initializeStytch();
     });
   },
-  template: `<div class="row height_fill fill align_center"><div id="stytch-auth-ui"></div></div>`,
+  template: `<div class="row height_fill width_fill align_center"><div id="stytch-auth-ui"></div></div>`,
   methods: {
     initializeStytch() {
       const stytch = stytchClient

@@ -30,14 +30,14 @@
     <!-- Sidebar Component -->
 
     <router-view name="top" @sign-out="signOut"></router-view>
-
-    <router-view :recipes="recipes" :recipe="recipeToView" @show-add-form="showAddForm"
-      @show-delete-confirm="showDeleteConfirm" @show-edit-form="showEditForm" @fetch-recipe="fetchRecipe"
-      @sign-in-submit="signInSubmit" @load-recipes="loadRecipes" @auth-success="goToApp"></router-view>
+    <div class="column max_width_1200px height_fill width_fill">
+      <router-view :recipes="recipes" :recipe="recipeToView" @show-add-form="showAddForm"
+        @show-delete-confirm="showDeleteConfirm" @show-edit-form="showEditForm" @fetch-recipe="fetchRecipe"
+        @sign-in-submit="signInSubmit" @load-recipes="loadRecipes" @auth-success="goToApp"></router-view>
+    </div>
     <!-- Right Column -->
     <router-view name="right" v-model="overlayInput" @hide-form="hideForm" @scrape-recipe="scrapeRecipe"
       @add-or-edit-recipe="addOrEditRecipe"></router-view>
-
 
 
     <!-- Delete Confirm Modal -->

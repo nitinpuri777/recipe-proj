@@ -6,7 +6,6 @@ import RecipeList from './components/recipe-list.js'
 import RecipeDetail from './components/recipe-detail.js'
 import RightOverlay from './components/right-overlay.js'
 import DeleteModal from './components/delete-modal.js'
-import SignInPage from './pages/sign-in.js'
 import StytchAuthUI from './components/auth/stytch-auth-ui.js'
 import Authenticate from './components/auth/authenticate.js'
 import stytchClient from './components/auth/stytch-client.js'
@@ -22,9 +21,10 @@ const routes = [
   },
   { 
     path: '/app/recipe/:id', 
+    name: 'recipeDetail',
     components: {
       default: RecipeDetail,
-      top:Header,
+      // top:Header,
       right:RightOverlay
     }
   },
@@ -45,7 +45,6 @@ const App = createApp({
     RecipeDetail,
     RightOverlay,
     DeleteModal,
-    SignInPage,
     StytchAuthUI
   },
   data() {
@@ -187,6 +186,10 @@ const App = createApp({
       const json = await response.json()
       this.recipes = json.recipes
       this.hideDeleteConfirm()
+      console.log(this.$route.name)
+      if(this.$route.name === 'recipeDetail') {
+        this.$router.back();
+      }
 
     },
     async addOrEditRecipe() {
