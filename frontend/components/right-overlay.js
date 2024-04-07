@@ -64,7 +64,7 @@ const RightOverlay = {
         </div>
       </div>
       <div class="row align_right gap_8">
-        <button class="row button rounded border" @click="hideForm" type="button">Cancel</button>
+        <button class="row button__secondary rounded border" @click="hideForm" type="button">Cancel</button>
         <button class="row button rounded border" type="submit">Save</button>
       </div>
     </form>
