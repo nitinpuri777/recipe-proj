@@ -1,5 +1,5 @@
 import stytchClient from "./stytch-client.js";
-const StytchAuthUI = {
+const StytchAuth = {
   mounted: function() {
     this.$nextTick(function () {
       this.initializeStytch();
@@ -74,4 +74,4 @@ const StytchAuthUI = {
 
 }
 
-export default StytchAuthUI
+export default StytchAuth

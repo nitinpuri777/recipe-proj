@@ -1,7 +1,7 @@
 import { html } from "../globals.js";
 import { useStore } from "../store.js";
 
-const Header = {
+const AppHeader = {
   template: html`
     <div class="row width_fill border_bottom border_color_gray align_center_x">
       <div class="row max_width_1200px width_fill  pad_left_16 pad_right_16 pad_top_16 pad_bottom_16 gap_32">
@@ -27,4 +27,4 @@ const Header = {
   }
 }
 
-export default Header
+export default AppHeader

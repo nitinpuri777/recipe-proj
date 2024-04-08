@@ -1,32 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Header from './components/header.js'
-import RecipeList from './components/recipe-list.js'
-import RecipeDetail from './components/recipe-detail.js'
-import RightOverlay from './components/right-overlay.js'
-import StytchAuthUI from './components/auth/stytch-auth-ui.js'
 import Authenticate from './components/auth/authenticate.js'
 import stytchClient from './components/auth/stytch-client.js'
+
+import SignInPage from './pages/SignInPage.js'
+import RecipeListPage from './pages/RecipeListPage.js'
+import RecipeDetailPage from './pages/RecipeDetailPage.js'
 
 const routes = [
   { 
     path: '/app', 
-    components: {
-      default:RecipeList,
-      top:Header,
-      right:RightOverlay
-    }
+    component: RecipeListPage,
   },
   { 
     path: '/app/recipe/:id', 
     name: 'recipeDetail',
-    components: {
-      default: RecipeDetail,
-      right:RightOverlay
-    }
+    component: RecipeDetailPage 
   },
-  { path: `/sign-in`, component: StytchAuthUI},
-  { path: `/authenticate`, component: Authenticate},
-  { path: '/:catchAll(.*)', redirect: '/app' },
+  { 
+    path: `/sign-in`, 
+    component: SignInPage
+  },
+  { 
+    path: `/authenticate`, 
+    component: Authenticate
+  },
+  { 
+    path: '/:catchAll(.*)', 
+    redirect: '/app' 
+  },
 ];
 
 const router = createRouter({
