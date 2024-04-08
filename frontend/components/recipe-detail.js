@@ -47,7 +47,6 @@ const RecipeDetail = {
   computed: {
     isTemporary() {
       if(this.$route.query.url) {
-        console.log(this.$route.query.url)
         return true
       }
       else {
@@ -86,9 +85,7 @@ const RecipeDetail = {
       this.store.showEditForm(this.recipeToView); // Call the showEditForm action from the store
     },
     async temporaryFetchRecipe(url) {
-      console.log(url)
       this.store.recipeToView = await this.store.scrapeRecipe(url)
-      console.log(this.store.recipeToView)
     }
   }
 }

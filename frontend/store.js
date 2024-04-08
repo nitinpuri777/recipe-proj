@@ -63,7 +63,6 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       const json = await response.json()
-      console.log(json.recipe)
       this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
       this.overlayInput.recipeStepsInput = json.recipe.steps
       this.overlayInput.recipeNameInput = json.recipe.name
@@ -99,7 +98,6 @@ export const useStore = defineStore('store', {
         }
         const response = await fetch(url, options)
         const json = await response.json()
-        console.log(json.recipe)
         this.recipeToView = json.recipe
         return json.recipe
     },
@@ -177,7 +175,6 @@ export const useStore = defineStore('store', {
         hostname: this.overlayInput.hostname,
         url: this.overlayInput.urlToScrapeInput
       }
-      console.log(recipe)
       let body = { recipe }
       let options = {
         method: 'POST',
@@ -242,7 +239,6 @@ export const useStore = defineStore('store', {
         const authResponse = await stytchClient.magicLinks.authenticate(token, {
           session_duration_minutes: 60
         });
-        console.log(authResponse);
         if (authResponse.status_code === 200) {
           console.log("Authenticated successfully");
           this.isAuthenticated = true;

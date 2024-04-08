@@ -3,7 +3,6 @@ import { parseHostname } from '../../frontend/globals.js';
 const Scraper = {
 getRecipe: async function(url) {
     let recipeContent = await this.findRecipe(url)
-    console.log(recipeContent)
     let parsedImageUrl = this.parseImageUrl(recipeContent)
     let parsedName = this.parseName(recipeContent)
     let parsedIngredients = this.parseIngredients(recipeContent)
@@ -16,7 +15,6 @@ getRecipe: async function(url) {
         image_url: parsedImageUrl,
         hostname
     }
-    console.log(recipe)
     return recipe
 
 
