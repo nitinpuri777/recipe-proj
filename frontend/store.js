@@ -21,7 +21,7 @@ export const useStore = defineStore('store', {
         },
       recipeToDelete: {},
       recipeToView: {},
-      isAuthenticated: false,
+      isAuthenticated: stytchClient.session.getSync() ? true : false,
     }
   },
   getters: { 
@@ -63,34 +63,15 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       const json = await response.json()
+      console.log(json.recipe)
       this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
       this.overlayInput.recipeStepsInput = json.recipe.steps
       this.overlayInput.recipeNameInput = json.recipe.name
-      this.overlayInput.imageUrl = json.recipe.imageUrl
+      this.overlayInput.imageUrl = json.recipe.image_url
       this.overlayInput.hostname = parseHostname(scrapeUrl)
       this.urlToScrapeInput = ""
+      return json.recipe
     },
-    async signInSubmit(email, password) {
-			let url = '/api/sign-in'
-			let body = {
-				email: email,
-				password: password
-			}
-			let options = {
-				method: 'POST',
-				body: JSON.stringify(body),
-				headers: {
-					'Content-Type': 'application/json',
-				}
-			}
-			const response = await fetch(url, options)
-			const json = await response.json()
-			if (json.token != null) {
-				localStorage.setItem("authToken", json.token);
-				router.push('/app')
-        this.loadRecipes()
-			}
-		},
     goToApp() {
       router.push('/app')
     },
@@ -143,10 +124,7 @@ export const useStore = defineStore('store', {
       const json = await response.json()
       this.recipes = json.recipes
       this.hideDeleteConfirm()
-      console.log(this.$route.name)
-      if(this.$route.name === 'recipeDetail') {
-        this.$router.back();
-      }
+      router.back();
 
     },
     async addOrEditRecipe() {
@@ -249,12 +227,17 @@ export const useStore = defineStore('store', {
     signOut() {
       stytchClient.session.revoke();
       this.goToSignIn()
+      this.isAuthenticated = false;
     },
 
-    goToSignIn() {
-      router.push('/sign-in')
+    goToSignIn(currentPath) {
+      let signInRoute = `/sign-in`
+      if(currentPath) {
+        signInRoute = signInRoute + `?next_route=${encodeURIComponent(currentPath)}`;
+      } 
+      router.push(signInRoute);
     },
-    async authenticateMagicLink(token) {
+    async authenticateMagicLink(token, next_route) {
       try {
         const authResponse = await stytchClient.magicLinks.authenticate(token, {
           session_duration_minutes: 60
@@ -263,7 +246,13 @@ export const useStore = defineStore('store', {
         if (authResponse.status_code === 200) {
           console.log("Authenticated successfully");
           this.isAuthenticated = true;
-          router.push('/app'); // Redirect or handle post-authentication logic
+          if(next_route) {
+            router.push(next_route)
+          }
+          else {
+            router.push('/app')
+          }
+          ; // Redirect or handle post-authentication logic
         } else {
           console.error(authResponse.error_message);
         }
@@ -271,14 +260,19 @@ export const useStore = defineStore('store', {
         console.error("Authentication error:", error);
       }
     },
-    async authenticateOAuth(token) {
+    async authenticateOAuth(token, next_route) {
       try {
         await stytchClient.oauth.authenticate(token, {
           session_duration_minutes: 60
         });
         console.log('Successful authentication: OAuth');
         this.isAuthenticated = true;
-        router.push('/app'); // Redirect or handle post-authentication logic
+        if(next_route) {
+          router.push(next_route)
+        }
+        else {
+          router.push('/app')
+        } // Redirect or handle post-authentication logic
       } catch (error) {
         console.error("OAuth authentication failed:", error);
       }

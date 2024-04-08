@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import { parseHostname } from '../../frontend/globals.js';
 const Scraper = {
 getRecipe: async function(url) {
     let recipeContent = await this.findRecipe(url)
@@ -7,11 +8,13 @@ getRecipe: async function(url) {
     let parsedName = this.parseName(recipeContent)
     let parsedIngredients = this.parseIngredients(recipeContent)
     let parsedSteps = this.parseSteps(recipeContent)
+    let hostname = parseHostname(url)
     const recipe = {
         name: parsedName,
         ingredients: parsedIngredients,
         steps: parsedSteps,
-        imageUrl: parsedImageUrl
+        image_url: parsedImageUrl,
+        hostname
     }
     console.log(recipe)
     return recipe

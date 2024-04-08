@@ -9,8 +9,11 @@ const AppHeader = {
           <a href="/"><img src="/assets/logo.png" class="width_fill"></a>
         </div>
         <div class="row align_right width_fill">
-          <div class="row shrink_none align_center">
+          <div v-if="store.isAuthenticated" class="row shrink_none align_center">
             <a @click="signOut" class="pad_8 button rounded border">Sign Out</a>
+          </div>
+          <div v-if="!store.isAuthenticated" class="row shrink_none align_center">
+            <a @click="signIn" class="pad_8 button rounded border">Sign In</a>
           </div>
         </div>
       </div>
@@ -23,6 +26,9 @@ const AppHeader = {
   methods: {
     signOut() {
       this.store.signOut(); // Call the signOut action defined in your store
+    },
+    signIn() {
+      this.store.goToSignIn(this.$route.path);
     }
   }
 }

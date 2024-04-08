@@ -277,6 +277,10 @@ body {
   text-overflow: ellipsis;
 }
 
+.text_nowrap {
+  text-wrap: nowrap;
+}
+
 .right_overlay {
   transition: transform 300ms ease-in-out;
 }

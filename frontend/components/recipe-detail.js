@@ -8,7 +8,7 @@ const RecipeDetail = {
         <div class="row align_left">
           <img src="/assets/icons/arrow-left.svg" class="height_28px width_28px icon" @click="goBack">
         </div>  
-        <div class="row align_right gap_16">
+        <div v-if="!isTemporary" class="row align_right gap_16">
           <img src="/assets/icons/edit-2.svg" class="height_28px width_28px icon" @click="showEditForm">
           <img src="/assets/icons/trash-2.svg" class="height_28px width_28px icon" @click="showDeleteConfirm">
         </div>
@@ -42,9 +42,18 @@ const RecipeDetail = {
       </div>
     </div>`,
   mounted() {
-    this.fetchRecipe();
+    this.renderRecipe();
   },
   computed: {
+    isTemporary() {
+      if(this.$route.query.url) {
+        console.log(this.$route.query.url)
+        return true
+      }
+      else {
+        return false
+      }
+    },
     store() {
       return useStore();
     },
@@ -53,9 +62,19 @@ const RecipeDetail = {
     }
   },
   methods: {
+    async renderRecipe() {
+      if(this.isTemporary) {
+        this.temporaryFetchRecipe(this.$route.query.url);
+      }
+      else {
+        this.fetchRecipe()
+      }
+    },
     async fetchRecipe() {
+      if(this.$route.params.id) { 
       const recipeId = this.$route.params.id;
-      await this.store.fetchRecipe(recipeId); // Call the fetchRecipe action from the store
+      await this.store.fetchRecipe(recipeId);
+      } // Call the fetchRecipe action from the store
     },
     goBack() {
       this.$router.back();
@@ -66,6 +85,11 @@ const RecipeDetail = {
     showEditForm() {
       this.store.showEditForm(this.recipeToView); // Call the showEditForm action from the store
     },
+    async temporaryFetchRecipe(url) {
+      console.log(url)
+      this.store.recipeToView = await this.store.scrapeRecipe(url)
+      console.log(this.store.recipeToView)
+    }
   }
 }
 

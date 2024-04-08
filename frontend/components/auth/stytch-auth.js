@@ -10,7 +10,11 @@ const StytchAuth = {
     initializeStytch() {
       const stytch = stytchClient
       let hostname = window.location.origin
+      let next_route = this.$route.query.next_route
       let redirectURL = `${hostname}/authenticate`
+      if(next_route) {
+        redirectURL = redirectURL + `?next_route=${next_route}`
+      }
       stytch.mountLogin({
         elementId: '#stytch-auth-ui',
         config: {
