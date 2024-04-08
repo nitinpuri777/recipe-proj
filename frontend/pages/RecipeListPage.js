@@ -5,7 +5,7 @@ import RightOverlay from '../components/right-overlay.js'
 const RecipeListPage = {
   template: `
     <app-header />
-    <recipe-list />
+    <recipe-list class="max_width_1200px height_fill width_fill"/>
     <right-overlay />
 
   `,
