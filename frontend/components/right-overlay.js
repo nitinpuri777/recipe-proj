@@ -1,4 +1,6 @@
 import { html } from "../globals.js";
+import { useStore } from "../store.js";
+
 const RightOverlay = {
   template:
   html`<!-- Backdrop -->
@@ -17,9 +19,9 @@ const RightOverlay = {
       <label class="column gap_8">
         <span class="font_bold">URL to Scrape</span>
         <div class="row gap_8">
-          <input class="rounded border pad_8" type="text" name="recipeName" v-model="modelValue.urlToScrapeInput"
+          <input class="rounded border pad_8" type="text" name="recipeName" v-model="store.overlayInput.urlToScrapeInput"
             label="Url to Scrape">
-          <button type="button" @click="scrapeRecipe(modelValue.urlToScrapeInput)" class="button rounded border">Fetch
+          <button type="button" @click="scrapeRecipe(store.overlayInput.urlToScrapeInput)" class="button rounded border">Fetch
             Details</button>
         </div>
       </label>
@@ -28,19 +30,19 @@ const RightOverlay = {
       <!-- Recipe Name Input -->
       <label class="column gap_8">
         <span class="font_bold">Recipe Name</span>
-        <input class="rounded border pad_8" type="text" name="recipeName" v-model="modelValue.recipeNameInput"
+        <input class="rounded border pad_8" type="text" name="recipeName" v-model="store.overlayInput.recipeNameInput"
           label="Recipe Name">
       </label>
       <label class="column gap_8">
         <span class="font_bold">Image Url</span>
-        <img :src="modelValue.imageUrl" class="width_160px">
+        <img :src="store.overlayInput.imageUrl" class="width_160px">
       </label>
       <!-- Ingredients Input -->
       <div class="column gap_8">
         <span class="font_bold">Ingredients</span>
-        <div class="row gap_8 align_center" v-for="(ingredient,index) in modelValue.recipeIngredientsInput">
+        <div class="row gap_8 align_center" v-for="(ingredient,index) in store.overlayInput.recipeIngredientsInput">
           <input class="rounded border pad_8 fill" type="text" name="recipeName"
-            v-model="modelValue.recipeIngredientsInput[index]">
+            v-model="store.overlayInput.recipeIngredientsInput[index]">
           <button type="button" @click="removeIngredientInput(index)" class="button rounded border">x</button>
         </div>
         <div class="row align_left">
@@ -51,10 +53,10 @@ const RightOverlay = {
       <!-- Steps Input -->
       <div class="column gap_8">
         <span class="font_bold">Steps</span>
-        <div class="row gap_8 align_top" v-for="(step,index) in modelValue.recipeStepsInput">
+        <div class="row gap_8 align_top" v-for="(step,index) in store.overlayInput.recipeStepsInput">
           <div class="pad_top_8">{{index + 1}}.</div>
           <textarea rows="4" class="rounded border pad_8 fill" name="recipeName"
-            v-model="modelValue.recipeStepsInput[index]"></textarea>
+            v-model="store.overlayInput.recipeStepsInput[index]"></textarea>
           <div class="pad_top_8"> <button type="button" @click="removeStepInput(index)"
               class="button rounded border">x</button></div>
         </div>
@@ -71,35 +73,37 @@ const RightOverlay = {
 
   </div>
   </div>`,
-  props:['modelValue'],
   methods: {
     hideForm: function() {
-      this.$emit("hide-form");
+      this.store.hideForm();
     },
     scrapeRecipe: function(urlToScrapeInput) {
-      this.$emit("scrape-recipe", urlToScrapeInput)
+      this.store.scrapeRecipe(urlToScrapeInput)
     },
     addOrEditRecipe: function() {
 
-      this.$emit("add-or-edit-recipe")
+      this.store.addOrEditRecipe();
     },
     removeIngredientInput: function(index) {
-      this.modelValue.recipeIngredientsInput.splice(index, 1)
+      this.store.overlayInput.recipeIngredientsInput.splice(index, 1)
     },
     addIngredientInput: function() {
-      this.modelValue.recipeIngredientsInput.push("")
+      this.store.overlayInput.recipeIngredientsInput.push("")
     },
     removeStepInput: function(index) {
-      this.modelValue.recipeStepsInput.splice(index, 1)
+      this.store.overlayInput.recipeStepsInput.splice(index, 1)
     },
     addStepInput: function() {
-      this.modelValue.recipeStepsInput.push("")
+      this.store.overlayInput.recipeStepsInput.push("")
     }
   },
   computed: {
+    store() {
+      return useStore()
+    },
     overlayType() {
-      if(this.modelValue) { 
-      return this.modelValue.overlayType;
+      if(this.store.overlayInput.overlayType) { 
+      return this.store.overlayInput.overlayType;
       }
       else {
         return "none"

@@ -21,7 +21,6 @@ const routes = [
     name: 'recipeDetail',
     components: {
       default: RecipeDetail,
-      // top:Header,
       right:RightOverlay
     }
   },

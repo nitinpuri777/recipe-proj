@@ -12,13 +12,14 @@
         "vue/server-renderer": "https://play.vuejs.org/server-renderer.esm-browser.js",
         "vue-router": "https://unpkg.com/vue-router@4.3.0/dist/vue-router.esm-browser.js",
         "@vue/devtools-api": "https://unpkg.com/@vue/devtools-api@6.6.1/lib/esm/index.js",
-        "stytch":"https://www.unpkg.com/@stytch/vanilla-js@2.0/dist/index.esm.js"
+        "stytch":"https://www.unpkg.com/@stytch/vanilla-js@2.0/dist/index.esm.js",
+        "pinia":"https://unpkg.com/pinia@2.1.7/dist/pinia.esm-browser.js",
+        "vue-demi":"https://unpkg.com/vue-demi@0.8.0/lib/index.esm.mjs"
       },
       "scopes": {}
     }
   </script>
-  <script src="/app.js" type="module">
-  </script>
+  <script src="/app.js" type="module"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&display=swap" rel="stylesheet">
@@ -26,24 +27,12 @@
 
 <body>
   <div id="app" class="align_center_x column height_fill width_fill align_top scroll nunito-font">
-
-    <!-- Sidebar Component -->
-
-    <router-view name="top" @sign-out="signOut"></router-view>
+    <router-view name="top"></router-view>
     <div class="column max_width_1200px height_fill width_fill">
-      <router-view :recipes="recipes" :recipe="recipeToView" @show-add-form="showAddForm"
-        @show-delete-confirm="showDeleteConfirm" @show-edit-form="showEditForm" @fetch-recipe="fetchRecipe"
-        @sign-in-submit="signInSubmit" @load-recipes="loadRecipes" @auth-success="goToApp"></router-view>
+      <router-view name="default"></router-view>
     </div>
-    <!-- Right Column -->
-    <router-view name="right" v-model="overlayInput" @hide-form="hideForm" @scrape-recipe="scrapeRecipe"
-      @add-or-edit-recipe="addOrEditRecipe"></router-view>
-
-
-    <!-- Delete Confirm Modal -->
-    <delete-modal :modal-classes="modalClasses" :modal-overlay-classes="modalOverlayClasses" :recipe="recipeToDelete"
-      @hide-delete-confirm="hideDeleteConfirm" @delete-recipe="deleteRecipe"></delete-modal>
-
+    <router-view name="right"></router-view>
+    <delete-modal></delete-modal>
   </div>
 </body>
 

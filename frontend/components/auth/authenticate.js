@@ -1,51 +1,33 @@
-import stytchClient from "./stytch-client.js"
+import { useStore } from "../../store.js";
 
 const Authenticate = {
   template: `<div class="row fill height_fill align_center"> Authenticating...</div>`,
-  created: function() {
+  computed: {
+    // Define a computed property to access the store
+    store() {
+      return useStore();
+    }
+  },
+  created() {
     this.authenticateToken()
   },
   methods: {
-    authenticateToken: async function(){
-      const queryParams = new URLSearchParams(window.location.search)
-      const token = queryParams.get('token')
-      const tokenType = queryParams.get('stytch_token_type')
+    async authenticateToken() {
+      const queryParams = new URLSearchParams(window.location.search);
+      const token = queryParams.get('token');
+      const tokenType = queryParams.get('stytch_token_type');
 
-      // If a token is found, authenticate it with the appropriate method.
-      if (token && tokenType) {  
+      if (token && tokenType) {
         if (tokenType === 'magic_links') {
-          let authResponse = await stytchClient.magicLinks.authenticate(token, {
-              session_duration_minutes: 60
-            })
-          console.log(authResponse)
-          if(authResponse.status_code === 200) {
-            console.log("Authenticated successfully")
-            this.$emit('auth-success')
-            //call the function to get the user or register and get the user
-          }
-          else {
-            console.log(authResponse.error_message)
-          }
-            
+          // Use the computed property 'store' to access store actions
+          await this.store.authenticateMagicLink(token);
         } else if (tokenType === 'oauth') {
-          stytchClient.oauth
-            .authenticate(token, {
-              session_duration_minutes: 60
-            })
-            .then(() => {
-              console.log('Successful authentication: OAuth')
-              this.$emit('auth-success')
-            })
-            .catch((err) => {
-              console.error(err)
-              alert('OAuth authentication failed. See console for details.')
-            })
+          // Use the computed property 'store' to access store actions
+          await this.store.authenticateOAuth(token);
         }
       } else {
-        // If query params are not found, announce that something went wrong.
-        alert('Something went wrong. No token found to authenticate.')
+        alert('Something went wrong. No token found to authenticate.');
       }
-
     }
   }
 }
