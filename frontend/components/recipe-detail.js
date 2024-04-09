@@ -34,15 +34,15 @@ const RecipeDetail = {
           </div>
         </div>
       </div>
-      <div class="row gap_16 wrap">
-        <div class="column gap_16 min_width_300px max_width_500px">
+      <div class="row gap_fill gap_16 wrap">
+        <div class="column align_left gap_16 min_width_300px max_width_576px">
           <div class="font_24">Ingredients</div>
-          <ul class="bullets column gap_8">
+          <ul class="bullets  column gap_8">
             <li v-for="ingredient in recipeToView.ingredients">{{ingredient}}</li>
           </ul>
         </div>
-        <div class="column gap_16 min_width_300px max_width_500px">
-          <div class="font_24">Steps</div>
+        <div class="column align_right gap_16 min_width_300px max_width_576px">
+          <div class="row align_left width_fill font_24">Steps</div>
           <ol class="numbers column gap_8">
             <li v-for="step in recipeToView.steps">{{step}}</li>
           </ol>
