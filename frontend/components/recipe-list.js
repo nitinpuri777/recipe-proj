@@ -4,7 +4,7 @@ import { useStore } from '../store.js'; // Adjust the path as necessary
 const RecipeList = {
   template: html`
   <div v-if="loading">
-    <div class="row width_fill align_center height_fill"> Loading...</div>
+    <div class="row width_fill align_center height_fill"> <img src="/assets/logo-only.svg" class="svg-logo"></div>
   </div>
   <div v-else>
     <div class="row width_fill"> 

@@ -409,12 +409,15 @@ body {
   border-radius: 10px; /* Adjust as per your design */
 }
 
-/* .tile_grid > div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-} */
+@keyframes grow-shrink {
+  0%, 100% {
+    transform: scale(1); /* Original size */
+  }
+  50% {
+    transform: scale(1.2); /* Grow to 1.2 times the original size */
+  }
+}
+
+.svg-logo {
+  animation: grow-shrink .75s ease-in-out infinite;
+}
