@@ -3,7 +3,10 @@ import { useStore } from '../store.js'; // Adjust the path as necessary
 
 const RecipeList = {
   template: html`
-  <div>
+  <div v-if="loading">
+    <div class="row width_fill align_center height_fill"> Loading...</div>
+  </div>
+  <div v-else>
     <div class="row width_fill"> 
       <div class="row align_right width_fill pad_16">
         <img @click="showAddForm" class="height_32px width_32px icon" src="/assets/icons/plus-circle.svg">  
@@ -28,8 +31,15 @@ const RecipeList = {
       return this.store.recipes; // Access the recipes from the store
     }
   },
-  mounted() {
-    this.store.loadRecipes(); // Load recipes from the store when the component mounts
+  data() {
+    return {
+      loading: false,
+    }
+  },
+  async mounted() {
+    this.loading = true;
+    await this.store.loadRecipes(); 
+    this.loading = false;// Load recipes from the store when the component mounts
   },
   methods: {
     showAddForm() {

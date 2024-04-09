@@ -154,6 +154,8 @@ body {
 .max_width_fill { max-width:100%; }
 .max_width_480px { max-width: 480px; }
 .max_width_500px { max-width: 500px}
+.max_width_800px { max-width: 800px}
+.max_width_680px { max-width: 680px}    
 .max_width_1200px { max-width: 1200px; }
 .min_height_59px { min-height:59px; }
 .height_28px { height:28px; }
@@ -267,10 +269,13 @@ body {
   font-style: normal;
 }
 
+.font_fill {font-size: 100%}
+.font_48 { font-size:48px }
 .font_32 { font-size:32px }
 .font_28 { font-size:28px }
 .font_24 { font-size:24px }
 .font_bold { font-weight: 600;}
+.font_700 { font-weight: 700 }
 
 .overflow_hidden { 
   overflow: hidden;
@@ -279,6 +284,10 @@ body {
 
 .text_nowrap {
   text-wrap: nowrap;
+}
+
+.text_center {
+  text-align: center;
 }
 
 .right_overlay {
@@ -343,9 +352,14 @@ body {
 .button__secondary {
   background-color: var(--color_button_secondary);
   color: var(--color_button_text_secondary);
+  font-weight:600;
   border: solid 1px var(--color_border);
   cursor:pointer;
   padding: 8px;
+}
+
+.button__secondary:hover {
+  background-color: var(--antiflash-white);
 }
 
 .bullets {

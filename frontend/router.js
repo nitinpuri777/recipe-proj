@@ -6,10 +6,11 @@ import RecipeListPage from './pages/RecipeListPage.js'
 import RecipeDetailPage from './pages/RecipeDetailPage.js'
 import ScrapeRecipePage from './pages/ScrapeRecipePage.js'
 import ScrapeDetailPage from './pages/ScrapeDetailPage.js'
+import SaveRecipePage from './pages/SaveRecipePage.js'
 
 const routes = [
   { 
-    path: '/scrape', 
+    path: '/', 
     component: ScrapeRecipePage,
     meta: { requiresAuth: false }
   },
@@ -17,6 +18,11 @@ const routes = [
     path: '/recipeDetail', 
     component: ScrapeDetailPage,
     meta: { requiresAuth: false }
+  },
+  { 
+    path: '/save-recipe', 
+    component: SaveRecipePage,
+    meta: { requiresAuth: true }
   },
   { 
     path: '/app', 
@@ -52,7 +58,12 @@ router.beforeEach(async (to, from) => {
   const store = useStore()
   const requiresAuth  = to.matched.some(record => record.meta.requiresAuth);
   if(!store.isAuthenticated && requiresAuth) {
-    return {path: '/sign-in'}
+    const encodedFullPath = encodeURIComponent(to.fullPath);
+
+    return {
+      path: '/sign-in',
+      query: { next_route: encodedFullPath } 
+    };
   } 
 })
 

@@ -63,6 +63,7 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       const json = await response.json()
+      console.log(json.recipe)
       this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
       this.overlayInput.recipeStepsInput = json.recipe.steps
       this.overlayInput.recipeNameInput = json.recipe.name
@@ -223,8 +224,9 @@ export const useStore = defineStore('store', {
     },
     signOut() {
       stytchClient.session.revoke();
-      this.goToSignIn()
       this.isAuthenticated = false;
+      router.push('/')
+
     },
 
     goToSignIn(currentPath) {
