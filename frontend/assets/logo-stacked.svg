@@ -28,13 +28,13 @@
      inkscape:document-units="mm"
      inkscape:zoom="0.35840563"
      inkscape:cx="318.07536"
-     inkscape:cy="59.987896"
+     inkscape:cy="59.987897"
      inkscape:window-width="1440"
      inkscape:window-height="786"
      inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-y="205"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer4" />
   <defs
      id="defs1" />
   <g
@@ -529,7 +529,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="logo-option-2"
-     style="display:inline">
+     style="display:none">
     <rect
        style="fill:#ffffff;stroke-width:0.264583"
        id="rect2"
