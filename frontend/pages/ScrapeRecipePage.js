@@ -1,6 +1,6 @@
 import { html } from "../globals.js"
 import AppHeader from "../components/app-header.js"
-import { useStore } from "../store.js"
+import UrlScraper from "../components/url-scraper.js"
 
 const ScrapeRecipePage = {
   template: html`
@@ -15,30 +15,13 @@ const ScrapeRecipePage = {
     Just get the recipe. No ads. No videos. No life stories.
   </div>
 </div>
-  <div class="row gap_8 width_fill">
-    <input class="rounded border border_color_gray pad_8 width_fill" type="text" placeholder="Paste your recipe url here." name="recipeName" v-model="urlToScrape"
-      label="Url to Scrape">
-      <router-link 
-        :to="{ path: '/recipeDetail', query: { url: urlToScrape } }" 
-        class="button rounded border text_nowrap">De-Clutter</router-link>
-  </div>
+  <url-scraper></url-scraper>
 </div>
 </div>
   `,
   components: {
-    AppHeader
-  },
-  data() {
-    return {
-      urlToScrape: ""
-    }
-  },
-  computed: {
-    store() {
-      return useStore()
-    }
-  },
-  methods: {
+    AppHeader,
+    UrlScraper
   }
 }
 
