@@ -2,12 +2,6 @@ import { useStore } from "../../store.js";
 
 const Authenticate = {
   template: `<div class="row fill height_fill align_center"> Authenticating...</div>`,
-  computed: {
-    // Define a computed property to access the store
-    store() {
-      return useStore();
-    }
-  },
   created() {
     this.authenticateToken()
   },
@@ -21,10 +15,10 @@ const Authenticate = {
       if (token && tokenType) {
         if (tokenType === 'magic_links') {
           // Use the computed property 'store' to access store actions
-          await this.store.authenticateMagicLink(token, next_route);
+          await this.$store.authenticateMagicLink(token, next_route);
         } else if (tokenType === 'oauth') {
           // Use the computed property 'store' to access store actions
-          await this.store.authenticateOAuth(token, next_route);
+          await this.$store.authenticateOAuth(token, next_route);
         }
       } else {
         alert('Something went wrong. No token found to authenticate.');

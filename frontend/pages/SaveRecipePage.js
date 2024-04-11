@@ -1,27 +1,19 @@
-import { useStore } from "../../store.js";
-
 const SaveRecipePage = {
   template: `<loader />`,
-  computed: {
-    // Define a computed property to access the store
-    store() {
-      return useStore();
-    }
-  },
   created() {
     this.saveRecipe()
   },
   methods: {
     async saveRecipe() {
       // Set the URL to scrape from the query parameters
-      this.store.overlayInput.urlToScrapeInput = this.$route.query.url;
+      this.$store.overlayInput.urlToScrapeInput = this.$route.query.url;
   
       try {
         // Wait for the scraping to complete
-        await this.store.scrapeRecipe(this.store.overlayInput.urlToScrapeInput);
+        await this.$store.scrapeRecipe(this.$store.overlayInput.urlToScrapeInput);
   
         // Assuming addRecipe is an asynchronous action, wait for it to complete
-        await this.store.addRecipe();
+        await this.$store.addRecipe();
   
         // After adding the recipe, navigate to the '/app' route
         this.$router.push('/app');

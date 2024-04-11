@@ -17,25 +17,22 @@ const DeleteModal = {
   </div>
 </div>`,
 computed: {
-  store() {
-    return useStore(); // Access the store once here
-  },
   recipeToDelete() {
-    return this.store.recipeToDelete; // Use the store instance to get the recipe to delete
+    return this.$store.recipeToDelete; // Use the $store instance to get the recipe to delete
   },
   modalClasses() {
-    return this.store.modalClasses; // Use the getter for modal classes
+    return this.$store.modalClasses; // Use the getter for modal classes
   },
   modalOverlayClasses() {
-    return this.store.modalOverlayClasses; // Use the getter for modal overlay classes
+    return this.$store.modalOverlayClasses; // Use the getter for modal overlay classes
   }
 },
 methods: {
   hideDeleteConfirm() {
-    this.store.hideDeleteConfirm(); // Call store action to hide delete confirmation
+    this.$store.hideDeleteConfirm(); // Call $store action to hide delete confirmation
   },
   deleteRecipe() {
-    this.store.deleteRecipe(this.recipeToDelete); // Call store action to delete the recipe
+    this.$store.deleteRecipe(this.recipeToDelete); // Call $store action to delete the recipe
   }
 }
 } 

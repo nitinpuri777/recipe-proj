@@ -1,6 +1,5 @@
 import { html } from '../globals.js'
 import RecipeDetail from '../components/recipe-detail.js'
-import { useStore } from "../store.js"
 
 const ScrapeDetailPage = {
   template: html`
@@ -8,11 +7,6 @@ const ScrapeDetailPage = {
   `,
   components: {
     RecipeDetail
-  },
-  computed: {
-    store() {
-      return useStore()
-    }
   }
 }
 

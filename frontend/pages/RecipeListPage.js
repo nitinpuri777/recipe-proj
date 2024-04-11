@@ -13,6 +13,9 @@ const RecipeListPage = {
     AppHeader,
     RecipeList,
     RightOverlay
+  },
+  mounted() {
+    console.log(this.$store)
   }
 
 }

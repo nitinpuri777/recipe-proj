@@ -1,5 +1,4 @@
 import { html } from "../globals.js";
-import { useStore } from "../store.js";
 
 const RecipeDetail = {
   template: html`
@@ -77,11 +76,8 @@ const RecipeDetail = {
         ""
       }
     },
-    store() {
-      return useStore();
-    },
     recipeToView() {
-      return this.store.recipeToView; // Access the recipeToView state from the store
+      return this.$store.recipeToView; // Access the recipeToView state from the $store
     }
   },
   methods: {
@@ -96,20 +92,20 @@ const RecipeDetail = {
     async fetchRecipe() {
       if(this.$route.params.id) { 
       const recipeId = this.$route.params.id;
-      await this.store.fetchRecipe(recipeId);
-      } // Call the fetchRecipe action from the store
+      await this.$store.fetchRecipe(recipeId);
+      } // Call the fetchRecipe action from the $store
     },
     goBack() {
       this.$router.back();
     },
     showDeleteConfirm() {
-      this.store.showDeleteConfirm(this.recipeToView); // Call the showDeleteConfirm action from the store
+      this.$store.showDeleteConfirm(this.recipeToView); // Call the showDeleteConfirm action from the $store
     },
     showEditForm() {
-      this.store.showEditForm(this.recipeToView); // Call the showEditForm action from the store
+      this.$store.showEditForm(this.recipeToView); // Call the showEditForm action from the $store
     },
     async temporaryFetchRecipe(url) {
-      this.store.recipeToView = await this.store.scrapeRecipe(url)
+      this.$store.recipeToView = await this.$store.scrapeRecipe(url)
     }
   }
 }

@@ -1,5 +1,4 @@
 import { html } from "../globals.js";
-import { useStore } from '../store.js'; // Adjust the path as necessary
 
 const RecipeList = {
   template: html`
@@ -24,11 +23,8 @@ const RecipeList = {
     </main>
   </div>`,
   computed: {
-    store() {
-      return useStore(); // Access the store once here
-    },
     recipes() {
-      return this.store.recipes; // Access the recipes from the store
+      return this.$store.recipes; // Access the recipes from the $store
     }
   },
   data() {
@@ -38,12 +34,12 @@ const RecipeList = {
   },
   async mounted() {
     this.loading = true;
-    await this.store.loadRecipes(); 
-    this.loading = false;// Load recipes from the store when the component mounts
+    await this.$store.loadRecipes(); 
+    this.loading = false;// Load recipes from the $store when the component mounts
   },
   methods: {
     showAddForm() {
-      this.store.showAddForm(); // Call store action to show the add form
+      this.$store.showAddForm(); // Call $store action to show the add form
     }
   }
 }

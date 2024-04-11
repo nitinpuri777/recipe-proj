@@ -1,5 +1,4 @@
 import { html } from "../globals.js";
-import { useStore } from "../store.js";
 
 const AppHeader = {
   template: html`
@@ -9,26 +8,21 @@ const AppHeader = {
           <a href="/"><img src="/assets/logo.png" class="width_fill"></a>
         </div>
         <div class="row align_right width_fill">
-          <div v-if="store.isAuthenticated" class="row shrink_none align_center">
+          <div v-if="$store.isAuthenticated" class="row shrink_none align_center">
             <a @click="signOut" class="pad_8 button__secondary font_bold rounded border">Sign Out</a>
           </div>
-          <router-link :to="{path: '/app'}" v-if="!store.isAuthenticated" class="row shrink_none align_center">
+          <router-link :to="{path: '/app'}" v-if="!$store.isAuthenticated" class="row shrink_none align_center">
             <a class="pad_8 button__secondary font_bold rounded border">Sign In</a>
           </router-link>
         </div>
       </div>
     </div>`,
-  computed: {
-    store() {
-      return useStore();
-    }
-  },
   methods: {
     signOut() {
-      this.store.signOut(); // Call the signOut action defined in your store
+      this.$store.signOut(); // Call the signOut action defined in your store
     },
     signIn() {
-      this.store.goToSignIn(this.$route.path);
+      this.$store.goToSignIn(this.$route.path);
     }
   }
 }
