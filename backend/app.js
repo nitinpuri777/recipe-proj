@@ -10,11 +10,16 @@ import { Sequelize, DataTypes, } from 'sequelize';
 import User from './models/user.js';
 import Recipe from './models/recipe.js';
 
+
+// Determine which set of credentials to use
+const DB_PREFIX = process.env.DB_PREFIX;
+
+// Use the appropriate credentials based on the active DB service
 const sequelize = new Sequelize({
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  username: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
+  host: process.env[`${DB_PREFIX}PGHOST`],
+  database: process.env[`${DB_PREFIX}PGDATABASE`],
+  username: process.env[`${DB_PREFIX}PGUSER`],
+  password: process.env[`${DB_PREFIX}PGPASSWORD`],
   dialect: 'postgres',
   dialectModule: pg,
   dialectOptions: {
