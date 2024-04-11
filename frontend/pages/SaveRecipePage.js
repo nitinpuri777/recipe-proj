@@ -1,7 +1,7 @@
 import { useStore } from "../../store.js";
 
 const SaveRecipePage = {
-  template: `<div class="row fill height_fill align_center"> Authenticating...</div>`,
+  template: `<loader />`,
   computed: {
     // Define a computed property to access the store
     store() {

@@ -4,8 +4,7 @@ import { useStore } from "../store.js";
 const RecipeDetail = {
   template: html`
   <div v-if="loading">
-    <div class="row width_fill align_center height_fill"> 
-      <img src="/assets/logo-only.svg" class="svg-logo">
+    <loader />
     </div>
   </div>
     <div v-else class="column gap_16 width_fill pad_left_16 pad_top_16 pad_right_16">
