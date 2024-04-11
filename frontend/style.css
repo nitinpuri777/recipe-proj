@@ -381,22 +381,9 @@ body {
 
 /* Grid */
 .grid {
-  /**
-   * User input values.
-   */
-  /* --grid-layout-gap: 16px; */
-  /**
-   * Calculated values.
-   */
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  /* gap: var(--grid-layout-gap); */
-}
-
-
-.tile_grid {
-  /* max-width: 240px; */
 }
 
 @keyframes grow-shrink {
