@@ -384,29 +384,19 @@ body {
   /**
    * User input values.
    */
-  --grid-layout-gap: 16px;
-  --grid-item--min-width: 160px;
-
+  /* --grid-layout-gap: 16px; */
   /**
    * Calculated values.
    */
-  --gap-count: calc(var(--grid-column-count) - 1);
-  --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-  /* --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count)); */
-  --grid-item--max-width: 240px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
-  grid-gap: var(--grid-layout-gap);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  /* gap: var(--grid-layout-gap); */
 }
 
 
 .tile_grid {
-  /* Using padding-top for maintaining aspect ratio; adjust the percentage as needed */
-  padding-top: calc((200px / 240px) * 100%);
-  max-width: 1fr;
-  min-width: 160px;
-  border-radius: 10px; /* Adjust as per your design */
+  /* max-width: 240px; */
 }
 
 @keyframes grow-shrink {

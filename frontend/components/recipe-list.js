@@ -4,7 +4,7 @@ import { useStore } from '../store.js'; // Adjust the path as necessary
 const RecipeList = {
   template: html`
   <div v-if="loading">
-    <div class="row width_fill align_center height_fill"> <img src="/assets/logo-only.svg" class="svg-logo"></div>
+    <loader />
   </div>
   <div v-else>
     <div class="row width_fill"> 
@@ -12,7 +12,7 @@ const RecipeList = {
         <img @click="showAddForm" class="height_32px width_32px icon" src="/assets/icons/plus-circle.svg">  
       </div>
     </div>
-    <main class="grid grid_gap_16 pad_left_16 pad_right_16 pad_bottom_16">
+    <main class="grid gap_16 pad_left_16 pad_right_16 pad_bottom_16">
       <router-link v-for="recipe in recipes" :key="recipe.id" :to="'/app/recipe/' + recipe.id" class="border_invisible rounded recipe_tile tile_grid">
         <div class="column gap_fill height_fill width_fill align_top">
           <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
