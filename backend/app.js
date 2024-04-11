@@ -13,6 +13,7 @@ import Recipe from './models/recipe.js';
 
 // Determine which set of credentials to use
 const DB_PREFIX = process.env.DB_PREFIX;
+const STYTCH_ENV_PREFIX = process.env.STYTCH_ENV_PREFIX
 
 // Use the appropriate credentials based on the active DB service
 const sequelize = new Sequelize({
@@ -63,7 +64,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.get('/api/env', (req, res) => {
   res.json({
-    VUE_APP_STYTCH_PUBLIC_TOKEN: process.env.VUE_APP_STYTCH_PUBLIC_TOKEN
+    VUE_APP_STYTCH_PUBLIC_TOKEN: process.env[`${STYTCH_ENV_PREFIX}VUE_APP_STYTCH_PUBLIC_TOKEN`]
   });
 });
 app.post('/api/scrape', ApiScrape.post)
