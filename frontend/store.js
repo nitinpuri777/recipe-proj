@@ -61,7 +61,7 @@ export const useStore = defineStore('store', {
           'Authorization': `Bearer ${token}`
         }
       }
-      const response = await fetch(url, options)
+      const response = await fetch(url, options) // can fail if offline, need to handle different error statuses, timeout 
       const json = await response.json()
       console.log(json.recipe)
       this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
@@ -275,5 +275,10 @@ export const useStore = defineStore('store', {
         console.error("OAuth authentication failed:", error);
       }
     },
+    handleError(error) {
+      console.error('API Error:', error);
+      // Display a toast notification to the user
+      this.$toast.error("Sorry, something went wrong.");
+    }
   }
 })
