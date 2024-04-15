@@ -105,7 +105,7 @@ const RecipeDetail = {
       this.$store.showEditForm(this.recipeToView); // Call the showEditForm action from the $store
     },
     async temporaryFetchRecipe(url) {
-      this.$store.recipeToView = await this.$store.scrapeRecipe(url)
+        this.$store.recipeToView = await this.$store.scrapeRecipe(url)
     }
   }
 }

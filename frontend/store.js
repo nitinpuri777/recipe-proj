@@ -67,17 +67,17 @@ export const useStore = defineStore('store', {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
+        this.overlayInput.recipeStepsInput = json.recipe.steps
+        this.overlayInput.recipeNameInput = json.recipe.name
+        this.overlayInput.imageUrl = json.recipe.image_url
+        this.overlayInput.hostname = parseHostname(scrapeUrl)
+        this.urlToScrapeInput = ""
+        return json.recipe
       } catch (error) {
+        throw new Error('Scrape failed')
         this.handleError(this, error);
       }
-      
-      this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
-      this.overlayInput.recipeStepsInput = json.recipe.steps
-      this.overlayInput.recipeNameInput = json.recipe.name
-      this.overlayInput.imageUrl = json.recipe.image_url
-      this.overlayInput.hostname = parseHostname(scrapeUrl)
-      this.urlToScrapeInput = ""
-      return json.recipe
     },
     goToApp() {
       router.push('/app')
