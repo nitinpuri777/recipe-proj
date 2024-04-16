@@ -1,21 +1,23 @@
 import AppHeader from '../components/app-header.js'
 import RecipeList from '../components/recipe-list.js'
 import RightOverlay from '../components/right-overlay.js'
+import UrlScraper from '../components/url-scraper.js'
 
 const RecipeListPage = {
   template: `
     <app-header />
-    <recipe-list class="max_width_1200px height_fill width_fill"/>
+    <div class="column pad_16 gap_16 max_width_1200px width_fill">
+    <url-scraper/>
+    <recipe-list class="height_fill"/>
+    </div>
     <right-overlay />
 
   `,
   components: {
     AppHeader,
     RecipeList,
-    RightOverlay
-  },
-  mounted() {
-    console.log(this.$store)
+    RightOverlay,
+    UrlScraper
   }
 
 }
