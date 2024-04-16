@@ -11,11 +11,11 @@ const RecipeDetail = {
         <div class="row align_left">
           <img src="/assets/icons/arrow-left.svg" class="height_28px width_28px icon" @click="goBack">
         </div>  
-        <div v-if="!isTemporary" class="row align_right gap_16">
+        <div v-if="hasRecipeId" class="row align_right gap_16">
           <img src="/assets/icons/edit-2.svg" class="height_28px width_28px icon" @click="showEditForm">
           <img src="/assets/icons/trash-2.svg" class="height_28px width_28px icon" @click="showDeleteConfirm">
         </div>
-        <div v-if="isTemporary" class="row align_right gap_16">
+        <div v-if="!hasRecipeId" class="row align_right gap_16">
           <router-link :to="{ path: '/save-recipe', query: { url: recipeUrl } }">
             <img src="/assets/icons/bookmark.svg" class="height_28px width_28px icon">
           </router-link>
@@ -50,9 +50,11 @@ const RecipeDetail = {
       </div>
     </div>`,
   async mounted() {
+    if(!this.$store.recipeToView.name) {
     this.loading = true;
     await this.renderRecipe();
     this.loading = false;
+    }
   },
   data() {
     return {
@@ -60,7 +62,7 @@ const RecipeDetail = {
     }
   },
   computed: {
-    isTemporary() {
+    hasUrlQueryParam() {
       if(this.$route.query.url) {
         return true
       }
@@ -68,8 +70,16 @@ const RecipeDetail = {
         return false
       }
     },
+    hasRecipeId(){
+      if(this.$route.params.id) {
+        return true
+      }
+      else {
+        false
+      }
+    },
     recipeUrl() {
-      if(this.$route.query.url) {
+      if(this.hasUrlQueryParam) {
         return this.$route.query.url
       }
       else {
@@ -82,10 +92,10 @@ const RecipeDetail = {
   },
   methods: {
     async renderRecipe() {
-      if(this.isTemporary) {
-        await this.temporaryFetchRecipe(this.$route.query.url);
+      if(this.hasUrlQueryParam) {
+        await this.scrapeRecipe(this.$route.query.url);
       }
-      else {
+      if(this.hasRecipeId) {
         await this.fetchRecipe()
       }
     },
@@ -104,7 +114,7 @@ const RecipeDetail = {
     showEditForm() {
       this.$store.showEditForm(this.recipeToView); // Call the showEditForm action from the $store
     },
-    async temporaryFetchRecipe(url) {
+    async scrapeRecipe(url) {
         this.$store.recipeToView = await this.$store.scrapeRecipe(url)
     }
   }
