@@ -19,6 +19,11 @@ const ScrapeRecipePage = {
 </div>
 </div>
   `,
+   mounted() {
+    if(this.$store.isAuthenticated) {
+      this.$router.push('/app')
+    }
+  },
   components: {
     AppHeader,
     UrlScraper
