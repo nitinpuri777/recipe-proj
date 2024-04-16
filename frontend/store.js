@@ -61,16 +61,23 @@ export const useStore = defineStore('store', {
           'Authorization': `Bearer ${token}`
         }
       }
-      const response = await fetch(url, options) // can fail if offline, need to handle different error statuses, timeout 
-      const json = await response.json()
-      console.log(json.recipe)
-      this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
-      this.overlayInput.recipeStepsInput = json.recipe.steps
-      this.overlayInput.recipeNameInput = json.recipe.name
-      this.overlayInput.imageUrl = json.recipe.image_url
-      this.overlayInput.hostname = parseHostname(scrapeUrl)
-      this.urlToScrapeInput = ""
-      return json.recipe
+      try {
+        const response = await fetch(url, options) // can fail if offline, need to handle different error statuses, timeout 
+        const json = await response.json()
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
+        this.overlayInput.recipeStepsInput = json.recipe.steps
+        this.overlayInput.recipeNameInput = json.recipe.name
+        this.overlayInput.imageUrl = json.recipe.image_url
+        this.overlayInput.hostname = parseHostname(scrapeUrl)
+        this.urlToScrapeInput = ""
+        return json.recipe
+      } catch (error) {
+        throw new Error('Scrape failed')
+        this.handleError(this, error);
+      }
     },
     goToApp() {
       router.push('/app')
@@ -277,8 +284,7 @@ export const useStore = defineStore('store', {
     },
     handleError(error) {
       console.error('API Error:', error);
-      // Display a toast notification to the user
-      this.$toast.error("Sorry, something went wrong.");
+      // Display a toast notification to the use
     }
   }
 })
