@@ -160,10 +160,18 @@ parseIngredients: function(recipe) {
 parseSteps: function(recipe) {
     let recipeSteps = []
     if (recipe['recipeInstructions']){
-        recipe['recipeInstructions'].forEach(step => {
-            if(step['@type'] === 'HowToStep'){
-                recipeSteps.push(step['text'])
+        recipe['recipeInstructions'].forEach(instruction => {
+            if(instruction['@type'] === 'HowToStep'){
+                recipeSteps.push(instruction['text'])
             }
+            if(instruction['@type']=== 'HowToSection'){
+                instruction['itemListElement'].forEach(item => {
+                    if(item['@type'] === 'HowToStep'){
+                        recipeSteps.push(item['text'])
+                    }
+                })
+            }
+
         })
     }
     else {

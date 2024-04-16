@@ -26,8 +26,6 @@ class Recipe extends Model {
       let userId = user.id
       let blankRecipeForUser = { userId }
       let newRecipe = {...blankRecipeForUser, ...recipe}
-      console.log(`adding new recipe`)
-      console.log(newRecipe)
       await Recipe.create(newRecipe)
       return await Recipe.findAllForUser(user)
   }
