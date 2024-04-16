@@ -4,7 +4,6 @@ const RecipeDetail = {
   template: html`
   <div v-if="loading">
     <loader />
-    </div>
   </div>
     <div v-else class="column gap_16 width_fill pad_left_16 pad_top_16 pad_right_16">
       <div class="row width_fill gap_fill">
