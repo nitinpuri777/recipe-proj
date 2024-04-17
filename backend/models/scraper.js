@@ -13,7 +13,8 @@ getRecipe: async function(url) {
         ingredients: parsedIngredients,
         steps: parsedSteps,
         image_url: parsedImageUrl,
-        hostname
+        hostname,
+        url: url
     }
     return recipe
 

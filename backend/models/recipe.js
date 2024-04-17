@@ -26,7 +26,11 @@ class Recipe extends Model {
       let userId = user.id
       let blankRecipeForUser = { userId }
       let newRecipe = {...blankRecipeForUser, ...recipe}
-      await Recipe.create(newRecipe)
+      try {
+        const createdRecipe = await Recipe.create(newRecipe);
+    } catch (error) {
+        console.error("Failed to create recipe", error);
+    }
       return await Recipe.findAllForUser(user)
   }
   static async removeRecipe(user, recipeToRemoveId) {
