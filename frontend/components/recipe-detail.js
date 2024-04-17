@@ -35,9 +35,19 @@ const RecipeDetail = {
       </div>
       <div class="row gap_fill gap_16 wrap">
         <div class="column align_left gap_16 min_width_300px max_width_576px">
-          <div class="font_24">Ingredients</div>
+          <div class="row gap_32 align_center_y">
+            <div class="font_24">Ingredients</div>
+            <div> 
+              <div class="row">
+              <button @click="this.scaleFactor = 0.5" class="button font_12 rounded_left ">0.5x</button>
+              <button @click="this.scaleFactor = 1" class="button font_12">1x</button>
+              <button @click="this.scaleFactor = 2" class="button font_12">2x</button>
+              <button @click="this.scaleFactor = 3" class="button font_12 rounded_right">3x</button>
+              </div>
+          </div>
+          </div>  
           <ul class="bullets  column gap_8">
-            <li v-for="ingredient in recipeToView.ingredients">{{ingredient}}</li>
+            <li v-for="ingredient in this.scaledIngredients">{{ingredient}}</li>
           </ul>
         </div>
         <div class="column align_right gap_16 min_width_300px max_width_576px">
@@ -52,15 +62,49 @@ const RecipeDetail = {
     if(!this.$store.recipeToView.name || this.hasRecipeId) {
     this.loading = true;
     await this.renderRecipe();
+    console.log(this.recipeToView)
     this.loading = false;
     }
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      scaleFactor: 1
+      
     }
   },
   computed: {
+    parsedIngredients() {
+      if(this.$store.recipeToView.parsedIngredients) {
+        return this.$store.recipeToView.parsedIngredients
+      }
+      else{
+        return null
+      }
+    },
+    scaledIngredients() { 
+      if(this.parsedIngredients){
+        let factor = this.scaleFactor
+        let scaledIngredients = []
+        for (const ingredient of this.parsedIngredients) {
+          let quantity = ingredient.quantity * factor
+          let scaledIngredient = ""
+          if(quantity && ingredient.description) {
+            scaledIngredient = `${quantity} ${ingredient.unitOfMeasure ?? ''} ${ingredient.description}`
+            if(factor != 1) {
+              scaledIngredient = scaledIngredient + "*"
+            }
+          }
+          else {
+            scaledIngredient = ingredient.ingredientString
+
+          }
+          
+          scaledIngredients.push(scaledIngredient)
+        }
+        return scaledIngredients
+      }
+    },
     hasUrlQueryParam() {
       if(this.$route.query.url) {
         return true
