@@ -52,6 +52,7 @@ const RecipeDetail = {
     if(!this.$store.recipeToView.name || this.hasRecipeId) {
     this.loading = true;
     await this.renderRecipe();
+    console.log(this.recipeToView)
     this.loading = false;
     }
   },
