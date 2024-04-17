@@ -14,7 +14,8 @@ getRecipe: async function(url) {
         steps: parsedSteps,
         image_url: parsedImageUrl,
         hostname,
-        url: url
+        url: url,
+        ld_json: recipeContent,
     }
     return recipe
 

@@ -67,12 +67,6 @@ export const useStore = defineStore('store', {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        this.overlayInput.recipeIngredientsInput = json.recipe.ingredients
-        this.overlayInput.recipeStepsInput = json.recipe.steps
-        this.overlayInput.recipeNameInput = json.recipe.name
-        this.overlayInput.imageUrl = json.recipe.image_url
-        this.overlayInput.hostname = parseHostname(scrapeUrl)
-        this.urlToScrapeInput = ""
         return json.recipe
       } catch (error) {
         throw new Error('Scrape failed')
@@ -172,17 +166,9 @@ export const useStore = defineStore('store', {
       }
 
     },
-    async addRecipe() {
+    async addRecipe(recipe) {
       let url = '/api/recipes'
       let token = localStorage.getItem("authToken")
-      let recipe = {
-        name: this.overlayInput.recipeNameInput,
-        ingredients: this.overlayInput.recipeIngredientsInput,
-        steps: this.overlayInput.recipeStepsInput,
-        image_url: this.overlayInput.imageUrl,
-        hostname: this.overlayInput.hostname,
-        url: this.overlayInput.urlToScrapeInput
-      }
       let body = { recipe }
       let options = {
         method: 'POST',
@@ -192,6 +178,7 @@ export const useStore = defineStore('store', {
           'Authorization': `Bearer ${token}`
         }
       }
+      console.log(recipe)
       const response = await fetch(url, options)
       const json = await response.json()
       this.recipes = json.recipes

@@ -1,9 +1,11 @@
 import 'dotenv/config'
+const DB_PREFIX = process.env.DB_PREFIX;
+
 const development = {
-    username: process.env.PGUSER,
-    password: process.env.PGPASSWORD,
-    database: process.env.PGDATABASE,
-    host: process.env.PGHOST,
+    host: process.env[`${DB_PREFIX}PGHOST`],
+    database: process.env[`${DB_PREFIX}PGDATABASE`],
+    username: process.env[`${DB_PREFIX}PGUSER`],
+    password: process.env[`${DB_PREFIX}PGPASSWORD`],
     dialect: 'postgres', 
     dialectOptions: {
       ssl: {
@@ -14,10 +16,10 @@ const development = {
   }
 
   const production = {
-    username: process.env.PROD_PGUSER,
-    password: process.env.PROD_PGPASSWORD,
-    database: process.env.PROD_PGDATABASE,
-    host: process.env.PROD_PGHOST,
+    host: process.env[`${DB_PREFIX}PGHOST`],
+    database: process.env[`${DB_PREFIX}PGDATABASE`],
+    username: process.env[`${DB_PREFIX}PGUSER`],
+    password: process.env[`${DB_PREFIX}PGPASSWORD`],
     dialect: 'postgres', 
     dialectOptions: {
       ssl: {

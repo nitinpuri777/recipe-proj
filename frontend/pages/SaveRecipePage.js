@@ -3,17 +3,22 @@ const SaveRecipePage = {
   created() {
     this.saveRecipe()
   },
+  data() {
+    return {
+      url: ''
+    }
+  },
   methods: {
     async saveRecipe() {
       // Set the URL to scrape from the query parameters
-      this.$store.overlayInput.urlToScrapeInput = this.$route.query.url;
+      this.url = this.$route.query.url;
   
       try {
         // Wait for the scraping to complete
-        await this.$store.scrapeRecipe(this.$store.overlayInput.urlToScrapeInput);
+        let recipe = await this.$store.scrapeRecipe(this.url);
   
         // Assuming addRecipe is an asynchronous action, wait for it to complete
-        await this.$store.addRecipe();
+        await this.$store.addRecipe(recipe);
   
         // After adding the recipe, navigate to the '/app' route
         this.$router.push('/app');

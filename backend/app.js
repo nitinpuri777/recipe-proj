@@ -45,6 +45,7 @@ Recipe.init({
   image_url: DataTypes.STRING,
   hostname: DataTypes.STRING,
   url: DataTypes.STRING,
+  ld_json: DataTypes.JSON,
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
