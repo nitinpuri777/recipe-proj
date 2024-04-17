@@ -49,7 +49,7 @@ const RecipeDetail = {
       </div>
     </div>`,
   async mounted() {
-    if(!this.$store.recipeToView.name) {
+    if(!this.$store.recipeToView.name || this.hasRecipeId) {
     this.loading = true;
     await this.renderRecipe();
     this.loading = false;
