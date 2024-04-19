@@ -46,6 +46,7 @@ Recipe.init({
   hostname: DataTypes.STRING,
   url: DataTypes.STRING,
   ld_json: DataTypes.JSON,
+  serving_size: DataTypes.INTEGER,
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,

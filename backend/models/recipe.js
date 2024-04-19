@@ -1,6 +1,5 @@
 import { Model } from 'sequelize'
-import { parse } from "recipe-ingredient-parser-v2";
-import { parseIngredient } from 'parse-ingredient';
+import parseIngredients from './parseIngredients.js'
 
 class Recipe extends Model {
   static async findAllForUser(user) {
@@ -18,7 +17,7 @@ class Recipe extends Model {
       }
     })
     if (foundRecipe){
-      let parsedIngredients = Recipe.parseIngredients(foundRecipe.ingredients)
+      let parsedIngredients = parseIngredients(foundRecipe.ingredients)
       foundRecipe.dataValues.parsedIngredients = parsedIngredients
       console.log(foundRecipe)
       return foundRecipe
@@ -28,23 +27,7 @@ class Recipe extends Model {
     }
   }
 
-  static parseIngredients(ingredients) {
-    let parsedIngredients = []
-    ingredients.forEach(ingredient => {
-      try {
-        let parsedIngredient = parseIngredient(ingredient)[0]
-        parsedIngredient.ingredientString = ingredient
-        parsedIngredients.push(parsedIngredient)
-      } catch (error) {
-        let parsedIngredient = `Error: `+ ingredient
-        parsedIngredients.push(parsedIngredient)
-      }
-      
-      
-      
-    })
-    return parsedIngredients
-  }
+  
 
   static async addRecipe(user, recipe) {
       let userId = user.id

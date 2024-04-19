@@ -37,14 +37,21 @@ const RecipeDetail = {
         <div class="column align_left gap_16 min_width_300px max_width_576px">
           <div class="row gap_32 align_center_y">
             <div class="font_24">Ingredients</div>
-            <div> 
+            <div v-if="!recipeToView.serving_size"> 
               <div class="row">
               <button @click="this.scaleFactor = 0.5" class="button font_12 rounded_left ">0.5x</button>
               <button @click="this.scaleFactor = 1" class="button font_12">1x</button>
               <button @click="this.scaleFactor = 2" class="button font_12">2x</button>
               <button @click="this.scaleFactor = 3" class="button font_12 rounded_right">3x</button>
               </div>
-          </div>
+            </div>
+            <div v-else>
+              <div class="row">
+                <button @click="decrementDesiredServings" class="button font_12 rounded_left ">-</button>
+                <input type="text" v-model="desiredServingsInput" class="border width_100px text_center">
+                <button @click="incrementDesiredServings" class="button font_12 rounded_right">+</button>
+              </div>
+            </div> 
           </div>  
           <ul class="bullets  column gap_8">
             <li v-for="ingredient in this.scaledIngredients">{{ingredient}}</li>
@@ -65,15 +72,34 @@ const RecipeDetail = {
     console.log(this.recipeToView)
     this.loading = false;
     }
+    this.desiredServings = this.recipeToView.serving_size
   },
   data() {
     return {
       loading: false,
-      scaleFactor: 1
+      scaleFactor: 1,
+      desiredServings: 0,
       
     }
   },
   computed: {
+    derivedScaleFactor() { 
+      if(this.recipeToView.serving_size) {
+        return this.desiredServings / this.recipeToView.serving_size
+      }
+      else {
+        return this.scaleFactor
+      }
+    },
+    desiredServingsInput() { 
+      if(this.desiredServings > 1) {
+        return `${this.desiredServings} servings`
+      }
+      else { 
+        return `${this.desiredServings} serving`
+      }
+      
+    },
     parsedIngredients() {
       if(this.$store.recipeToView.parsedIngredients) {
         return this.$store.recipeToView.parsedIngredients
@@ -84,10 +110,10 @@ const RecipeDetail = {
     },
     scaledIngredients() { 
       if(this.parsedIngredients){
-        let factor = this.scaleFactor
+        let factor = this.derivedScaleFactor
         let scaledIngredients = []
         for (const ingredient of this.parsedIngredients) {
-          let quantity = ingredient.quantity * factor
+          let quantity = Math.round((ingredient.quantity * factor) * 1000) / 1000 
           let scaledIngredient = ""
           if(quantity && ingredient.description) {
             scaledIngredient = `${quantity} ${ingredient.unitOfMeasure ?? ''} ${ingredient.description}`
@@ -159,7 +185,16 @@ const RecipeDetail = {
     },
     async scrapeRecipe(url) {
         this.$store.recipeToView = await this.$store.scrapeRecipe(url)
+    },
+    incrementDesiredServings() {
+      this.desiredServings++
+    },
+    decrementDesiredServings() {
+      if(this.desiredServings > 1) {
+        this.desiredServings--
+      }
     }
+    
   }
 }
 

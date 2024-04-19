@@ -1,22 +1,29 @@
 import * as cheerio from 'cheerio';
 import { parseHostname } from '../../frontend/globals.js';
+import parseIngredients from './parseIngredients.js';
 const Scraper = {
 getRecipe: async function(url) {
     let recipeContent = await this.findRecipe(url)
-    let parsedImageUrl = this.parseImageUrl(recipeContent)
-    let parsedName = this.parseName(recipeContent)
-    let parsedIngredients = this.parseIngredients(recipeContent)
-    let parsedSteps = this.parseSteps(recipeContent)
+    let scrapedImageUrl = this.scrapeImageUrl(recipeContent)
+    let scrapedName = this.scrapeName(recipeContent)
+    let scrapedIngredients = this.scrapeIngredients(recipeContent)
+    let scrapedSteps = this.scrapeSteps(recipeContent)
     let hostname = parseHostname(url)
+    let serving_size = this.scrapeServingSize(recipeContent)
+    console.log(serving_size)
     const recipe = {
-        name: parsedName,
-        ingredients: parsedIngredients,
-        steps: parsedSteps,
-        image_url: parsedImageUrl,
+        name: scrapedName,
+        ingredients: scrapedIngredients,
+        steps: scrapedSteps,
+        image_url: scrapedImageUrl,
         hostname,
         url: url,
         ld_json: recipeContent,
+        serving_size,
+        
     }
+    recipe.parsedIngredients = parseIngredients(recipe.ingredients)
+
     return recipe
 
 
@@ -142,7 +149,7 @@ parseRecipeObject: async function(url) {
     return recipe
 },
 
-parseName: function(recipe) {
+scrapeName: function(recipe) {
     if (recipe['name']){
         return recipe['name']
     }
@@ -151,7 +158,7 @@ parseName: function(recipe) {
     }
 },
 
-parseIngredients: function(recipe) {
+scrapeIngredients: function(recipe) {
     if (recipe['recipeIngredient']){
         return recipe['recipeIngredient']
     }
@@ -159,7 +166,7 @@ parseIngredients: function(recipe) {
         return ['No ingredients found']
     }
 },
-parseSteps: function(recipe) {
+scrapeSteps: function(recipe) {
     let recipeSteps = []
     if (recipe['recipeInstructions']){
         recipe['recipeInstructions'].forEach(instruction => {
@@ -181,9 +188,14 @@ parseSteps: function(recipe) {
     }
     return recipeSteps
 },
-parseImageUrl: function(recipe) {
+scrapeImageUrl: function(recipe) {
     return this.findFirstImageString(recipe)
 },
+scrapeServingSize: function(recipe) {
+    if(recipe.recipeYield) {
+    return recipe.recipeYield[0]
+    }
+}
 
 
 }

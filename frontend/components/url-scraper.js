@@ -31,6 +31,7 @@ const UrlScraper = {
       try {
         this.loading = true
         this.$store.recipeToView = await this.$store.scrapeRecipe(this.urlToScrape);
+        console.log(this.$store.recipeToView)
         this.loading = false
         this.$router.push({ path: '/recipeDetail', query: {url: this.urlToScrape}});
       } catch (error) {
