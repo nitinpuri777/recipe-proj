@@ -7,8 +7,13 @@ const RecipeList = {
   </div>
   <div v-else>
     <div class="column gap_16 width_fill height_fill">
-      <div class="font_32 font_700">
-        My Saved Recipes
+      <div class="row ">
+        <div class="font_32 font_700 text_nowrap">
+          My Saved Recipes
+        </div>
+        <div class="row gap_8 width_fill align_center_y align_right"> 
+          <input type="text" v-model="searchQuery" :class="inputVisibilityClass" class="search_bar_input rounded border border_color_gray pad_8"> <img @click="toggleSearchInput" v-if="showIcon" class="icon" src="/assets/icons/search.svg" /> 
+        </div> 
       </div>
       <main class="grid gap_16">
         <router-link v-for="recipe in recipes" :key="recipe.id" :to="'/app/recipe/' + recipe.id" class="border_invisible rounded recipe_tile tile_grid">
@@ -24,12 +29,20 @@ const RecipeList = {
   </div>`,
   computed: {
     recipes() {
-      return this.$store.recipes; // Access the recipes from the $store
-    }
+      if(this.searchQuery.length == 0) {
+        return this.$store.recipes; // Access the recipes from the $store
+      }
+      else { 
+        return this.$store.recipes.filter(recipe => recipe.name.toLowerCase().includes(this.searchQuery.toLowerCase().trim()) )
+      }
+    },
   },
   data() {
     return {
       loading: false,
+      searchQuery:"",
+      inputVisibilityClass: "search_bar_input--hidden",
+      showIcon: true,
     }
   },
   async mounted() {
@@ -40,6 +53,16 @@ const RecipeList = {
   methods: {
     showAddForm() {
       this.$store.showAddForm(); // Call $store action to show the add form
+    },
+    toggleSearchInput() {
+      if(this.inputVisibilityClass === "") {
+        this.inputVisibilityClass = "search_bar_input--hidden"
+        this.showIcon = true
+      }
+      else {
+        this.inputVisibilityClass = ""
+        this.showIcon = false
+      }
     }
   }
 }

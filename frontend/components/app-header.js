@@ -6,7 +6,8 @@ const AppHeader = {
       <div class="row max_width_1200px width_fill pad_left_16 pad_right_16 pad_top_16 pad_bottom_16 gap_32">
         <div class="row width_240px shrink_none">
           <a href="/"><img src="/assets/logo.png" class="width_fill"></a>
-        </div>
+    </div>
+
         <div class="row align_right width_fill">
           <div v-if="$store.isAuthenticated" class="row shrink_none align_center">
             <a @click="signOut" class="pad_8 button__secondary font_bold rounded border">Sign Out</a>

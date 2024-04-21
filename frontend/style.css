@@ -468,3 +468,22 @@ body {
     transform: translateY(-5px);
   }
 }
+
+.search_bar_input {
+  background-image: url('/assets/icons/search.svg');
+  background-repeat: no-repeat;
+  background-position: 10px center; /* Adjust as needed */
+  padding-left: 40px; /* Adjust padding to avoid overlap with the icon */
+  transition: transform 300ms ease-in-out
+}
+
+.search_bar_input--hidden {
+  visibility: hidden;
+  transform: translateX(90%);
+  opacity:0;
+}
+
+.toggle_icon--hidden  {
+  visibility: hidden;
+  opacity:0;
+}
