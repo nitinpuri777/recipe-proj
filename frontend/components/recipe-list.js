@@ -2,17 +2,14 @@ import { html } from "../globals.js";
 
 const RecipeList = {
   template: html`
-  <div v-if="loading" class="column width_fill height_fill">
-    <loader></loader>
-  </div>
-  <div v-else>
     <div class="column gap_16 width_fill height_fill">
-      <div class="row ">
+      <div class="row wrap gap_fill">
         <div class="font_32 font_700 text_nowrap">
           My Saved Recipes
         </div>
-        <div class="row gap_8 width_fill align_center_y align_right"> 
-          <input type="text" v-model="searchQuery" :class="inputVisibilityClass" class="search_bar_input rounded border border_color_gray pad_8"> <img @click="toggleSearchInput" v-if="showIcon" class="icon" src="/assets/icons/search.svg" /> 
+        <div class="row gap_8 align_center_y align_right"> 
+          <!-- <input type="text" v-model="searchQuery" class="search_bar_input width_fill rounded border border_color_gray pad_8">   -->
+          <img v-if="!this.$store.searchMode" @click="enableSearchMode" src="/assets/icons/search.svg" class="icon" />
         </div> 
       </div>
       <main class="grid gap_16">
@@ -25,44 +22,44 @@ const RecipeList = {
           </div>
         </router-link>
       </main>
-    </div>
-  </div>`,
+    </div>`,
   computed: {
+    searchQuery() {
+      return this.$store.searchQuery ?? ""
+    },
     recipes() {
-      if(this.searchQuery.length == 0) {
-        return this.$store.recipes; // Access the recipes from the $store
-      }
-      else { 
-        return this.$store.recipes.filter(recipe => recipe.name.toLowerCase().includes(this.searchQuery.toLowerCase().trim()) )
+      if (this.searchQuery.length === 0) {
+        return this.$store.recipes; // Return all recipes if there's no search query
+      } else {
+        return this.$store.recipes.filter(recipe => {
+          // Ensure recipe.name is not null or undefined before calling toLowerCase
+          const nameMatches = recipe.name && recipe.name.toLowerCase().includes(this.searchQuery.toLowerCase().trim());
+    
+          // Filter out null, undefined, and empty strings from ingredients, then join and check
+          const ingredientsMatches = recipe.ingredients
+            .filter(ingredient => ingredient && ingredient.trim())  // Filter out falsy and empty string values
+            .join(';')
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase().trim());
+    
+          return nameMatches || ingredientsMatches;
+        });
       }
     },
   },
   data() {
     return {
       loading: false,
-      searchQuery:"",
       inputVisibilityClass: "search_bar_input--hidden",
       showIcon: true,
     }
-  },
-  async mounted() {
-    this.loading = true;
-    await this.$store.loadRecipes(); 
-    this.loading = false;// Load recipes from the $store when the component mounts
   },
   methods: {
     showAddForm() {
       this.$store.showAddForm(); // Call $store action to show the add form
     },
-    toggleSearchInput() {
-      if(this.inputVisibilityClass === "") {
-        this.inputVisibilityClass = "search_bar_input--hidden"
-        this.showIcon = true
-      }
-      else {
-        this.inputVisibilityClass = ""
-        this.showIcon = false
-      }
+    enableSearchMode() {
+      this.$store.searchMode = true
     }
   }
 }

@@ -479,7 +479,7 @@ body {
 
 .search_bar_input--hidden {
   visibility: hidden;
-  transform: translateX(90%);
+  transform: translateX(80%);
   opacity:0;
 }
 
@@ -487,3 +487,9 @@ body {
   visibility: hidden;
   opacity:0;
 }
+
+.input_no_outline {
+  outline:none
+}
+
+

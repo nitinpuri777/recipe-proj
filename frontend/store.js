@@ -17,11 +17,13 @@ export const useStore = defineStore('store', {
         recipeStepsInput: [""],
         urlToScrapeInput: "",
         hostname: "",
-        imageUrl: ""
+        imageUrl: "",
+        searchQuery: "",
         },
       recipeToDelete: {},
       recipeToView: {},
       isAuthenticated: stytchClient.session.getSync() ? true : false,
+      searchMode: false,
     }
   },
   getters: { 
