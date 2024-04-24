@@ -1,7 +1,7 @@
 import { html } from "../globals.js"
 const UrlScraper = {
   template: html`
-  <div class="column width_fill gap_8">
+  <div class="column width_fill gap_8 collapsible_div" :class="collapsibleClasses">
     <div class="row gap_8 width_fill">
       <input class="rounded border border_color_gray pad_8 width_fill" type="text" placeholder="Paste your recipe url here." name="recipeName" v-model="urlToScrape"
         label="Url to Scrape">
@@ -39,8 +39,18 @@ const UrlScraper = {
         this.error = true
       }
       
+  },
+  },
+  computed: {
+    collapsibleClasses() { 
+      if(this.$store.searchMode) {
+        return "collapsible_div--hidden"
+      }
+      else {
+        return ""
+      }
+    }
   }
-}
 
 }
 

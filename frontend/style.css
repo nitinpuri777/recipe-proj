@@ -170,6 +170,7 @@ body {
 .height_32px { height:32px; }
 .height_48px { height:48px; }
 .height_59px { height:59px; }
+.height_76px { height:76px; }
 .height_80px { height:80px; }
 .height_120px { height:120px; }
 .height_140px { height: 140px; }
@@ -470,26 +471,58 @@ body {
 }
 
 .search_bar_input {
-  background-image: url('/assets/icons/search.svg');
-  background-repeat: no-repeat;
-  background-position: 10px center; /* Adjust as needed */
-  padding-left: 40px; /* Adjust padding to avoid overlap with the icon */
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%);
   transition: transform 300ms ease-in-out
 }
 
-.search_bar_input--hidden {
-  visibility: hidden;
-  transform: translateX(80%);
-  opacity:0;
+.search_bar_input--show {
+  transform: translateY(0%);
 }
 
-.toggle_icon--hidden  {
-  visibility: hidden;
-  opacity:0;
+.collapsible_div {
+  /* max-height: auto; */
+  max-height: 100px;
+  overflow: hidden;
+  transition: max-height 500ms ease-in-out, padding 500ms ease-in-out;
+}
+
+.collapsible_div--hidden {
+  max-height: 0;
+  padding: 0px;
+
 }
 
 .input_no_outline {
   outline:none
 }
+
+.slide-enter-active, .slide-leave-active {
+  transition: transform 0.5s ease-in-out;
+}
+.slide-enter, .slide-leave-to {
+  transform: translateY(-100%); /* Start above the view */
+}
+
+.header-placeholder {
+  position: relative; /* Needed for absolute positioning of SearchHeader */
+}
+
+.search-header {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  z-index: 100; /* Ensure it covers the AppHeader */
+}
+
+.width_transition {
+  transition: max-width 500ms ease-in-out;
+}
+
+
+
+
 
 
