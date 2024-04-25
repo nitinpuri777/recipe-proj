@@ -16,9 +16,19 @@ const SearchHeader = {
       this.$store.searchQuery = ""
     }
   },
-  mounted() {
-    this.$refs.searchInput.focus()
-  }
+  computed: {
+    focus() { 
+      return this.$store.focusSearchInput
+    }
+  },
+  watch: {
+    // whenever question changes, this function will run
+    focus(newFocus, oldFocus) {
+      if (newFocus) {
+        this.$refs.searchInput.focus()
+      }
+    }
+  },
 }
 
 export default SearchHeader

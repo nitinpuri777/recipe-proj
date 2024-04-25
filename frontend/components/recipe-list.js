@@ -60,7 +60,7 @@ const RecipeList = {
     },
     enableSearchMode() {
       this.$store.searchMode = true
-      this.$refs.searchInput.focus()
+      this.$store.triggerFocusSearchInput()
     }
   }
 }

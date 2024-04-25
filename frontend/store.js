@@ -18,12 +18,13 @@ export const useStore = defineStore('store', {
         urlToScrapeInput: "",
         hostname: "",
         imageUrl: "",
-        searchQuery: "",
         },
       recipeToDelete: {},
       recipeToView: {},
       isAuthenticated: stytchClient.session.getSync() ? true : false,
       searchMode: false,
+      searchQuery: "",
+      focusSearchInput: false,
     }
   },
   getters: { 
@@ -270,6 +271,10 @@ export const useStore = defineStore('store', {
       } catch (error) {
         console.error("OAuth authentication failed:", error);
       }
+    },
+    triggerFocusSearchInput() {
+      this.focusSearchInput = true
+      setTimeout(() => this.focusSearchInput = false, 100);
     },
     handleError(error) {
       console.error('API Error:', error);
