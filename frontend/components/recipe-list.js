@@ -13,7 +13,7 @@ const RecipeList = {
         </div> 
       </div>
       <main class="grid gap_16">
-        <router-link v-for="recipe in recipes" :key="recipe.id" :to="'/app/recipe/' + recipe.id" class="border_invisible rounded recipe_tile tile_grid">
+        <router-link v-for="recipe in recipes" :key="recipe.id" :to="'/app/recipe/' + recipe.id" class="border_invisible rounded recipe_tile tile_grid max_width_500px">
           <div class="column gap_fill height_fill width_fill align_top">
             <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
             <div class="row font_bold pad_8">
@@ -60,6 +60,7 @@ const RecipeList = {
     },
     enableSearchMode() {
       this.$store.searchMode = true
+      this.$refs.searchInput.focus()
     }
   }
 }
