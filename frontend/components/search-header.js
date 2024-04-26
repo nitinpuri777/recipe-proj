@@ -22,7 +22,6 @@ const SearchHeader = {
     }
   },
   watch: {
-    // whenever question changes, this function will run
     focus(newFocus, oldFocus) {
       if (newFocus) {
         this.$refs.searchInput.focus()

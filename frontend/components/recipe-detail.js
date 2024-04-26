@@ -34,10 +34,10 @@ const RecipeDetail = {
         </div>
       </div>
       <div class="row gap_fill gap_16 wrap">
-        <div class="column align_left gap_16 min_width_300px max_width_576px">
+        <div class="column align_left gap_16 min_width_300px max_width_480px">
           <div class="row gap_32 align_center_y">
-            <div class="font_24">Ingredients</div>
-            <div v-if="!recipeToView.serving_size"> 
+            <div class="font_24 font_bold">Ingredients</div>
+            <div v-if="!recipeToView.serving_size" class="row"> 
               <div class="row">
               <button @click="this.scaleFactor = 0.5" class="button font_12 rounded_left ">0.5x</button>
               <button @click="this.scaleFactor = 1" class="button font_12">1x</button>
@@ -53,15 +53,20 @@ const RecipeDetail = {
               </div>
             </div> 
           </div>  
-          <ul class="bullets  column gap_8">
-            <li v-for="ingredient in this.scaledIngredients">{{ingredient}}</li>
-          </ul>
+          <div class="bullets column gap_8">
+            <div v-for="ingredient in this.scaledIngredients" class="row border_bottom border_color_gray">
+              <div> {{ingredient}} </div>
+            </div>
+        </div>
         </div>
         <div class="column align_right gap_16 min_width_300px max_width_576px">
-          <div class="row align_left width_fill font_24">Steps</div>
-          <ol class="numbers column gap_8">
-            <li v-for="step in recipeToView.steps">{{step}}</li>
-          </ol>
+          <div class="row align_left width_fill font_24 font_bold">Steps</div>
+          <div class="column gap_16">
+            <div  v-for="(step, index) in recipeToView.steps" class="row font_16 gap_16">
+              <div class="font_20 font_bold">{{index+1}}</div>
+              <div>{{step}}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>`,
