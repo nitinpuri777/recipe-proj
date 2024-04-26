@@ -7,9 +7,9 @@ const RecipeListPage = {
   template: `
     <search-header class="search_bar_input" :class="searchHeaderClasses" />
     <app-header />
-      <div class="column pad_16 width_transition gap_16 width_fill height_fill" :class="searchModeWidthClasses">
+      <div class="column pad_16 width_transition width_fill height_fill" :class="searchModeWidthClasses">
         <div class="row width_fill align_center_x">
-          <url-scraper class="pad_top_16 pad_bottom_16 max_width_800px"/>
+          <url-scraper class="pad_top_16 pad_bottom_32 max_width_800px"/>
         </div>
         <template v-if="loading" class="column width_fill height_fill">
           <loader></loader>

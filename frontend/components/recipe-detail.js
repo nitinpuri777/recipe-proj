@@ -1,4 +1,6 @@
 import { html } from "../globals.js";
+import { toDecimal, toFraction } from 'fraction-parser';
+
 
 const RecipeDetail = {
   template: html`
@@ -118,7 +120,8 @@ const RecipeDetail = {
         let factor = this.derivedScaleFactor
         let scaledIngredients = []
         for (const ingredient of this.parsedIngredients) {
-          let quantity = Math.round((ingredient.quantity * factor) * 1000) / 1000 
+          //let quantity = Math.round((ingredient.quantity * factor) * 1000) / 1000 
+          let quantity = toFraction((ingredient.quantity * factor), {useUnicodeVulgar: true})
           let scaledIngredient = ""
           if(quantity && ingredient.description) {
             scaledIngredient = `${quantity} ${ingredient.unitOfMeasure ?? ''} ${ingredient.description}`
