@@ -34,7 +34,7 @@ const RecipeDetail = {
         </div>
       </div>
       <div class="row gap_fill gap_16 wrap">
-        <div class="column align_left gap_16 min_width_300px max_width_480px">
+        <div class="column align_left gap_16 min_width_300px max_width_400px">
           <div class="row gap_32 align_center_y">
             <div class="font_24 font_bold">Ingredients</div>
             <div v-if="!recipeToView.serving_size" class="row"> 
@@ -59,7 +59,7 @@ const RecipeDetail = {
             </div>
         </div>
         </div>
-        <div class="column align_right gap_16 min_width_300px max_width_576px">
+        <div class="column align_right gap_16 min_width_300px max_width_700px">
           <div class="row align_left width_fill font_24 font_bold">Steps</div>
           <div class="column gap_16">
             <div  v-for="(step, index) in recipeToView.steps" class="row font_16 gap_16">

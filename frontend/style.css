@@ -159,9 +159,11 @@ body {
 .min_width_300px {min-width:300px;}
 .min_width_400px {min-width:400px;}
 .max_width_fill { max-width:100%; }
+.max_width_400px {max-width: 400px}
 .max_width_480px { max-width: 480px; }
 .max_width_500px { max-width: 500px}
 .max_width_576px { max-width: 576px}
+.max_width_700px { max-width: 700px}
 .max_width_800px { max-width: 800px}
 .max_width_680px { max-width: 680px}    
 .max_width_1200px { max-width: 1200px; }
