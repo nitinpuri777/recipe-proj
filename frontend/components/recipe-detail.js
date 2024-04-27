@@ -57,7 +57,7 @@ const RecipeDetail = {
           </div>  
           <div class="bullets column gap_8">
             <div v-for="ingredient in this.scaledIngredients" class="row border_bottom border_color_gray">
-              <div> {{ingredient}} </div>
+              <div :class="{'font_italic':ingredient.modified}"> {{ingredient.string}} </div>
             </div>
         </div>
         </div>
@@ -122,16 +122,19 @@ const RecipeDetail = {
         for (const ingredient of this.parsedIngredients) {
           //let quantity = Math.round((ingredient.quantity * factor) * 1000) / 1000 
           let quantity = toFraction((ingredient.quantity * factor), {useUnicodeVulgar: true})
-          console.log(`quantity: ${quantity} factor ${factor}`)
-          let scaledIngredient = ""
+          let scaledIngredient = {
+            string:"",
+            modified:false
+          }
           if(ingredient.quantity > 0 && ingredient.description) {
-            scaledIngredient = `${quantity} ${ingredient.unitOfMeasure ?? ''} ${ingredient.description}`
+            scaledIngredient.string = `${quantity} ${ingredient.unitOfMeasure ?? ''} ${ingredient.description}`
             if(factor != 1) {
-              scaledIngredient = scaledIngredient + "*"
+              scaledIngredient.string = scaledIngredient.string + "*"
+              scaledIngredient.modified = true
             }
           }
           else {
-            scaledIngredient = ingredient.ingredientString
+            scaledIngredient.string = ingredient.ingredientString
 
           }
           
