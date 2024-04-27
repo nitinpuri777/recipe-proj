@@ -1,65 +1,17 @@
 import 'dotenv/config'
-import pg from 'pg'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import ApiSignIn from './api/sign-in.js'
 import Middleware from './api/_middleware.js';
 import ApiRecipes from './api/recipes.js';
 import ApiScrape from './api/scrape.js';
-import { Sequelize, DataTypes, } from 'sequelize';
-import User from './models/user.js';
-import Recipe from './models/recipe.js';
+import sequelize from './models/sequelize.js';
 
-
-// Determine which set of credentials to use
-const DB_PREFIX = process.env.DB_PREFIX;
 const STYTCH_ENV_PREFIX = process.env.STYTCH_ENV_PREFIX
 
-// Use the appropriate credentials based on the active DB service
-const sequelize = new Sequelize({
-  host: process.env[`${DB_PREFIX}PGHOST`],
-  database: process.env[`${DB_PREFIX}PGDATABASE`],
-  username: process.env[`${DB_PREFIX}PGUSER`],
-  password: process.env[`${DB_PREFIX}PGPASSWORD`],
-  dialect: 'postgres',
-  dialectModule: pg,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false 
-    }
-  },
-  logging: false 
-})
-User.init({
-  name: DataTypes.STRING,
-  email: DataTypes.STRING,
-  password: DataTypes.STRING,
-  token: DataTypes.STRING,
-  stytchUserId: DataTypes.STRING
-}, { sequelize, modelName: 'user' });
-Recipe.init({
-  name: DataTypes.STRING,
-  ingredients: DataTypes.JSON,
-  steps: DataTypes.JSON,
-  image_url: DataTypes.STRING,
-  hostname: DataTypes.STRING,
-  url: DataTypes.STRING,
-  ld_json: DataTypes.JSON,
-  serving_size: DataTypes.INTEGER,
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'users',
-      key: 'id',
-    }
-  }
-}, { sequelize, modelName: 'recipe' });
-
-
+//initialize db connection
 sequelize.sync();
-//sequelize
+
 
 const app = express() 
 app.use(express.json())
