@@ -122,9 +122,9 @@ const RecipeDetail = {
         for (const ingredient of this.parsedIngredients) {
           //let quantity = Math.round((ingredient.quantity * factor) * 1000) / 1000 
           let quantity = toFraction((ingredient.quantity * factor), {useUnicodeVulgar: true})
-          console.log(quantity)
+          console.log(`quantity: ${quantity} factor ${factor}`)
           let scaledIngredient = ""
-          if(quantity > 0 && ingredient.description) {
+          if(ingredient.quantity > 0 && ingredient.description) {
             scaledIngredient = `${quantity} ${ingredient.unitOfMeasure ?? ''} ${ingredient.description}`
             if(factor != 1) {
               scaledIngredient = scaledIngredient + "*"
