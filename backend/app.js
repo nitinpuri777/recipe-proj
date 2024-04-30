@@ -6,6 +6,8 @@ import Middleware from './api/_middleware.js';
 import ApiRecipes from './api/recipes.js';
 import ApiScrape from './api/scrape.js';
 import sequelize from './models/sequelize.js';
+import ApiLists from './api/lists.js';
+import ApiListItems from './api/listItems.js';
 
 const STYTCH_ENV_PREFIX = process.env.STYTCH_ENV_PREFIX
 
@@ -29,6 +31,12 @@ app.post('/api/recipes', ApiRecipes.post)
 app.delete('/api/recipes/:id', ApiRecipes.delete_)
 app.put('/api/recipes/:id', ApiRecipes.put)
 app.get('/api/recipe/:id', ApiRecipes.find)
+app.get('/api/lists/:listId/items', ApiListItems.get)
+app.post('/api/lists/:listId/items', ApiListItems.add)
+app.delete('/api/lists/:listId/items/:listItemId', ApiListItems.delete_)
+app.get('/api/lists', ApiLists.find)
+app.post('/api/lists', ApiLists.create)
+app.delete('/api/lists/:id', ApiLists.delete_)
 app.use('/api', Middleware.handleError)
 app.use(express.static('frontend'))
 app.get('*', Middleware.loadContent)

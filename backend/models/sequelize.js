@@ -3,6 +3,8 @@ import pg from 'pg'
 import { Sequelize, DataTypes, } from 'sequelize';
 import User from './user.js';
 import Recipe from './recipe.js';
+import List from './list.js';
+import ListItem from './listItem.js';
 
 
 
@@ -23,32 +25,15 @@ const sequelize = new Sequelize({
       rejectUnauthorized: false 
     }
   },
-  logging: false 
+  logging: false
 })
-User.init({
-  name: DataTypes.STRING,
-  email: DataTypes.STRING,
-  password: DataTypes.STRING,
-  token: DataTypes.STRING,
-  stytchUserId: DataTypes.STRING
-}, { sequelize, modelName: 'user' });
-Recipe.init({
-  name: DataTypes.STRING,
-  ingredients: DataTypes.JSON,
-  steps: DataTypes.JSON,
-  image_url: DataTypes.STRING,
-  hostname: DataTypes.STRING,
-  url: DataTypes.STRING,
-  ld_json: DataTypes.JSON,
-  serving_size: DataTypes.INTEGER,
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'users',
-      key: 'id',
-    }
-  }
-}, { sequelize, modelName: 'recipe' });
+
+User.initModel(sequelize)
+Recipe.initModel(sequelize)
+List.initModel(sequelize)
+ListItem.initModel(sequelize)
+
+List.hasMany(ListItem, { foreignKey: 'listId' });
+ListItem.belongsTo(List, { foreignKey: 'listId' });
 
 export default sequelize

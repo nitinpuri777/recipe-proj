@@ -1,7 +1,31 @@
-import { Model } from 'sequelize'
+import { Model, DataTypes } from 'sequelize'
 import parseIngredients from './parseIngredients.js'
 
 class Recipe extends Model {
+  static initModel(sequelize) {
+    Recipe.init({
+      name: DataTypes.STRING,
+      ingredients: DataTypes.JSON,
+      steps: DataTypes.JSON,
+      image_url: DataTypes.STRING,
+      hostname: DataTypes.STRING,
+      url: DataTypes.STRING,
+      ld_json: DataTypes.JSON,
+      serving_size: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users', // Ensure this matches your users table name (might be 'Users')
+          key: 'id',
+        }
+      }
+    }, {
+      sequelize,
+      modelName: 'recipe'
+    });
+  }
+
   static async findAllForUser(user) {
       return await Recipe.findAll({
         where: {

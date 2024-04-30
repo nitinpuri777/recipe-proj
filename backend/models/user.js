@@ -1,6 +1,15 @@
-import { Model } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 class User extends Model {
+  static async initModel(sequelize) {
+    User.init({
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      password: DataTypes.STRING,
+      token: DataTypes.STRING,
+      stytchUserId: DataTypes.STRING
+    }, { sequelize, modelName: 'user' });
+  }
   static async findByToken(token) {
     return await User.findOne({
       where: {

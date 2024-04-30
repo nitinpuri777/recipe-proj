@@ -73,7 +73,6 @@ export const useStore = defineStore('store', {
         return json.recipe
       } catch (error) {
         throw new Error('Scrape failed')
-        this.handleError(this, error);
       }
     },
     goToApp() {
@@ -276,9 +275,36 @@ export const useStore = defineStore('store', {
       this.focusSearchInput = true
       setTimeout(() => this.focusSearchInput = false, 100);
     },
-    handleError(error) {
-      console.error('API Error:', error);
-      // Display a toast notification to the use
+    async getLists() {
+      let url = '/api/lists'
+        let options = {
+          method: 'GET',
+          headers: {'Content-Type': 'application/json'}
+        }
+        const response = await fetch(url, options)
+        const lists = await response.json().lists
+        return lists
+    },
+    async createList() {
+      let url = '/api/lists'
+        let options = {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'}
+        }
+        const response = await fetch(url, options)
+        const list = await response.json().list
+        return list
+    },
+    async deleteList() {
+      let url = '/api/lists'
+        let options = {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'}
+        }
+        const response = await fetch(url, options)
+        if(response.status() != '200') {
+          console.log(response.message)
+        }
     }
   }
 })
