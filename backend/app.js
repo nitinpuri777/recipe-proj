@@ -17,6 +17,12 @@ sequelize.sync();
 
 const app = express() 
 app.use(express.json())
+app.use((req, res, next) => {
+  if (req.method === "POST" || req.method === "PUT" || req.method === "DELETE") {
+      console.log(`Received ${req.method} at ${req.path}:`, JSON.stringify(req.body));
+  }
+  next();
+});
 app.use(cookieParser())
 app.get('/api/env', (req, res) => {
   res.json({

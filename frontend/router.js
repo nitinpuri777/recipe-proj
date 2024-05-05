@@ -7,6 +7,7 @@ import RecipeDetailPage from './pages/RecipeDetailPage.js'
 import ScrapeRecipePage from './pages/ScrapeRecipePage.js'
 import ScrapeDetailPage from './pages/ScrapeDetailPage.js'
 import SaveRecipePage from './pages/SaveRecipePage.js'
+import ShoppingListPage from './pages/ShoppingListPage.js'
 
 const routes = [
   { 
@@ -33,6 +34,12 @@ const routes = [
     path: '/app/recipe/:id', 
     name: 'recipeDetail',
     component: RecipeDetailPage,
+    meta: { requiresAuth: true }
+  },
+  { 
+    path: '/app/shopping', 
+    name: 'shopping',
+    component: ShoppingListPage,
     meta: { requiresAuth: true }
   },
   { 

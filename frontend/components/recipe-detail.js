@@ -92,6 +92,7 @@ const RecipeDetail = {
   computed: {
     derivedScaleFactor() { 
       if(this.recipeToView.serving_size) {
+        console.log(this.recipeToView.serving_size)
         return this.desiredServings / this.recipeToView.serving_size
       }
       else {

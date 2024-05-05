@@ -25,6 +25,9 @@ export const useStore = defineStore('store', {
       searchMode: false,
       searchQuery: "",
       focusSearchInput: false,
+      shoppingLists:{},
+      currentListId:"",
+      currentListItems:{}
     }
   },
   getters: { 
@@ -282,8 +285,10 @@ export const useStore = defineStore('store', {
           headers: {'Content-Type': 'application/json'}
         }
         const response = await fetch(url, options)
-        const lists = await response.json().lists
-        return lists
+        const json = await response.json()
+        console.log(json)
+        const lists = json.lists
+        this.shoppingLists = lists
     },
     async createList() {
       let url = '/api/lists'
@@ -292,19 +297,59 @@ export const useStore = defineStore('store', {
           headers: {'Content-Type': 'application/json'}
         }
         const response = await fetch(url, options)
-        const list = await response.json().list
-        return list
+        this.getLists()
     },
-    async deleteList() {
-      let url = '/api/lists'
+    async deleteList(listId) {
+      let url = `/api/lists/${listId}`
         let options = {
           method: 'DELETE',
           headers: {'Content-Type': 'application/json'}
         }
         const response = await fetch(url, options)
-        if(response.status() != '200') {
+        if(response.status != '200') {
           console.log(response.message)
         }
+        this.getLists()
+    },
+    async setCurrentList(listId) {
+      this.currentListId = listId
+      await this.getListItems(listId)
+    },
+    async getListItems(listId) {
+      let url= `/api/lists/${listId}/items`
+      let options = {
+        method: "GET",
+        headers: {'Content-Type': 'application/json'}
+      }
+      const response = await fetch(url, options)
+      const json = await response.json()
+      console.log(json)
+      this.currentListItems = json.listItems
+    },
+    async createListItem(listId, itemDetails) {
+      console.log(itemDetails)
+      let url= `/api/lists/${listId}/items`
+      let options = {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({itemDetails})
+      }
+      const response = await fetch(url, options)
+      const json = await response.json()
+      await this.getListItems(listId)
+    },
+
+    async deleteListItem(listId, listItemId) {
+      let url = `/api/lists/${listId}/items/${listItemId}`
+      let options = {
+        method: "DELETE",
+        headers: {'Content-Type': 'application/json'}
+      }
+      const response = await fetch(url, options)
+      if(response.status != '200') {
+        console.log(response.message)
+      }
+      this.getListItems(listId)
     }
   }
 })

@@ -10,7 +10,6 @@ getRecipe: async function(url) {
     let scrapedSteps = this.scrapeSteps(recipeContent)
     let hostname = parseHostname(url)
     let serving_size = this.scrapeServingSize(recipeContent)
-    console.log(serving_size)
     const recipe = {
         name: scrapedName,
         ingredients: scrapedIngredients,
@@ -192,10 +191,18 @@ scrapeImageUrl: function(recipe) {
     return this.findFirstImageString(recipe)
 },
 scrapeServingSize: function(recipe) {
-    if(recipe.recipeYield) {
-    return recipe.recipeYield[0]
+    // Check if recipeYield exists
+    if (recipe.recipeYield) {
+        // Determine if recipeYield is an array or a string
+        let yieldValue = Array.isArray(recipe.recipeYield) ? recipe.recipeYield[0] : recipe.recipeYield;
+        // Use regex to find the first sequence of digits
+        let match = yieldValue.match(/\d+/);
+        // Parse the found digits to an integer and return, or return null if no digits found
+        return match ? parseInt(match[0]) : null;
     }
+    return null; // Return null if no recipeYield is present
 }
+
 
 
 }

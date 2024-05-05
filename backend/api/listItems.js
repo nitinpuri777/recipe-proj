@@ -3,9 +3,9 @@ import ListItem from "../models/listItem.js";
 
 async function get(req, res, next) {
   try {
-    console.log(`api: ${req.params.listId}`)
-    const response = await ListItem.getListItems(req.params.listId)
-    res.status(200).json({response})
+    console.log(`api-get: ${req.params.listId}`)
+    const listItems = await ListItem.getListItems(req.params.listId)
+    res.status(200).json({listItems})
   } catch (error) {
     console.error(error)
     next(error)
@@ -13,11 +13,11 @@ async function get(req, res, next) {
 }
 async function add(req, res, next) {
   try {
-    console.log(`api ${req.params.listId}`)
-    let response = await ListItem.addListItem(req.params.listId, req.body.itemDetails) 
-    res.status(200).json({response}) 
+    console.log(`api-add: ${req.params.listId} - ${req.body}`)
+    let listItems = await ListItem.addListItem(req.params.listId, req.body.itemDetails) 
+    res.status(200).json({listItems}) 
   } catch (error) {
-    console.error(error)
+    console.log(error)
     next(error)
   }
 }
