@@ -3,6 +3,7 @@
 --white: hsla(0, 0%, 100%, 1);
 --celadon: hsla(123, 32%, 72%, 1);
 --cadet-gray: hsla(197, 11%, 57%, 1);
+--subtle-gray: hsl(204,45%,98%);
 --antiflash-white: hsla(180, 3%, 93%, 1);
 --prussian-blue: hsla(210, 38%, 20%, 1);
 --desert-sand: hsla(23, 73%, 86%, 1);
@@ -102,7 +103,43 @@ body {
 .gap_16 { gap:16px }
 .gap_32 { gap:32px }
 .gap_8 { gap:8px }
+.gap_4 { gap:4px }
+.gap_2{ gap:2px }
+.gap_1{ gap:1px }
 .gap_fill { justify-content: space-between; }
+
+.checkbox {
+  display: inline-block;
+  border-radius: 4px;
+  border: 2px solid var(--antiflash-white);
+  height:22px;
+  width: 22px;  
+  appearance: none;
+  background-color: transparent;
+  outline: none;
+  transition: border-color 0.1s;
+  padding:0px;
+}
+
+.checkbox:not(:disabled):checked {
+  border-color: var(--cadet-gray);
+  background-image: url('/assets/icons/check.svg');
+  background-size: 100% 100%;
+  /* Center the background image */
+  background-position: center;
+  -webkit-appearance: none;
+  appearance: none;
+  filter: var(--cadet-gray)
+}
+
+.checkbox:not(:disabled):hover {
+  border-color: var(--cadet-gray);
+  cursor:pointer;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
 
 
 /* PADDING */
@@ -138,6 +175,7 @@ body {
 .border_top { border-top: 1px black solid; }
 .border_bottom { border-bottom: 1px black solid; }
 .border_color_gray { border-color: var(--antiflash-white);}
+.border_color_subtle_gray { border-color: var(--subtle-gray);}
 
 /* Fixed Height/Width */
 .test {
@@ -227,6 +265,10 @@ body {
 .bg_white {
   background-color: white;
 }
+
+.bg_gray {
+  background-color: var(--subtle-gray);
+}
 /* End GPT Suggestion for right column */
 
 /* Recipe Link */
@@ -297,6 +339,8 @@ body {
 .font_bold { font-weight: 600;}
 .font_italic { font-style: italic;}
 .font_700 { font-weight: 700 }
+
+.font_color_gray { color: var(--cadet-gray)}
 
 .overflow_hidden { 
   overflow: hidden;
@@ -395,9 +439,8 @@ body {
   border: 0px solid transparent;
 }
 
-.rounded {
-  border-radius:10px;
-}
+.rounded { border-radius:10px;}
+.rounded_8px { border-radius:8px;}
 
 .rounded_right {
   border-top-right-radius:10px;

@@ -25,9 +25,9 @@ export const useStore = defineStore('store', {
       searchMode: false,
       searchQuery: "",
       focusSearchInput: false,
-      shoppingLists:{},
+      shoppingLists:[],
       currentListId:"",
-      currentListItems:{}
+      currentListItems:[]
     }
   },
   getters: { 
