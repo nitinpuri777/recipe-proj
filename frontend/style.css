@@ -141,6 +141,13 @@ body {
   text-decoration: line-through;
 }
 
+.add_item_input {
+  background-image: url('/assets/icons/plus.svg');
+  background-repeat: no-repeat;
+  background-position: 4px;
+  background-size: 20px;
+}
+
 
 /* PADDING */
 .pad_8 { padding: 8px; }
