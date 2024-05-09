@@ -8,7 +8,7 @@ import StytchClient from "./stytch/stytch-client.js";
 async function authenticateSession(req, res, next) {
   let token = req.cookies.stytch_session
 
-  StytchClient.sessions.authenticate({session_token: token})
+  StytchClient.sessions.authenticate({session_token: token, session_duration_minutes: 43200})
     .then(async authResponse  =>  { 
       if(authResponse.status_code === 200) {
         let user = await User.findOrCreateByStytchUser(authResponse.user)

@@ -238,7 +238,7 @@ export const useStore = defineStore('store', {
     async authenticateMagicLink(token, next_route) {
       try {
         const authResponse = await stytchClient.magicLinks.authenticate(token, {
-          session_duration_minutes: 60
+          session_duration_minutes: 43200
         });
         if (authResponse.status_code === 200) {
           console.log("Authenticated successfully");
@@ -260,7 +260,7 @@ export const useStore = defineStore('store', {
     async authenticateOAuth(token, next_route) {
       try {
         await stytchClient.oauth.authenticate(token, {
-          session_duration_minutes: 60
+          session_duration_minutes: 43200
         });
         console.log('Successful authentication: OAuth');
         this.isAuthenticated = true;
