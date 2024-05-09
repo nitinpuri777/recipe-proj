@@ -17,7 +17,7 @@ const ShoppingListPage = {
     <div class ="column max_width_700px gap_16 width_fill">
       <div class="font_24 pad_left_16 pad_top_32">Shopping List</div>
       <div class="row width_fill pad_left_8 pad_right_8">
-        <input type="text" class="row width_fill pad_8 pad_left_32 rounded border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
+        <input type="text" class="row width_fill pad_8 pad_left_32 rounded_20px border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
       </div>
       <div class="column bg_gray gap_2 pad_left_8 pad_right_8 pad_top_16 pad_bottom_16">
         <template v-for="item, index in this.$store.currentListItems" :key="index">
@@ -44,12 +44,6 @@ const ShoppingListPage = {
           </div> 
         </template>
         </div> 
-        <div class="row">
-          <input type="text" v-model="inputIngredientName" placeholder="Ingredient Name">
-          <input type="number" v-model="inputQuantity" placeholder="Quantity">
-          <input type="text" v-model="inputUnitOfMeasure" placeholder="Unit of Measure">
-          <div  class="button" @click="addListItem"> Add Item </div>
-        </div>
       </div>
     </div>
 </div>
