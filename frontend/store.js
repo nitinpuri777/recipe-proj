@@ -336,7 +336,8 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       const json = await response.json()
-      await this.getListItems(listId)
+      return json.listItems
+      // await this.getListItems(listId)
     },
 
     async deleteListItem(listId, listItemId) {
@@ -349,7 +350,7 @@ export const useStore = defineStore('store', {
       if(response.status != '200') {
         console.log(response.message)
       }
-      this.getListItems(listId)
+      // this.getListItems(listId)
     },
 
     async updateListItem(listId, itemDetails) {
@@ -363,7 +364,7 @@ export const useStore = defineStore('store', {
       if(response.status != '200') {
         console.log(response.message)
       }
-      this.getListItems(listId)
+      // this.getListItems(listId)
     }
   }
 })

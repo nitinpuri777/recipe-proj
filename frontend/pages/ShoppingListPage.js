@@ -22,25 +22,33 @@ const ShoppingListPage = {
       </div>
       <div class="column bg_gray gap_2 pad_left_8 pad_right_8 pad_top_16 pad_bottom_16">
         <template v-for="item, index in this.$store.currentListItems" :key="index">
-          <div @click="showEditModal(item)" v-if="!this.checkedItems[index]" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
-            <div class= "row gap_8 align_center_y" :class="{'strikethrough font_color_gray' : checkedItems[index]}">
+          <div v-if="!item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
+            <div @click="showEditModal(item)" class= "row gap_8 align_center_y align_left_x width_fill" >
               <div class="font_16">{{item.ingredientName}}</div>
               <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
             </div>
             <div class="row align_right">
-              <input type="checkbox" v-model="checkedItems[index]" class="checkbox" @change="toggleCheckedItem(index)">
+              <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
             </div>
           </div> 
         </template>
-        <div v-if="this.checkedItems.some(value => value === true)" class="row pad_top_16 pad_bottom_8 font_bold">Checked Items</div>
+        <div v-if="this.$store.currentListItems.some(value => value.checked === true)" class="row gap_fill width_fill pad_top_16 pad_bottom_8 font_bold">
+          <div class="text_nowrap">Checked Items</div>
+          <div class="row align_right width_fill">
+            <div @click="deleteCheckedItems" class="border row rounded gap_4 pad_left_12 pad_right_12 align_center_y font_12" >
+              <img src="/assets/icons/x.svg" height="12px" width="12px">
+              <div>Clear</div>
+            </div>
+          </div>
+        </div>
         <template v-for="item, index in this.$store.currentListItems" :key="index">
-          <div v-if="this.checkedItems[index]" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
-            <div class= "row gap_8 align_center_y" :class="{'strikethrough font_color_gray' : checkedItems[index]}">
+          <div v-if="item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
+            <div class= "row gap_8 align_center_y" :class="{'strikethrough font_color_gray' : item.checked}">
               <div class="font_16">{{item.ingredientName}}</div>
               <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
             </div>
             <div class="row align_right">
-              <input type="checkbox" v-model="checkedItems[index]" class="checkbox" @change="toggleCheckedItem(index)">
+              <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
             </div>
           </div> 
         </template>
@@ -76,15 +84,21 @@ const ShoppingListPage = {
   methods: {
     async addListItem() {
       let json = parseIngredient(this.inputItem)[0]
+      const tempId = `temp-${Date.now()}`;
       console.log(json)
       let itemDetails = {
+        id: tempId,
         ingredientName: capitalizeFirstLetter(json.description),
         quantity: json.quantity,
         unitOfMeasure: json.unitOfMeasure
       }
       this.$store.currentListItems.push(itemDetails)
       this.inputItem = ""
-      await this.$store.createListItem(this.$store.currentListId, itemDetails)
+      let listItemResponse = await this.$store.createListItem(this.$store.currentListId, itemDetails)
+      const index = this.$store.currentListItems.findIndex(item => item.id === tempId);
+      if (index !== -1) {
+        this.$store.currentListItems[index] = { ...this.$store.currentListItems[index], ...listItemResponse };
+      }
       
     },
     showEditModal(item) {
@@ -108,6 +122,10 @@ const ShoppingListPage = {
       this.showModal=false
       await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[indexToUpdate])
     },
+    async toggleCheckedItem(index) {
+      // this.$store.currentListItems[index].checked = !this.$store.currentListItems[index].checked
+      await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[index])
+    },
     async deleteItem(itemId) {
       let indexToDelete = this.$store.currentListItems.findIndex(listItem => listItem.id == itemId)
       if (indexToDelete > -1) {
@@ -116,6 +134,17 @@ const ShoppingListPage = {
       this.showModal=false
       await this.$store.deleteListItem(this.$store.currentListId, itemId)
 
+    },
+    async deleteCheckedItems() {
+      let checkedItems = []
+      for (const item of this.$store.currentListItems) {
+        if(item.checked) {
+          checkedItems.push(item.id)
+        }
+      }
+      for (const itemId of checkedItems) {
+        this.deleteItem(itemId)
+      }
     }
   },
   components: {

@@ -155,11 +155,13 @@ body {
 .pad_32 { padding: 32px; }
 
 .pad_left_8 { padding-left: 8px; }
+.pad_left_12 { padding-left: 12px; }
 .pad_left_16 { padding-left: 16px; }
 .pad_left_32 { padding-left: 32px; }
 
 
 .pad_right_8 { padding-right: 8px; }
+.pad_right_12 { padding-right: 12px; }
 .pad_right_16 { padding-right: 16px; }
 .pad_right_32 { padding-right: 32px; }
 
@@ -587,6 +589,8 @@ body {
   background-repeat: no-repeat;
   background-position: calc(100% - 8px) center;
 }
+
+
 
 
 

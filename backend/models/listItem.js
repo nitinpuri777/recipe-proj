@@ -25,14 +25,17 @@ class ListItem extends Model {
       },
       quantity: {
         type: DataTypes.DECIMAL,
-        allowNull: false
+        allowNull: true
       },
       unitOfMeasure: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       category: {
         type: DataTypes.STRING
+      },
+      checked: {
+        type: DataTypes.BOOLEAN
       },
       createdAt: {
         allowNull: false,
