@@ -580,6 +580,14 @@ body {
   transition: max-width 500ms ease-in-out;
 }
 
+.custom_select { 
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url('assets/icons/chevron-down.svg');
+  background-repeat: no-repeat;
+  background-position: calc(100% - 8px) center;
+}
+
 
 
 

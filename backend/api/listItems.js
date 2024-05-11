@@ -31,9 +31,21 @@ async function delete_(req, res, next) {
   }
 }
 
+async function update(req, res, next) {
+  try {
+    console.log(req.body.itemDetails)
+    await ListItem.updateListItem(req.body.itemDetails)
+    res.status(200).json({message:'Successfully updated.'})
+  } catch (error) {
+    console.error(error)
+    next(error)
+  }
+}
+
 const ApiListItems = {
   get,
   add,
+  update,
   delete_
 }
 

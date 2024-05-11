@@ -75,9 +75,9 @@ class ListItem extends Model {
     
   }
 
-  static async updateListItem(listItemId, updatedlistItem){
+  static async updateListItem(updatedlistItem){
     try {
-      let itemToUpdate = ListItem.findByPk(listItemId)
+      let itemToUpdate = await ListItem.findByPk(updatedlistItem.id)
       itemToUpdate.update(updatedlistItem)
     } catch (error) {
       throw new Error('COULD_NOT_UPDATE_ITEM')

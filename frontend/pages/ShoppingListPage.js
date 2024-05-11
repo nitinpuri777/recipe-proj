@@ -1,7 +1,8 @@
 import AppHeader from "../components/app-header.js"
-import { html } from "../globals.js"
-import { parseIngredient } from "parse-ingredient"
+import { html, capitalizeFirstLetter } from "../globals.js"
+import { parseIngredient, unitsOfMeasure } from "parse-ingredient"
 import { toDecimal, toFraction } from 'fraction-parser';
+import EditIngredientModal from "../components/edit-ingredient-modal.js";
 
 const ShoppingListPage = {
   template: html`
@@ -21,7 +22,7 @@ const ShoppingListPage = {
       </div>
       <div class="column bg_gray gap_2 pad_left_8 pad_right_8 pad_top_16 pad_bottom_16">
         <template v-for="item, index in this.$store.currentListItems" :key="index">
-          <div v-if="!this.checkedItems[index]" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
+          <div @click="showEditModal(item)" v-if="!this.checkedItems[index]" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
             <div class= "row gap_8 align_center_y" :class="{'strikethrough font_color_gray' : checkedItems[index]}">
               <div class="font_16">{{item.ingredientName}}</div>
               <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
@@ -47,6 +48,7 @@ const ShoppingListPage = {
       </div>
     </div>
 </div>
+<edit-ingredient-modal @hide-edit-modal="hideEditModal" @delete-item="deleteItem" @save-item="updateListItem" :id="editId" :showModal="showModal" :ingredientName="editIngredientName" :quantity="editQuantity" :unitOfMeasure="editUnitOfMeasure"/>
   `,
   async mounted() {
     await this.$store.getLists()
@@ -54,13 +56,20 @@ const ShoppingListPage = {
       console.log(this.$store.shoppingLists[0].id)
       await this.$store.setCurrentList(this.$store.shoppingLists[0].id)
     }
+    console.log(unitsOfMeasure)
+  },
+  components: {
+    EditIngredientModal
   },
   data() {
     return {
-      inputIngredientName:"",
-      inputQuantity:null,
-      inputUnitOfMeasure:"",
       inputItem:"",
+      showModal:false,
+      editId:null,
+      editIngredientName:"",
+      editQuantity:null,
+      editUnitOfMeasure:"",
+      editItem:"",
       checkedItems: [],
     }
   },
@@ -69,7 +78,7 @@ const ShoppingListPage = {
       let json = parseIngredient(this.inputItem)[0]
       console.log(json)
       let itemDetails = {
-        ingredientName: json.description,
+        ingredientName: capitalizeFirstLetter(json.description),
         quantity: json.quantity,
         unitOfMeasure: json.unitOfMeasure
       }
@@ -77,10 +86,41 @@ const ShoppingListPage = {
       this.inputItem = ""
       await this.$store.createListItem(this.$store.currentListId, itemDetails)
       
+    },
+    showEditModal(item) {
+      this.editIngredientName = item.ingredientName
+      this.editQuantity = item.quantity
+      this.editUnitOfMeasure = item.unitOfMeasure
+      this.editId = item.id
+      this.showModal = true
+    },
+    hideEditModal() {
+      this.showModal = false
+    },
+    async updateListItem(item) {
+      console.log(item)
+      let indexToUpdate = this.$store.currentListItems.findIndex(listItem => listItem.id == item.id)
+      if(indexToUpdate !== -1) {
+        this.$store.currentListItems[indexToUpdate].ingredientName = item.ingredientName
+        this.$store.currentListItems[indexToUpdate].quantity = item.quantity
+        this.$store.currentListItems[indexToUpdate].unitOfMeasure = item.unitOfMeasure
+      }
+      this.showModal=false
+      await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[indexToUpdate])
+    },
+    async deleteItem(itemId) {
+      let indexToDelete = this.$store.currentListItems.findIndex(listItem => listItem.id == itemId)
+      if (indexToDelete > -1) {
+        this.$store.currentListItems.splice(indexToDelete, 1);
+      }
+      this.showModal=false
+      await this.$store.deleteListItem(this.$store.currentListId, itemId)
+
     }
   },
   components: {
-    AppHeader
+    AppHeader,
+    EditIngredientModal
 
   }
 

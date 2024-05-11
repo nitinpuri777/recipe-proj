@@ -21,3 +21,8 @@ export function parseHostname(url) {
     return null; // or handle as needed
   }
 }
+
+export function capitalizeFirstLetter(string) {
+  if (!string) return string;  // Return the original string if it's empty or undefined
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

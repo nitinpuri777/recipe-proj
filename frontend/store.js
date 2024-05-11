@@ -350,6 +350,20 @@ export const useStore = defineStore('store', {
         console.log(response.message)
       }
       this.getListItems(listId)
+    },
+
+    async updateListItem(listId, itemDetails) {
+      let url = `/api/lists/${listId}/items`
+      let options = {
+        method: "PUT",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({itemDetails})
+      }
+      const response = await fetch(url, options)
+      if(response.status != '200') {
+        console.log(response.message)
+      }
+      this.getListItems(listId)
     }
   }
 })
