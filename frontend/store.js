@@ -183,7 +183,6 @@ export const useStore = defineStore('store', {
           'Authorization': `Bearer ${token}`
         }
       }
-      console.log(recipe)
       const response = await fetch(url, options)
       const json = await response.json()
       this.recipes = json.recipes
@@ -241,7 +240,6 @@ export const useStore = defineStore('store', {
           session_duration_minutes: 43200
         });
         if (authResponse.status_code === 200) {
-          console.log("Authenticated successfully");
           this.isAuthenticated = true;
           if(next_route) {
             router.push(next_route)
@@ -262,7 +260,6 @@ export const useStore = defineStore('store', {
         await stytchClient.oauth.authenticate(token, {
           session_duration_minutes: 43200
         });
-        console.log('Successful authentication: OAuth');
         this.isAuthenticated = true;
         if(next_route) {
           router.push(next_route)
@@ -286,7 +283,6 @@ export const useStore = defineStore('store', {
         }
         const response = await fetch(url, options)
         const json = await response.json()
-        console.log(json)
         const lists = json.lists
         this.shoppingLists = lists
     },
@@ -307,7 +303,6 @@ export const useStore = defineStore('store', {
         }
         const response = await fetch(url, options)
         if(response.status != '200') {
-          console.log(response.message)
         }
         this.getLists()
     },
@@ -323,11 +318,9 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       const json = await response.json()
-      console.log(json)
       this.currentListItems = json.listItems
     },
     async createListItem(listId, itemDetails) {
-      console.log(itemDetails)
       let url= `/api/lists/${listId}/items`
       let options = {
         method: "POST",
@@ -348,7 +341,6 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       if(response.status != '200') {
-        console.log(response.message)
       }
       // this.getListItems(listId)
     },
@@ -362,7 +354,6 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       if(response.status != '200') {
-        console.log(response.message)
       }
       // this.getListItems(listId)
     }

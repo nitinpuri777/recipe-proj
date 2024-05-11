@@ -61,10 +61,8 @@ const ShoppingListPage = {
   async mounted() {
     await this.$store.getLists()
     if(this.$store.shoppingLists) {
-      console.log(this.$store.shoppingLists[0].id)
       await this.$store.setCurrentList(this.$store.shoppingLists[0].id)
     }
-    console.log(unitsOfMeasure)
   },
   components: {
     EditIngredientModal
@@ -85,7 +83,6 @@ const ShoppingListPage = {
     async addListItem() {
       let json = parseIngredient(this.inputItem)[0]
       const tempId = `temp-${Date.now()}`;
-      console.log(json)
       let itemDetails = {
         id: tempId,
         ingredientName: capitalizeFirstLetter(json.description),
@@ -112,7 +109,6 @@ const ShoppingListPage = {
       this.showModal = false
     },
     async updateListItem(item) {
-      console.log(item)
       let indexToUpdate = this.$store.currentListItems.findIndex(listItem => listItem.id == item.id)
       if(indexToUpdate !== -1) {
         this.$store.currentListItems[indexToUpdate].ingredientName = item.ingredientName
