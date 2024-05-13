@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import router from './router.js'
 import stytchClient from './components/auth/stytch-client.js'
-import { parseHostname } from './globals.js'
+import { parseIngredient, unitsOfMeasure } from "parse-ingredient"
+import { capitalizeFirstLetter } from './globals.js'
 
 
 export const useStore = defineStore('store', { 
@@ -285,6 +286,7 @@ export const useStore = defineStore('store', {
         const json = await response.json()
         const lists = json.lists
         this.shoppingLists = lists
+        return lists
     },
     async createList() {
       let url = '/api/lists'
@@ -304,7 +306,6 @@ export const useStore = defineStore('store', {
         const response = await fetch(url, options)
         if(response.status != '200') {
         }
-        this.getLists()
     },
     async setCurrentList(listId) {
       this.currentListId = listId
@@ -319,6 +320,24 @@ export const useStore = defineStore('store', {
       const response = await fetch(url, options)
       const json = await response.json()
       this.currentListItems = json.listItems
+    },
+    async addListItem() {
+      let json = parseIngredient(this.inputItem)[0]
+      const tempId = `temp-${Date.now()}`;
+      let itemDetails = {
+        id: tempId,
+        ingredientName: capitalizeFirstLetter(json.description),
+        quantity: json.quantity,
+        unitOfMeasure: json.unitOfMeasure
+      }
+      this.$store.currentListItems.push(itemDetails)
+      this.inputItem = ""
+      let listItemResponse = await this.$store.createListItem(this.$store.currentListId, itemDetails)
+      const index = this.$store.currentListItems.findIndex(item => item.id === tempId);
+      if (index !== -1) {
+        this.$store.currentListItems[index] = { ...this.$store.currentListItems[index], ...listItemResponse };
+      }
+      
     },
     async createListItem(listId, itemDetails) {
       let url= `/api/lists/${listId}/items`

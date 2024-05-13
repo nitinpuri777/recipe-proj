@@ -9,6 +9,11 @@ class List extends Model {
         allowNull: false,
         primaryKey: true
       },
+      name: {
+        type: DataTypes.STRING,
+        defaultValue: () => `Shopping List ${new Date().toLocaleDateString()}`,
+        allowNull: true
+      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,

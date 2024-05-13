@@ -150,6 +150,7 @@ body {
 
 
 /* PADDING */
+.pad_2 { padding: 2px; }
 .pad_8 { padding: 8px; }
 .pad_16 { padding: 16px; }
 .pad_32 { padding: 32px; }
@@ -292,6 +293,11 @@ body {
   background-color: var(--antiflash-white);
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+
 .secondary_link { 
   color: var(--color_text_secondary);
   cursor: pointer;
@@ -299,6 +305,16 @@ body {
 
 .secondary_link:hover {
   cursor: pointer;
+}
+
+.primary_link { 
+  color: var(--color_text);
+  cursor: pointer;
+}
+
+.primary_link:hover {
+  cursor: pointer;
+  color: var(--color_text_hover);
 }
 
 .dotted_underline {
@@ -395,7 +411,7 @@ body {
 }
 
 .modal_overlay {
-  transition: transform 300ms ease-in-out;
+  transition: width 0.3s ease, height 0.3s ease, max-width 0.3s ease, transform 0.3s ease, border-radius 0.3s ease;
 }
 
 .modal_overlay--hidden {
@@ -588,6 +604,49 @@ body {
   background-image: url('assets/icons/chevron-down.svg');
   background-repeat: no-repeat;
   background-position: calc(100% - 8px) center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0; /* Directly below the button */
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  z-index: 1;
+  /* width: 120px;  */
+  border: 1px solid #ccc;
+}
+
+.slot_container {
+  max-height: 400px; /* Set the maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin-bottom: 16px; /* Optional: space between the slot content and buttons */
+}
+
+@media (max-width: 700px) {
+  .modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    max-width: none; /* Overrides any existing max-width */
+    transform: none; /* Reset transformations to fill the screen */
+    border-radius: 0; /* Optional: remove border-radius for a full-screen look */
+    padding: 16px; /* Remove padding if desired for a true full-screen experience */
+    overflow-y: scroll;
+  }
+
+  .modal_overlay__backdrop {
+    display: none; /* Completely hides the backdrop */
+  }
+
+  .slot_container {
+    max-height: calc(100vh - 50px); /* Adjust based on your modal's header/footer height */
+    overflow-y: auto; /* Ensures content is scrollable if it exceeds the view height */
+  }
 }
 
 

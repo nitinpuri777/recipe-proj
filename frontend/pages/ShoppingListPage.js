@@ -10,10 +10,19 @@ const ShoppingListPage = {
   <div class="row width_fill align_center_x height_fill">
    <div class="row max_width_1000px width_fill pad_left_16 pad_right_16">
     <div class="column max_width_280px pad_top_32 width_fill height_fill align_left border_right border_color_subtle_gray">
-        <div @click="this.$store.setCurrentList(list.id)" v-for="list, index in this.$store.shoppingLists" class="row width_fill gap_8 button__secondary border_invisible"> 
-            List {{index+1}}
+        <div v-for="list, index in this.$store.shoppingLists" class="row width_fill pad_top_16 pad_bottom_16 pad_right_16 pad_left_16 border_invisible font_16 text_nowrap "> 
+          <div @click="this.$store.setCurrentList(list.id)" class="pointer"> {{ list.name ? list.name : 'Unnamed List' }} </div>
+          <div class="row width_fill align_right align_center_y position_relative"> 
+            <img @click.stop="showListMenu(index)" src="/assets/icons/more-horizontal.svg" class="icon" height="16px" width="16px">
+            <div v-if="index==listMenuIndex" class="dropdown-menu rounded_8px border_color_gray pad_16 column gap_8">
+                <!-- <div class="primary_link" @click="optionOne">Rename</div> -->
+                <div class="primary_link" @click="deleteList(list.id)">Delete</div>
+            </div>
+          </div>
         </div>
-        <div  class="button__secondary" @click="this.$store.createList"> + Create New List </div>
+        <div class="row width_fill align_center_x pad_16 font_bold secondary_link" @click="this.$store.createList"> 
+            <div> + Create New List </div>
+        </div>
     </div> 
     <div class ="column max_width_700px gap_16 width_fill">
       <div class="font_24 pad_left_16 pad_top_32">Shopping List</div>
@@ -63,6 +72,11 @@ const ShoppingListPage = {
     if(this.$store.shoppingLists) {
       await this.$store.setCurrentList(this.$store.shoppingLists[0].id)
     }
+    document.addEventListener('click', (event) => {
+      if (!this.$el.contains(event.target) && this.listMenuIndex !== null) {
+        this.listMenuIndex = null;  // Close the dropdown only if the click is outside the component
+      }
+    })
   },
   components: {
     EditIngredientModal
@@ -77,6 +91,7 @@ const ShoppingListPage = {
       editUnitOfMeasure:"",
       editItem:"",
       checkedItems: [],
+      listMenuIndex: null
     }
   },
   methods: {
@@ -140,6 +155,21 @@ const ShoppingListPage = {
       }
       for (const itemId of checkedItems) {
         this.deleteItem(itemId)
+      }
+    },
+    async deleteList(listId) {
+      let index = this.$store.shoppingLists.findIndex(list => list.id == listId)
+      console.log(listId, index)
+      this.$store.shoppingLists.splice(index, 1)
+      await this.$store.deleteList(listId)
+      this.listMenuIndex = null
+    },
+    showListMenu(index) {
+      // Toggle the visibility based on the current state
+      if (this.listMenuIndex === index) {
+        this.listMenuIndex = null;  // Close the dropdown if it's already open for this index
+      } else {
+        this.listMenuIndex = index;  // Open the dropdown for the clicked index
       }
     }
   },
