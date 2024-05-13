@@ -80,16 +80,6 @@ const RecipeDetail = {
           </div>
         </div>
       </div>
-      <generic-modal title="Add to Shopping List" :showModal="isModalVisible" confirmButtonText="Add to List" @close="hideModal" @confirm="addIngredientsToList" >
-        <div class="column scroll">
-            <div v-for="ingredient in this.ingredientsToAdd" class="row gap_fill border_bottom border_color_gray pad_2">
-              <div class="text_nowrap width_fill max_width_400px overflow_hidden"> {{ingredient.string}} </div>
-              <div class="row align_right align_center_y">
-                <input type="checkbox" v-model="ingredient.checked"  class="checkbox">
-              </div>
-            </div>
-          </div>
-      </generic-modal>
     </div>
     `
     ,
@@ -107,9 +97,6 @@ const RecipeDetail = {
       loading: false,
       scaleFactor: 1,
       desiredServings: 0,
-      moreMenuVisible: false,
-      isModalVisible: false,
-      ingredientsToAdd: []
     }
   },
   computed: {
@@ -233,59 +220,8 @@ const RecipeDetail = {
         this.desiredServings--
       }
     },
-    showIngredientsMoreMenu() {
-      this.moreMenuVisible = true
-    },
     showModal() {
-      this.ingredientsToAdd = this.scaledIngredients.map(item => {
-        return { ...item, checked: true }; // Adds isActive attribute to each object
-      });
-      this.isModalVisible = true;
-
-    },
-    hideModal(){
-      this.isModalVisible = false;
-    },
-    async addIngredientsToList(){
-      let listId = null
-      let lists = await this.$store.getLists()
-      console.log(lists)
-      if(lists[0]) {
-        listId = lists[0].id
-        console.log(listId)
-      }
-      else {
-        console.log("No existing lists")
-        this.$store.createList()
-        lists = await this.$store.getLists()
-        listId = lists[0].id
-      }
-      console.log(this.ingredientsToAdd)
-      for (const item of this.ingredientsToAdd) {
-        console.log(item.string, item.checked)
-        if(item.checked) {
-          this.addListItem(listId, item.string)
-        }
-      }
-      this.hideModal()
-    },
-    async addListItem(listId, ingredientString) {
-      let json = parseIngredient(ingredientString)[0]
-      const tempId = `temp-${Date.now()}`;
-      let itemDetails = {
-        id: tempId,
-        ingredientName: capitalizeFirstLetter(json.description),
-        quantity: json.quantity,
-        unitOfMeasure: json.unitOfMeasure
-      }
-      this.$store.currentListItems.push(itemDetails)
-      this.inputItem = ""
-      let listItemResponse = await this.$store.createListItem(listId, itemDetails)
-      const index = this.$store.currentListItems.findIndex(item => item.id === tempId);
-      if (index !== -1) {
-        this.$store.currentListItems[index] = { ...this.$store.currentListItems[index], ...listItemResponse };
-      }
-      
+      this.$emit('show-modal', this.scaledIngredients)
     }
   }
 }
