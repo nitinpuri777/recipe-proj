@@ -3,6 +3,7 @@ import { html, capitalizeFirstLetter } from "../globals.js"
 import { parseIngredient, unitsOfMeasure } from "parse-ingredient"
 import { toDecimal, toFraction } from 'fraction-parser';
 import EditIngredientModal from "../components/edit-ingredient-modal.js";
+import GenericModal from "../components/generic-modal.js";
 
 const ShoppingListPage = {
   template: html`
@@ -11,21 +12,20 @@ const ShoppingListPage = {
    <div class="row max_width_1000px width_fill pad_left_16 pad_right_16">
     <div class="column max_width_280px pad_top_32 width_fill height_fill align_left border_right border_color_subtle_gray">
         <div v-for="list, index in this.$store.shoppingLists" class="row width_fill pad_top_16 pad_bottom_16 pad_right_16 pad_left_16 border_invisible font_16 text_nowrap "> 
-          <div @click="this.$store.setCurrentList(list.id)" class="pointer"> {{ list.name ? list.name : 'Unnamed List' }} </div>
+          <div @click="this.$store.setCurrentList(list)" class="pointer"> {{ list.name ? list.name : 'Unnamed List' }} </div>
           <div class="row width_fill align_right align_center_y position_relative"> 
             <img @click.stop="showListMenu(index)" src="/assets/icons/more-horizontal.svg" class="icon" height="16px" width="16px">
             <div v-if="index==listMenuIndex" class="dropdown-menu rounded_8px border_color_gray pad_16 column gap_8">
-                <!-- <div class="primary_link" @click="optionOne">Rename</div> -->
                 <div class="primary_link" @click="deleteList(list.id)">Delete</div>
             </div>
           </div>
         </div>
-        <div class="row width_fill align_center_x pad_16 font_bold secondary_link" @click="this.$store.createList"> 
+        <div class="row width_fill align_center_x pad_16 font_bold secondary_link" @click="showCreateNewListModal"> 
             <div> + Create New List </div>
         </div>
     </div> 
     <div class ="column max_width_700px gap_16 width_fill">
-      <div class="font_24 pad_left_16 pad_top_32">Shopping List</div>
+      <div class="font_24 pad_left_16 pad_top_32">{{$store.currentList.name}}</div>
       <div class="row width_fill pad_left_8 pad_right_8">
         <input type="text" class="row width_fill pad_8 pad_left_32 rounded_20px border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
       </div>
@@ -66,11 +66,16 @@ const ShoppingListPage = {
     </div>
 </div>
 <edit-ingredient-modal @hide-edit-modal="hideEditModal" @delete-item="deleteItem" @save-item="updateListItem" :id="editId" :showModal="showModal" :ingredientName="editIngredientName" :quantity="editQuantity" :unitOfMeasure="editUnitOfMeasure"/>
+<generic-modal 
+  title="Create List" :showModal="isCreateNewListModalVisible" confirmButtonText="Create List"
+  @close="hideCreateNewListModal" @confirm="createList">
+  <input type=text class="width_fill rounded font_16 pad_8 border border_color_gray min_width_300px" v-model="inputListName">
+</generic-modal>
   `,
   async mounted() {
     await this.$store.getLists()
     if(this.$store.shoppingLists) {
-      await this.$store.setCurrentList(this.$store.shoppingLists[0].id)
+      await this.$store.setCurrentList(this.$store.shoppingLists[0])
     }
     document.addEventListener('click', (event) => {
       if (!this.$el.contains(event.target) && this.listMenuIndex !== null) {
@@ -79,11 +84,13 @@ const ShoppingListPage = {
     })
   },
   components: {
-    EditIngredientModal
+    EditIngredientModal,
+    GenericModal
   },
   data() {
     return {
       inputItem:"",
+      inputListName:"",
       showModal:false,
       editId:null,
       editIngredientName:"",
@@ -91,7 +98,8 @@ const ShoppingListPage = {
       editUnitOfMeasure:"",
       editItem:"",
       checkedItems: [],
-      listMenuIndex: null
+      listMenuIndex: null,
+      isCreateNewListModalVisible: false
     }
   },
   methods: {
@@ -171,11 +179,23 @@ const ShoppingListPage = {
       } else {
         this.listMenuIndex = index;  // Open the dropdown for the clicked index
       }
+    },
+    showCreateNewListModal() {
+      this.inputListName = "Shopping List"
+      this.isCreateNewListModalVisible = true;
+    },
+    hideCreateNewListModal() {
+      this.isCreateNewListModalVisible = false;
+    },
+    createList() {
+      this.isCreateNewListModalVisible = false;
+      this.$store.createList(this.inputListName)
     }
   },
   components: {
     AppHeader,
-    EditIngredientModal
+    EditIngredientModal,
+    GenericModal
 
   }
 

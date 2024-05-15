@@ -39,10 +39,12 @@ class List extends Model {
     }, { sequelize, modelName: 'list' });
   }
 
-  static async createListForUser(userId) {
+  static async createListForUser(userId, listName) {
+    console.log(listName)
     try {
       return await List.create({
-        userId: userId
+        userId: userId,
+        name: listName
       })
     } catch (error) {
       console.error(`error: ${error}`)

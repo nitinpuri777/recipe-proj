@@ -27,6 +27,7 @@ export const useStore = defineStore('store', {
       searchQuery: "",
       focusSearchInput: false,
       shoppingLists:[],
+      currentList:{},
       currentListId:"",
       currentListItems:[]
     }
@@ -297,6 +298,19 @@ export const useStore = defineStore('store', {
         const response = await fetch(url, options)
         this.getLists()
     },
+    async createList(name) {
+      let url = '/api/lists'
+        let options = {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            name
+          })
+        }
+        console.log(options)
+        const response = await fetch(url, options)
+        this.getLists()
+    },
     async deleteList(listId) {
       let url = `/api/lists/${listId}`
         let options = {
@@ -307,9 +321,10 @@ export const useStore = defineStore('store', {
         if(response.status != '200') {
         }
     },
-    async setCurrentList(listId) {
-      this.currentListId = listId
-      await this.getListItems(listId)
+    async setCurrentList(list) {
+      this.currentList = list
+      this.currentListId = list.id
+      await this.getListItems(list.id)
     },
     async getListItems(listId) {
       let url= `/api/lists/${listId}/items`

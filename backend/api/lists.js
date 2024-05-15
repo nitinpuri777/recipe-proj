@@ -23,8 +23,12 @@ async function delete_(req,res, next) {
 async function create(req,res, next) {
   try {
     let userId = req.user.id
+    let listName = ""
+    if(req.body.name) {
+      listName = req.body.name
+    }
     console.log(`got line 25 lists.js ${userId}`)
-    let list = await List.createListForUser(userId)
+    let list = await List.createListForUser(userId, listName)
     res.status(200).json({list})
   } catch (error) {
     next(error)
