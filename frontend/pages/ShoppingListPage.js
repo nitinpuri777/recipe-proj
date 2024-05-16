@@ -10,7 +10,7 @@ const ShoppingListPage = {
   <app-header />
   <div class="row width_fill align_center_x height_fill">
    <div class="row max_width_1000px width_fill pad_left_16 pad_right_16">
-    <div class="column max_width_280px pad_top_32 width_fill height_fill align_left border_right border_color_subtle_gray">
+    <div id="listOfLists" class="column max_width_280px pad_top_32 width_fill height_fill align_left border_right border_color_subtle_gray">
         <div v-for="list, index in this.$store.shoppingLists" class="row width_fill pad_top_16 pad_bottom_16 pad_right_16 pad_left_16 border_invisible font_16 text_nowrap "> 
           <div @click="this.$store.setCurrentList(list)" class="pointer"> {{ list.name ? list.name : 'Unnamed List' }} </div>
           <div class="row width_fill align_right align_center_y position_relative"> 
@@ -25,14 +25,24 @@ const ShoppingListPage = {
         </div>
     </div> 
     <div class ="column max_width_700px gap_16 width_fill">
-      <div class="font_24 pad_left_16 pad_top_32">{{$store.currentList.name}}</div>
+      <div class="row font_24 pad_left_16 pad_top_32 gap_8 align_center_y">
+          <div>{{$store.currentList.name}}</div>
+          <div class="row position_relative align_bottom">
+            <img id="dropDownOfLists" src="/assets/icons/chevron-down.svg" height="24px" width="24px" class="icon " @click="showDropDownOfLists">
+            <div v-if="isDropDownOfListsVisible" class="dropdown-menu-right rounded_8px border_color_gray pad_16 column gap_8">
+              <div v-for="list, index in this.$store.shoppingLists" :key="index">
+                <div class="primary_link" @click="selectListFromMenu(list)"> {{ list.name ? list.name : 'Unnamed List' }} </div>
+              </div>
+            </div>
+          </div>
+</div>
       <div class="row width_fill pad_left_8 pad_right_8">
         <input type="text" class="row width_fill pad_8 pad_left_32 rounded_20px border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
       </div>
       <div class="column bg_gray gap_2 pad_left_8 pad_right_8 pad_top_16 pad_bottom_16">
         <template v-for="item, index in this.$store.currentListItems" :key="index">
           <div v-if="!item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
-            <div @click="showEditModal(item)" class= "row gap_8 align_center_y align_left_x width_fill" >
+            <div @click="showEditModal(item)" class= "row gap_8 align_center_y align_left_x width_fill pointer" >
               <div class="font_16">{{item.ingredientName}}</div>
               <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
             </div>
@@ -78,8 +88,9 @@ const ShoppingListPage = {
       await this.$store.setCurrentList(this.$store.shoppingLists[0])
     }
     document.addEventListener('click', (event) => {
-      if (!this.$el.contains(event.target) && this.listMenuIndex !== null) {
-        this.listMenuIndex = null;  // Close the dropdown only if the click is outside the component
+      if (!this.$el.contains(event.target) && this.listMenuIndex !== null && this.isDropDownOfListsVisible) {
+        this.listMenuIndex = null
+        // this.isDropDownOfListsVisible = false  // Close the dropdown only if the click is outside the component
       }
     })
   },
@@ -99,7 +110,8 @@ const ShoppingListPage = {
       editItem:"",
       checkedItems: [],
       listMenuIndex: null,
-      isCreateNewListModalVisible: false
+      isCreateNewListModalVisible: false,
+      isDropDownOfListsVisible: false
     }
   },
   methods: {
@@ -139,11 +151,21 @@ const ShoppingListPage = {
         this.$store.currentListItems[indexToUpdate].unitOfMeasure = item.unitOfMeasure
       }
       this.showModal=false
-      await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[indexToUpdate])
+      try {
+        await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[indexToUpdate])  
+      } catch (error) {
+        console.log(error)     
+      }
+      
     },
     async toggleCheckedItem(index) {
       // this.$store.currentListItems[index].checked = !this.$store.currentListItems[index].checked
-      await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[index])
+      try {
+        await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[index])
+      }
+      catch (error) {
+        console.log(error)
+      }
     },
     async deleteItem(itemId) {
       let indexToDelete = this.$store.currentListItems.findIndex(listItem => listItem.id == itemId)
@@ -151,7 +173,11 @@ const ShoppingListPage = {
         this.$store.currentListItems.splice(indexToDelete, 1);
       }
       this.showModal=false
-      await this.$store.deleteListItem(this.$store.currentListId, itemId)
+      try {
+        await this.$store.deleteListItem(this.$store.currentListId, itemId)
+      } catch (error) {
+        console.log(error)
+      }
 
     },
     async deleteCheckedItems() {
@@ -187,9 +213,24 @@ const ShoppingListPage = {
     hideCreateNewListModal() {
       this.isCreateNewListModalVisible = false;
     },
-    createList() {
+    async createList() {
+      let newList = {
+        name: this.inputListName
+      }
+      this.$store.shoppingLists.push(newList)
       this.isCreateNewListModalVisible = false;
-      this.$store.createList(this.inputListName)
+      try {
+        await this.$store.createList(this.inputListName)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async selectListFromMenu(listId) {
+      this.isDropDownOfListsVisible = false
+      await this.$store.setCurrentList(listId)
+    },
+    showDropDownOfLists() {
+      this.isDropDownOfListsVisible = !this.isDropDownOfListsVisible;
     }
   },
   components: {

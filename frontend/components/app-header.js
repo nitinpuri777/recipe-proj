@@ -3,12 +3,15 @@ import { html } from "../globals.js";
 const AppHeader = {
   template: html`
     <div class="row width_fill border_bottom border_color_gray align_center_x">
-      <div class="row max_width_1200px width_fill pad_left_16 pad_right_16 pad_top_16 pad_bottom_16 gap_32">
+      <div class="row max_width_1200px width_fill pad_left_16 pad_right_16 pad_top_16 pad_bottom_16 gap_32 align_center_y">
         <div class="row width_240px shrink_none">
           <a href="/"><img src="/assets/logo.png" class="width_fill"></a>
-    </div>
-
-        <div class="row align_right width_fill">
+        </div>
+        <div class="row gap_32 pad_left_16 align_center_y">
+          <router-link :to="{path: '/app'}" class="font_20 font_bold pointer height_fill"> Home </router-link>
+          <router-link :to="{path: '/app/shopping'}" class="font_20 font_bold pointer"> Shopping </router-link>
+        </div>
+          <div class="row align_right width_fill">
           <div v-if="$store.isAuthenticated" class="row shrink_none align_center">
             <a @click="signOut" class="pad_8 button__secondary font_bold rounded border">Sign Out</a>
           </div>
