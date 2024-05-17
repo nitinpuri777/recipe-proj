@@ -317,6 +317,17 @@ body {
   color: var(--color_text_hover);
 }
 
+.nav_link { 
+  color: var(--color_text);
+  cursor: pointer;
+  border-bottom: 1px solid transparent
+}
+
+.nav_link:hover {
+  cursor: pointer;
+  border-bottom: 1px solid var(--color_text_hover);
+}
+
 .dotted_underline {
   text-decoration: underline;
   text-decoration-style: dotted;
@@ -639,6 +650,10 @@ body {
   display: none;
 }
 
+.mobile_navigation {
+  display: none;
+}
+
 @media (max-width: 700px) {
   .modal_overlay {
     position: fixed;
@@ -669,8 +684,34 @@ body {
   }
 
   #dropDownOfLists {
-    display: block;
+    display: flex;
   }
+
+  .fullWidthNavigationItems {
+    display: none;
+  }
+
+  .mobile_navigation {
+    display: flex;
+  }
+}
+
+.panel {
+  position: fixed;
+  top: 75px;
+  right: 0;
+  width: 100%; /* or any other width you want */
+  height: 100%;
+  background-color: #fff; /* or any other color you want */
+  overflow: auto;
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
+  padding: 16px;
+  z-index: 1000; /* make sure the panel is above everything else */
+  transition: transform 0.3s ease-in-out;
+}
+
+.panel--hidden {
+  transform: translateX(100%);
 }
 
 
