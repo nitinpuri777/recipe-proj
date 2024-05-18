@@ -694,6 +694,12 @@ body {
   .mobile_navigation {
     display: flex;
   }
+
+  .mobile_overflow {
+    max-width: 300px ;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .panel {

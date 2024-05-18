@@ -24,18 +24,18 @@ const ShoppingListPage = {
             <div> + Create New List </div>
         </div>
     </div> 
-    <div class ="column max_width_700px gap_16 width_fill">
-      <div class="row font_24 pad_left_16 pad_top_32 gap_8 align_center_y">
-          <div>{{$store.currentList.name}}</div>
-          <div class="row position_relative align_bottom">
-            <img id="dropDownOfLists" src="/assets/icons/chevron-down.svg" height="24px" width="24px" class="icon " @click="showDropDownOfLists">
-            <div v-if="isDropDownOfListsVisible" class="dropdown-menu-right rounded_8px border_color_gray pad_16 column gap_8">
+    <div class ="column max_width_700px gap_16 width_fill ">
+      <div class="row font_24 pad_left_16 pad_top_32 gap_8 align_center_y position_relative">
+          <div @click="showDropDownOfLists" class="pointer">{{$store.currentList.name}}</div>
+          <div v-if="this.$store.currentList.name" @click="showDropDownOfLists" class="row align_bottom">
+            <img id="dropDownOfLists" src="/assets/icons/chevron-down.svg" height="24px" width="24px" class="icon ">
+          </div>
+          <div v-if="isDropDownOfListsVisible" class="dropdown-menu-right rounded_8px border_color_gray pad_16 column gap_8">
               <div v-for="list, index in this.$store.shoppingLists" :key="index">
                 <div class="primary_link" @click="selectListFromMenu(list)"> {{ list.name ? list.name : 'Unnamed List' }} </div>
               </div>
-            </div>
-          </div>
-</div>
+      </div>
+      </div>
       <div class="row width_fill pad_left_8 pad_right_8">
         <input type="text" class="row width_fill pad_8 pad_left_32 rounded_20px border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
       </div>
@@ -43,7 +43,7 @@ const ShoppingListPage = {
         <template v-for="item, index in this.$store.currentListItems" :key="index">
           <div v-if="!item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
             <div @click="showEditModal(item)" class= "row gap_8 align_center_y align_left_x width_fill pointer" >
-              <div class="font_16">{{item.ingredientName}}</div>
+              <div class="font_16 mobile_overflow text_nowrap">{{item.ingredientName}}</div>
               <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
             </div>
             <div class="row align_right">
@@ -116,22 +116,8 @@ const ShoppingListPage = {
   },
   methods: {
     async addListItem() {
-      let json = parseIngredient(this.inputItem)[0]
-      const tempId = `temp-${Date.now()}`;
-      let itemDetails = {
-        id: tempId,
-        ingredientName: capitalizeFirstLetter(json.description),
-        quantity: json.quantity,
-        unitOfMeasure: json.unitOfMeasure
-      }
-      this.$store.currentListItems.push(itemDetails)
-      this.inputItem = ""
-      let listItemResponse = await this.$store.createListItem(this.$store.currentListId, itemDetails)
-      const index = this.$store.currentListItems.findIndex(item => item.id === tempId);
-      if (index !== -1) {
-        this.$store.currentListItems[index] = { ...this.$store.currentListItems[index], ...listItemResponse };
-      }
-      
+      await this.$store.addListItem(this.inputItem)
+      this.inputItem=""
     },
     showEditModal(item) {
       this.editIngredientName = item.ingredientName
@@ -225,9 +211,10 @@ const ShoppingListPage = {
         console.log(error)
       }
     },
-    async selectListFromMenu(listId) {
+    async selectListFromMenu(list) {
       this.isDropDownOfListsVisible = false
-      await this.$store.setCurrentList(listId)
+      await this.$store.setCurrentList(list)
+      
     },
     showDropDownOfLists() {
       this.isDropDownOfListsVisible = !this.isDropDownOfListsVisible;

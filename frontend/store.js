@@ -390,6 +390,41 @@ export const useStore = defineStore('store', {
       if(response.status != '200') {
       }
       // this.getListItems(listId)
+    },
+    async addListItem(item) {
+      let json = parseIngredient(item)[0]
+      let ingredientName = capitalizeFirstLetter(json.description)
+      let unitOfMeasure = json.unitOfMeasure
+      this.inputItem = ""
+      // Find an item with the same ingredient name
+      let existingItem = this.currentListItems.find(item => (item.ingredientName.toLowerCase() === ingredientName.toLowerCase() && item.unitOfMeasure === unitOfMeasure))
+
+      if (existingItem) {
+        // If an item with the same ingredient name exists, add the new quantity to the existing quantity
+        existingItem.quantity = Number(existingItem.quantity) + Number(json.quantity);
+        let listItemResponse = await this.updateListItem(this.currentListId, existingItem)
+        const index = this.currentListItems.findIndex(item => item.id === existingItem.id);
+        if (index !== -1) {
+          this.currentListItems[index] = { ...this.currentListItems[index], ...listItemResponse };
+        }
+      } else {
+        // If no item with the same ingredient name exists, add the new item
+        const tempId = `temp-${Date.now()}`;
+        let itemDetails = {
+          id: tempId,
+          ingredientName: ingredientName,
+          quantity: json.quantity,
+          unitOfMeasure: json.unitOfMeasure
+        }
+
+        this.currentListItems.push(itemDetails)
+        let listItemResponse = await this.createListItem(this.currentListId, itemDetails)
+        const index = this.currentListItems.findIndex(item => item.id === tempId);
+        if (index !== -1) {
+          this.currentListItems[index] = { ...this.currentListItems[index], ...listItemResponse };
+        }
+      }
+
     }
   }
 })

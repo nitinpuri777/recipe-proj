@@ -50,20 +50,20 @@ const RecipeDetailPage = {
       let lists = await this.$store.getLists()
       console.log(lists)
       if(lists[0]) {
-        listId = lists[0].id
-        console.log(listId)
+        await this.$store.setCurrentList(lists[0])
+        console.log(this.$store.currentListId)
       }
       else {
         console.log("No existing lists")
         this.$store.createList()
         lists = await this.$store.getLists()
-        listId = lists[0].id
+        await this.$store.setCurrentList(lists[0])
       }
       console.log(this.ingredientsToAdd)
       for (const item of this.ingredientsToAdd) {
         console.log(item.string, item.checked)
         if(item.checked) {
-          this.addListItem(listId, item.string)
+          this.$store.addListItem(item.string)
         }
       }
       this.hideModal()
