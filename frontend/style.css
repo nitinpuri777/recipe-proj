@@ -6,7 +6,7 @@
 --subtle-gray: hsl(204,45%,98%);
 --antiflash-white: hsla(180, 3%, 93%, 1);
 --prussian-blue: hsla(210, 38%, 20%, 1);
---desert-sand: hsla(23, 73%, 86%, 1);
+--desert-sand: rgb(244, 190, 156);
 --fire-engine-red: hsla(0, 85%, 45%, 1);
 --kelly-green: hsla(100, 70%, 45%, 1);
 --orange-web: hsla(38, 95%, 55%, 1);
@@ -320,12 +320,30 @@ body {
 .nav_link { 
   color: var(--color_text);
   cursor: pointer;
-  border-bottom: 1px solid transparent
+  border-bottom: 2px solid transparent;
+  transition: color 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
 }
 
 .nav_link:hover {
   cursor: pointer;
-  border-bottom: 1px solid var(--color_text_hover);
+  border-bottom: 2px solid var(--color_text_hover);
+}
+
+.nav_link.selected {
+  color: var(--desert-sand);
+  border-bottom: 2px solid var(--desert-sand); 
+  transition: color 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
+}
+
+.selected {
+  color: var(--desert-sand);
+  transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out, font-weight 0.2s ease-in-out;
+}
+
+
+.nav_link.selected:hover {
+  color: var(--desert-sand);
+  border-bottom: 2px solid var(--desert-sand);
 }
 
 .dotted_underline {

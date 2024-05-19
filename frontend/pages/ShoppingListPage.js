@@ -12,7 +12,7 @@ const ShoppingListPage = {
    <div class="row max_width_1000px width_fill pad_left_16 pad_right_16">
     <div id="listOfLists" class="column max_width_280px pad_top_32 width_fill height_fill align_left border_right border_color_subtle_gray">
         <div v-for="list, index in this.$store.shoppingLists" class="row width_fill pad_top_16 pad_bottom_16 pad_right_16 pad_left_16 border_invisible font_16 text_nowrap "> 
-          <div @click="this.$store.setCurrentList(list)" class="pointer"> {{ list.name ? list.name : 'Unnamed List' }} </div>
+          <div @click="this.$store.setCurrentList(list)" class="pointer font_20" :class="{'selected font_bold' : this.$store.currentListId === list.id}"> {{ list.name ? list.name : 'Unnamed List' }} </div>
           <div class="row width_fill align_right align_center_y position_relative"> 
             <img @click.stop="showListMenu(index)" src="/assets/icons/more-horizontal.svg" class="icon" height="16px" width="16px">
             <div v-if="index==listMenuIndex" class="dropdown-menu rounded_8px border_color_gray pad_16 column gap_8">
@@ -26,9 +26,9 @@ const ShoppingListPage = {
     </div> 
     <div class ="column max_width_700px gap_16 width_fill ">
       <div class="row font_24 pad_left_16 pad_top_32 gap_8 align_center_y position_relative">
-          <div @click="showDropDownOfLists" class="pointer">{{$store.currentList.name}}</div>
+          <div @click.stop="showDropDownOfLists" class="pointer">{{$store.currentList.name}}</div>
           <div v-if="this.$store.currentList.name" @click="showDropDownOfLists" class="row align_bottom">
-            <img id="dropDownOfLists" src="/assets/icons/chevron-down.svg" height="24px" width="24px" class="icon ">
+            <img id="dropDownOfLists" src="/assets/icons/chevron-down.svg" height="24px" width="24px" class="icon">
           </div>
           <div v-if="isDropDownOfListsVisible" class="dropdown-menu-right rounded_8px border_color_gray pad_16 column gap_8">
               <div v-for="list, index in this.$store.shoppingLists" :key="index">
@@ -88,9 +88,11 @@ const ShoppingListPage = {
       await this.$store.setCurrentList(this.$store.shoppingLists[0])
     }
     document.addEventListener('click', (event) => {
-      if (!this.$el.contains(event.target) && this.listMenuIndex !== null && this.isDropDownOfListsVisible) {
+      if (!this.$el.contains(event.target) && this.listMenuIndex !== null) {
         this.listMenuIndex = null
-        // this.isDropDownOfListsVisible = false  // Close the dropdown only if the click is outside the component
+      }
+      if (!this.$el.contains(event.target) && this.isDropDownOfListsVisible) {
+        this.isDropDownOfListsVisible = false  // Close the dropdown only if the click is outside the component
       }
     })
   },

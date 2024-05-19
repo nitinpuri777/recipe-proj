@@ -11,8 +11,9 @@ const AppHeader = {
         <!-- End Logo -->
         <!-- Navigation Items -->
         <div class="row height_fill gap_32 pad_left_16 align_center_y fullWidthNavigationItems">
-          <router-link :to="{path: '/app'}" class="font_20 font_bold pointer nav_link"> <div> Home <div> </router-link>
-          <router-link :to="{path: '/app/shopping'}" class="font_20 font_bold pointer nav_link"> Shopping </router-link>
+         
+          <router-link :to="{path: '/app'}" :class="{'selected' : this.$route.path === '/app'}" class="font_20 font_bold row height_fill align_center_y pointer nav_link"> Home </router-link>
+          <router-link :to="{path: '/app/shopping'}" :class="{'selected' : this.$route.path === '/app/shopping'}" class="font_20 font_bold row height_fill align_center_y pointer nav_link"> Shopping </router-link>
         </div>
         <!-- End navigation Items -->
         <!-- Sign Out -->
