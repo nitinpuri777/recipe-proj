@@ -27,7 +27,7 @@ export const useStore = defineStore('store', {
       searchQuery: "",
       focusSearchInput: false,
       shoppingLists:[],
-      currentList:{},
+      currentList: {},
       currentListId:"",
       currentListItems:[]
     }
@@ -309,6 +309,7 @@ export const useStore = defineStore('store', {
         }
         console.log(options)
         const response = await fetch(url, options)
+        console.log(response.json)
         this.getLists()
     },
     async deleteList(listId) {

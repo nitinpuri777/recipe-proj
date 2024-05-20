@@ -10,8 +10,23 @@ const RecipeDetailPage = {
     <recipe-detail @show-modal="showModal" class="max_width_1200px height_fill width_fill" />
     <right-overlay />
     <delete-modal />
-    <generic-modal title="Add to Shopping List" :showModal="isModalVisible" confirmButtonText="Add to List" @close="hideModal" @confirm="addIngredientsToList" >
+    <generic-modal title="" :showModal="isModalVisible" confirmButtonText="Add to List" @close="hideModal" @confirm="addIngredientsToList" >
         <div class="column scroll">
+            <div class="row font_24 font_bold gap_8 position_relative"> 
+              <div  class="underline"> 
+                Add to
+              </div>
+              <div @click.stop="showDropDownOfLists" :class="{'dotted_underline pointer' : this.$store.shoppingLists.length > 0}">
+                {{$store.currentList.name ? $store.currentList.name : 'New List'}} 
+              </div>
+              <div v-if="isDropDownOfListsVisible" class="dropdown-menu-right rounded_8px border_color_gray pad_16 column gap_8">
+                <div v-for="list, index in this.$store.shoppingLists" :key="index">
+                  <div class="primary_link" @click="selectListFromMenu(list)"> 
+                    {{ list.name ? list.name : 'Unnamed List' }}
+                  </div>
+                </div>
+              </div> 
+            </div>
             <div v-for="ingredient in this.ingredientsToAdd" class="row gap_fill border_bottom border_color_gray pad_2">
               <div class="text_nowrap width_fill max_width_400px overflow_hidden"> {{ingredient.string}} </div>
               <div class="row align_right align_center_y">
@@ -22,6 +37,12 @@ const RecipeDetailPage = {
     </generic-modal>
 
   `,
+  async mounted() {
+    await this.$store.getLists()
+    if(this.$store.shoppingLists[0]) {
+      await this.$store.setCurrentList(this.$store.shoppingLists[0])
+    }
+  },
   components: {
     RecipeDetail,
     RightOverlay,
@@ -31,10 +52,21 @@ const RecipeDetailPage = {
   data() {
     return {
       isModalVisible: false,
-      ingredientsToAdd: []
+      ingredientsToAdd: [],
+      isCreateNewListModalVisible: false,
+      isDropDownOfListsVisible: false
     }
   },
   methods: {
+    showDropDownOfLists() {
+      if(this.$store.shoppingLists.length > 0) {
+        this.isDropDownOfListsVisible = !this.isDropDownOfListsVisible;
+      }
+    },
+    selectListFromMenu(list) {
+      this.isDropDownOfListsVisible = false;
+      this.$store.setCurrentList(list)
+    },
     showModal(ingredients) {
       this.ingredientsToAdd = ingredients.map(item => {
         return { ...item, checked: true }; // Adds isActive attribute to each object
@@ -46,27 +78,22 @@ const RecipeDetailPage = {
       this.isModalVisible = false;
     },
     async addIngredientsToList(){
-      let listId = null
-      let lists = await this.$store.getLists()
-      console.log(lists)
-      if(lists[0]) {
-        await this.$store.setCurrentList(lists[0])
-        console.log(this.$store.currentListId)
+      if (!this.$store.currentList || !this.$store.currentList.id) {
+        await this.$store.createList('Shopping List');
+        await this.$store.getLists();
+        await this.$store.setCurrentList(this.$store.shoppingLists[this.$store.shoppingLists.length - 1]);
       }
-      else {
-        console.log("No existing lists")
-        this.$store.createList()
-        lists = await this.$store.getLists()
-        await this.$store.setCurrentList(lists[0])
-      }
-      console.log(this.ingredientsToAdd)
-      for (const item of this.ingredientsToAdd) {
-        console.log(item.string, item.checked)
-        if(item.checked) {
-          this.$store.addListItem(item.string)
+    
+      if (this.$store.currentList && this.$store.currentList.id) {
+        for (const item of this.ingredientsToAdd) {
+          if (item.checked) {
+            await this.addListItem(this.$store.currentList.id, item.string);
+          }
         }
       }
-      this.hideModal()
+    
+      this.hideModal();
+      
     },
     async addListItem(listId, ingredientString) {
       let json = parseIngredient(ingredientString)[0]

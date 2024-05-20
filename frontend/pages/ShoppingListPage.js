@@ -26,15 +26,19 @@ const ShoppingListPage = {
     </div> 
     <div class ="column max_width_700px gap_16 width_fill ">
       <div class="row font_24 pad_left_16 pad_top_32 gap_8 align_center_y position_relative">
-          <div @click.stop="showDropDownOfLists" class="pointer">{{$store.currentList.name}}</div>
-          <div v-if="this.$store.currentList.name" @click.stop="showDropDownOfLists" class="row align_bottom">
-            <img id="dropDownOfLists" src="/assets/icons/chevron-down.svg" height="24px" width="24px" class="icon">
+        <div @click.stop="showDropDownOfLists" class="pointer">
+          {{$store.currentList ? $store.currentList.name : 'New List'}}
+        </div>
+        <div v-if="this.$store.currentList.name" @click.stop="showDropDownOfLists" class="row align_bottom">
+          <img id="dropDownOfLists" src="/assets/icons/chevron-down.svg" height="24px" width="24px" class="icon">
+        </div>
+        <div v-if="isDropDownOfListsVisible" class="dropdown-menu-right rounded_8px border_color_gray pad_16 column gap_8">
+          <div v-for="list, index in this.$store.shoppingLists" :key="index">
+            <div class="primary_link" @click="selectListFromMenu(list)"> 
+              {{ list.name ? list.name : 'Unnamed List' }}
+            </div>
           </div>
-          <div v-if="isDropDownOfListsVisible" class="dropdown-menu-right rounded_8px border_color_gray pad_16 column gap_8">
-              <div v-for="list, index in this.$store.shoppingLists" :key="index">
-                <div class="primary_link" @click="selectListFromMenu(list)"> {{ list.name ? list.name : 'Unnamed List' }} </div>
-              </div>
-      </div>
+        </div>
       </div>
       <div class="row width_fill pad_left_8 pad_right_8">
         <input type="text" class="row width_fill pad_8 pad_left_32 rounded_20px border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
@@ -84,7 +88,7 @@ const ShoppingListPage = {
   `,
   async mounted() {
     await this.$store.getLists()
-    if(this.$store.shoppingLists) {
+    if(this.$store.shoppingLists[0]) {
       await this.$store.setCurrentList(this.$store.shoppingLists[0])
     }
     document.addEventListener('click', (event) => {

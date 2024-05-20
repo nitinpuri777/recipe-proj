@@ -58,10 +58,6 @@ const RecipeDetail = {
             </div> 
             <div class="row width_fill align_right position_relative">
                 <img @click.stop="showModal" src="/assets/icons/shopping-cart.svg" class="icon">
-              <div v-if="moreMenuVisible" class="dropdown-menu rounded_8px border_color_gray pad_16 column gap_8">
-                <!-- <div class="primary_link" @click="optionOne">Rename</div> -->
-                <div class="primary_link text_nowrap" @click="addIngredientsToShoppingList">Add to Shopping List</div>
-            </div>
             </div>
           </div>  
           <div class="column gap_8">
