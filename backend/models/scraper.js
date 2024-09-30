@@ -195,6 +195,10 @@ scrapeServingSize: function(recipe) {
     if (recipe.recipeYield) {
         // Determine if recipeYield is an array or a string
         let yieldValue = Array.isArray(recipe.recipeYield) ? recipe.recipeYield[0] : recipe.recipeYield;
+        // If yieldValue is already a number, return it directly
+        if (typeof yieldValue === 'number') {
+            return yieldValue;
+        }
         // Use regex to find the first sequence of digits
         let match = yieldValue.match(/\d+/);
         // Parse the found digits to an integer and return, or return null if no digits found
