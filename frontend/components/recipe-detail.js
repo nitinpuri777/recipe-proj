@@ -19,9 +19,7 @@ const RecipeDetail = {
           <img src="/assets/icons/trash-2.svg" class="height_28px width_28px icon" @click="showDeleteConfirm">
         </div>
         <div v-if="!hasRecipeId" class="row align_right gap_16">
-          <router-link :to="{ path: '/save-recipe', query: { url: recipeUrl } }">
-            <img src="/assets/icons/bookmark.svg" class="height_28px width_28px icon">
-          </router-link>
+            <img src="/assets/icons/bookmark.svg" class="height_28px width_28px icon" @click="saveRecipe">
         </div>
       </div> 
       <div class="row gap_16">
@@ -218,6 +216,9 @@ const RecipeDetail = {
     },
     showModal() {
       this.$emit('show-modal', this.scaledIngredients)
+    },
+    saveRecipe() {
+      this.$router.replace({ path: '/save-recipe', query: { url: this.recipeUrl } });
     }
   }
 }

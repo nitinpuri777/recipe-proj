@@ -18,10 +18,11 @@ const SaveRecipePage = {
         let recipe = await this.$store.scrapeRecipe(this.url);
   
         // Assuming addRecipe is an asynchronous action, wait for it to complete
-        await this.$store.addRecipe(recipe);
+        let createdRecipe = await this.$store.addRecipe(recipe);
+        console.log(createdRecipe)
   
         // After adding the recipe, navigate to the '/app' route
-        this.$router.push('/app');
+        this.$router.replace(`/app/recipe/${createdRecipe.id}`);
       } catch (error) {
         console.error("An error occurred while saving the recipe:", error);
         // Handle any errors that might occur during scraping or adding the recipe

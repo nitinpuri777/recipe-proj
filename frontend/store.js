@@ -187,9 +187,7 @@ export const useStore = defineStore('store', {
       }
       const response = await fetch(url, options)
       const json = await response.json()
-      this.recipes = json.recipes
-      this.addRecipeName = ""
-      this.hideForm();
+      return json.createdRecipe
     },
     showAddForm() {
       this.overlayInput.overlayType = "add"

@@ -25,8 +25,8 @@ export const find = async (req, res) => {
 
 export const post = async (req, res) => {
   let user = req.user
-  let recipes = await Recipe.addRecipe(user, req.body.recipe)
-  return res.status(200).json({recipes})
+  let createdRecipe = await Recipe.addRecipe(user, req.body.recipe)
+  return res.status(200).json({createdRecipe})
 }
 
 export const delete_ = async (req, res) => {
