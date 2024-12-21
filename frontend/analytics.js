@@ -1,4 +1,4 @@
-import amplitude from 'amplitude';
+import { init, Identify } from '@amplitude/analytics-browser';
 
 // Fetch the API key from the backend
 async function getAmplitudeApiKey() {
@@ -7,21 +7,23 @@ async function getAmplitudeApiKey() {
   return data.AMPLITUDE_API_KEY;
 }
 
-(async () => {
+async function initializeAmplitude() {
   const AMPLITUDE_API_KEY = await getAmplitudeApiKey();
 
   // Initialize Amplitude
-  amplitude.getInstance().init(AMPLITUDE_API_KEY, null, {
+  init(AMPLITUDE_API_KEY, null, {
     fetchRemoteConfig: true,
     autocapture: {
       elementInteractions: true
     }
   });
-})();
+}
+
+initializeAmplitude();
 
 // Function to identify users
 export function identifyUser(userId, userTraits = {}) {
-  const identify = new amplitude.Identify();
+  const identify = new Identify();
 
   // Add user traits
   Object.entries(userTraits).forEach(([key, value]) => {
@@ -29,6 +31,10 @@ export function identifyUser(userId, userTraits = {}) {
   });
 
   // Identify the user
-  amplitude.getInstance().identify(identify);
-  amplitude.getInstance().setUserId(userId);
-} 
+  amplitude.identify(identify);
+  amplitude.setUserId(userId);
+}
+
+export default {
+  identifyUser
+}; 
