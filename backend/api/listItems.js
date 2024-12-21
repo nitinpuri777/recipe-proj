@@ -64,7 +64,17 @@ async function categorize(req, res, next) {
       max_tokens: 500
     });
 
-    const categorizedItems = JSON.parse(completion.choices[0].message.content);
+    const responseContent = completion.choices[0].message.content;
+    console.log('OpenAI Response:', responseContent);
+
+    let categorizedItems;
+    try {
+      categorizedItems = JSON.parse(responseContent);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return res.status(500).json({ error: 'Failed to parse categorization response' });
+    }
+
     res.status(200).json({ categorizedItems });
   } catch (error) {
     console.error('Categorization error:', error);
