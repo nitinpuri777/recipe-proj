@@ -63,7 +63,7 @@ const ShoppingListPage = {
                   <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
                 </div>
                 <div class="row align_right">
-                  <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
+                  <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(item)">
                 </div>
               </div>
             </template>
@@ -88,7 +88,7 @@ const ShoppingListPage = {
                 <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
               </div>
               <div class="row align_right">
-                <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
+                <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(item)">
               </div>
             </div>
           </template>
@@ -175,10 +175,9 @@ const ShoppingListPage = {
         console.log(error)     
       }
     },
-    async toggleCheckedItem(index) {
-      // this.$store.currentListItems[index].checked = !this.$store.currentListItems[index].checked
+    async toggleCheckedItem(item) {
       try {
-        await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[index])
+        await this.$store.updateListItem(this.$store.currentListId, item)
       }
       catch (error) {
         console.log(error)
