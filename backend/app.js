@@ -27,7 +27,7 @@ app.use(cookieParser())
 app.get('/api/env', (req, res) => {
   res.json({
     VUE_APP_STYTCH_PUBLIC_TOKEN: process.env[`${STYTCH_ENV_PREFIX}VUE_APP_STYTCH_PUBLIC_TOKEN`],
-    // AMPLITUDE_API_KEY: process.env[AMPLITUDE_API_KEY]
+    AMPLITUDE_API_KEY: process.env['AMPLITUDE_API_KEY']
   });
 });
 app.post('/api/scrape', ApiScrape.post)
