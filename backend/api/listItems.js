@@ -49,30 +49,40 @@ async function update(req, res, next) {
 async function categorize(req, res, next) {
   try {
     const items = req.body.items;
-    
-    const prompt = `Please categorize these grocery items by store section/aisle. 
-    Return only a JSON object where the keys are the item names and the values are their categories.
-    Use these categories only: Produce, Meat & Seafood, Dairy & Eggs, Pantry, Frozen, Beverages, Bakery, Snacks, Condiments, Spices & Seasonings, Other.
-    
-    Items to categorize:
-    ${items.map(item => item.ingredientName).join(', ')}`;
+    const batchSize = 10; // Define a suitable batch size
+    const categorizedItems = {};
 
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo",
-      temperature: 0.7,
-      max_tokens: 4000
-    });
+    for (let i = 0; i < items.length; i += batchSize) {
+      const batch = items.slice(i, i + batchSize);
+      const prompt = `Please categorize these grocery items by store section/aisle. 
+      Return only a JSON object where the keys are the item names and the values are their categories.
+      Use these categories only: Produce, Meat & Seafood, Dairy & Eggs, Pantry, Frozen, Beverages, Bakery, Snacks, Condiments, Spices & Seasonings, Other.
+      
+      Items to categorize:
+      ${batch.map(item => item.ingredientName).join(', ')}`;
 
-    const responseContent = completion.choices[0].message.content;
-    console.log('OpenAI Response:', responseContent);
+      const completion = await openai.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-3.5-turbo",
+        temperature: 0.7,
+        max_tokens: 1000 // Adjust max_tokens as needed
+      });
 
-    let categorizedItems;
-    try {
-      categorizedItems = JSON.parse(responseContent);
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      return res.status(500).json({ error: 'Failed to parse categorization response' });
+      const responseContent = completion.choices[0].message.content;
+      console.log('OpenAI Response:', responseContent);
+
+      if (!responseContent.trim().endsWith('}')) {
+        console.error('Incomplete JSON response');
+        return res.status(500).json({ error: 'Incomplete JSON response from OpenAI' });
+      }
+
+      try {
+        const batchCategorizedItems = JSON.parse(responseContent);
+        Object.assign(categorizedItems, batchCategorizedItems);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        return res.status(500).json({ error: 'Failed to parse categorization response' });
+      }
     }
 
     res.status(200).json({ categorizedItems });
