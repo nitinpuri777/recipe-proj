@@ -102,7 +102,8 @@ const RecipeDetailPage = {
         id: tempId,
         ingredientName: capitalizeFirstLetter(json.description),
         quantity: json.quantity,
-        unitOfMeasure: json.unitOfMeasure
+        unitOfMeasure: json.unitOfMeasure,
+        category: json.category
       }
       this.$store.currentListItems.push(itemDetails)
       this.inputItem = ""

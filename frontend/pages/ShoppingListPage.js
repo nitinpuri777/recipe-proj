@@ -44,42 +44,60 @@ const ShoppingListPage = {
         <input type="text" class="row width_fill pad_8 pad_left_32 rounded_20px border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
       </div>
       <div class="column bg_gray gap_2 pad_left_8 pad_right_8 pad_top_16 pad_bottom_16">
-        <template v-for="item, index in this.$store.currentListItems" :key="index">
-          <div v-if="!item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
-            <div @click="showEditModal(item)" class= "row gap_8 align_center_y align_left_x width_fill pointer" >
-              <div class="font_16 mobile_overflow text_nowrap">{{item.ingredientName}}</div>
-              <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
-            </div>
-            <div class="row align_right">
-              <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
-            </div>
-          </div> 
+        <div v-if="hasUncheckedItems" class="row width_fill align_right pad_bottom_8">
+          <button 
+            @click="autoCategorizeItems" 
+            :disabled="isAutoCategorizing"
+            class="button rounded border text_nowrap pad_left_12 pad_right_12"
+          >
+            {{ isAutoCategorizing ? 'Categorizing...' : 'Auto-categorize' }}
+          </button>
+        </div>
+        <template v-for="(items, category) in groupedItems" :key="category">
+          <template v-if="items.some(item => !item.checked)">
+            <div class="font_bold pad_top_16 pad_bottom_8">{{ category }}</div>
+            <template v-for="item in items" :key="item.id">
+              <div v-if="!item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
+                <div @click="showEditModal(item)" class="row gap_8 align_center_y align_left_x width_fill pointer">
+                  <div class="font_16 mobile_overflow text_nowrap">{{item.ingredientName}}</div>
+                  <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
+                </div>
+                <div class="row align_right">
+                  <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
+                </div>
+              </div>
+            </template>
+          </template>
         </template>
-        <div v-if="this.$store.currentListItems.some(value => value.checked === true)" class="row gap_fill width_fill pad_top_16 pad_bottom_8 font_bold">
-          <div class="text_nowrap">Checked Items</div>
-          <div class="row align_right width_fill">
-            <div @click="deleteCheckedItems" class="border row rounded gap_4 pad_left_12 pad_right_12 align_center_y font_12" >
-              <img src="/assets/icons/x.svg" height="12px" width="12px">
-              <div>Clear</div>
+
+        <template v-if="this.$store.currentListItems.some(value => value.checked === true)">
+          <div class="row gap_fill width_fill pad_top_8 pad_bottom_8 font_bold">
+            <div class="text_nowrap">Checked Items</div>
+            <div class="row align_right width_fill">
+              <div @click="deleteCheckedItems" class="border row rounded gap_4 pad_left_12 pad_right_12 align_center_y font_12">
+                <img src="/assets/icons/x.svg" height="12px" width="12px">
+                <div>Clear</div>
+              </div>
             </div>
           </div>
-        </div>
-        <template v-for="item, index in this.$store.currentListItems" :key="index">
-          <div v-if="item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
-            <div class= "row gap_8 align_center_y" :class="{'strikethrough font_color_gray' : item.checked}">
-              <div class="font_16">{{item.ingredientName}}</div>
-              <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
+
+          <template v-for="item in this.$store.currentListItems" :key="item.id">
+            <div v-if="item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
+              <div class="row gap_8 align_center_y" :class="{'strikethrough font_color_gray' : item.checked}">
+                <div class="font_16">{{item.ingredientName}}</div>
+                <div class="font_12 font_color_gray">{{item.quantity}} {{item.unitOfMeasure}}</div>
+              </div>
+              <div class="row align_right">
+                <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
+              </div>
             </div>
-            <div class="row align_right">
-              <input type="checkbox" v-model="item.checked" class="checkbox" @change="toggleCheckedItem(index)">
-            </div>
-          </div> 
+          </template>
         </template>
         </div> 
       </div>
     </div>
 </div>
-<edit-ingredient-modal @hide-edit-modal="hideEditModal" @delete-item="deleteItem" @save-item="updateListItem" :id="editId" :showModal="showModal" :ingredientName="editIngredientName" :quantity="editQuantity" :unitOfMeasure="editUnitOfMeasure"/>
+<edit-ingredient-modal @hide-edit-modal="hideEditModal" @delete-item="deleteItem" @save-item="updateListItem" :id="editId" :showModal="showModal" :ingredientName="editIngredientName" :quantity="editQuantity" :unitOfMeasure="editUnitOfMeasure" :category="editCategory"/>
 <generic-modal 
   title="Create List" :showModal="isCreateNewListModalVisible" confirmButtonText="Create List"
   @close="hideCreateNewListModal" @confirm="createList">
@@ -117,7 +135,10 @@ const ShoppingListPage = {
       checkedItems: [],
       listMenuIndex: null,
       isCreateNewListModalVisible: false,
-      isDropDownOfListsVisible: false
+      isDropDownOfListsVisible: false,
+      editCategory: "",
+      categories: [],
+      isAutoCategorizing: false
     }
   },
   methods: {
@@ -130,6 +151,7 @@ const ShoppingListPage = {
       this.editQuantity = item.quantity
       this.editUnitOfMeasure = item.unitOfMeasure
       this.editId = item.id
+      this.editCategory = item.category
       this.showModal = true
     },
     hideEditModal() {
@@ -138,17 +160,20 @@ const ShoppingListPage = {
     async updateListItem(item) {
       let indexToUpdate = this.$store.currentListItems.findIndex(listItem => listItem.id == item.id)
       if(indexToUpdate !== -1) {
-        this.$store.currentListItems[indexToUpdate].ingredientName = item.ingredientName
-        this.$store.currentListItems[indexToUpdate].quantity = item.quantity
-        this.$store.currentListItems[indexToUpdate].unitOfMeasure = item.unitOfMeasure
+        this.$store.currentListItems[indexToUpdate] = {
+          ...this.$store.currentListItems[indexToUpdate],
+          ingredientName: item.ingredientName,
+          quantity: item.quantity,
+          unitOfMeasure: item.unitOfMeasure,
+          category: item.category
+        }
       }
-      this.showModal=false
+      this.showModal = false
       try {
         await this.$store.updateListItem(this.$store.currentListId, this.$store.currentListItems[indexToUpdate])  
       } catch (error) {
         console.log(error)     
       }
-      
     },
     async toggleCheckedItem(index) {
       // this.$store.currentListItems[index].checked = !this.$store.currentListItems[index].checked
@@ -224,6 +249,84 @@ const ShoppingListPage = {
     },
     showDropDownOfLists() {
       this.isDropDownOfListsVisible = !this.isDropDownOfListsVisible;
+    },
+    async autoCategorizeItems() {
+      try {
+        this.isAutoCategorizing = true;
+        
+        const itemsToProcess = this.$store.currentListItems.filter(
+          item => !item.checked && !item.category
+        );
+        
+        if (itemsToProcess.length === 0) {
+          return;
+        }
+
+        // Get categories from OpenAI
+        const categorizedItems = await this.$store.categorizeManyItems(
+          this.$store.currentListId, 
+          itemsToProcess
+        );
+
+        // Update each item with its new category
+        for (const item of itemsToProcess) {
+          const newCategory = categorizedItems[item.ingredientName];
+          if (newCategory) {
+            const updatedItem = {
+              ...item,
+              category: newCategory
+            };
+            // Store the response from the update
+            const updatedResponse = await this.$store.updateListItem(this.$store.currentListId, updatedItem);
+            
+            // Update the item in the currentListItems array directly
+            const index = this.$store.currentListItems.findIndex(i => i.id === item.id);
+            if (index !== -1) {
+              this.$store.currentListItems[index] = {
+                ...this.$store.currentListItems[index],
+                category: newCategory
+              };
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error in auto-categorization:', error);
+      } finally {
+        this.isAutoCategorizing = false;
+      }
+    }
+  },
+  computed: {
+    groupedItems() {
+      // Create an object to store items by category
+      const grouped = {};
+      
+      // Add "Uncategorized" for items without a category
+      grouped["Uncategorized"] = [];
+      
+      // Group items
+      this.$store.currentListItems.forEach(item => {
+        const category = item.category || "Uncategorized";
+        if (!grouped[category]) {
+          grouped[category] = [];
+        }
+        grouped[category].push(item);
+      });
+      
+      // Sort categories alphabetically, but keep "Uncategorized" at the end
+      return Object.keys(grouped)
+        .sort((a, b) => {
+          if (a === "Uncategorized") return 1;
+          if (b === "Uncategorized") return -1;
+          return a.localeCompare(b);
+        })
+        .reduce((acc, category) => {
+          acc[category] = grouped[category];
+          return acc;
+        }, {});
+    },
+    hasUncheckedItems() {
+      return this.$store.currentListItems.some(item => !item.checked);
     }
   },
   components: {

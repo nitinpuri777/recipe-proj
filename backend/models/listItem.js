@@ -52,12 +52,12 @@ class ListItem extends Model {
 
   static async getListItems(listId) {
     try {
-      return await ListItem.findAll({
-        where:{
-          listId
-        }
+      const items = await ListItem.findAll({
+        where: { listId }
       })
+      return items
     } catch (error) {
+      console.error('Get items error:', error)
       throw new Error('COULD_NOT_GET_LIST_ITEMS')
     }
   }
@@ -69,7 +69,8 @@ class ListItem extends Model {
         listId: listId,
         ingredientName: itemDetails.ingredientName,
         quantity: itemDetails.quantity,
-        unitOfMeasure: itemDetails.unitOfMeasure
+        unitOfMeasure: itemDetails.unitOfMeasure,
+        category: itemDetails.category
       })
     } catch (error) {
       console.error(`error: ${error}`)
@@ -78,11 +79,13 @@ class ListItem extends Model {
     
   }
 
-  static async updateListItem(updatedlistItem){
+  static async updateListItem(updatedListItem){
     try {
-      let itemToUpdate = await ListItem.findByPk(updatedlistItem.id)
-      itemToUpdate.update(updatedlistItem)
+      let itemToUpdate = await ListItem.findByPk(updatedListItem.id)
+      await itemToUpdate.update(updatedListItem)
+      return itemToUpdate
     } catch (error) {
+      console.error('Update error:', error)
       throw new Error('COULD_NOT_UPDATE_ITEM')
     }
     

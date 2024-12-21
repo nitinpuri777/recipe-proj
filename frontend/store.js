@@ -326,14 +326,14 @@ export const useStore = defineStore('store', {
       await this.getListItems(list.id)
     },
     async getListItems(listId) {
-      let url= `/api/lists/${listId}/items`
-      let options = {
-        method: "GET",
-        headers: {'Content-Type': 'application/json'}
+      try {
+        let response = await fetch(`/api/lists/${listId}/items`)
+        let json = await response.json()
+        this.currentListItems = json.listItems
+        return json.listItems
+      } catch (error) {
+        console.error(error)
       }
-      const response = await fetch(url, options)
-      const json = await response.json()
-      this.currentListItems = json.listItems
     },
     async addListItem() {
       let json = parseIngredient(this.inputItem)[0]
@@ -342,7 +342,8 @@ export const useStore = defineStore('store', {
         id: tempId,
         ingredientName: capitalizeFirstLetter(json.description),
         quantity: json.quantity,
-        unitOfMeasure: json.unitOfMeasure
+        unitOfMeasure: json.unitOfMeasure,
+        category: json.category
       }
       this.$store.currentListItems.push(itemDetails)
       this.inputItem = ""
@@ -378,17 +379,37 @@ export const useStore = defineStore('store', {
       // this.getListItems(listId)
     },
 
-    async updateListItem(listId, itemDetails) {
-      let url = `/api/lists/${listId}/items`
-      let options = {
-        method: "PUT",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({itemDetails})
+    async updateListItem(listId, item) {
+      try {
+        let response = await fetch(`/api/lists/${listId}/items/${item.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+          },
+          body: JSON.stringify({
+            itemDetails: {
+              id: item.id,
+              listId: listId,
+              ingredientName: item.ingredientName,
+              quantity: item.quantity,
+              unitOfMeasure: item.unitOfMeasure,
+              category: item.category,
+              checked: item.checked
+            }
+          })
+        })
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        let updatedItem = await response.json()
+        return updatedItem
+      } catch (error) {
+        console.error('Error updating item:', error)
+        throw error
       }
-      const response = await fetch(url, options)
-      if(response.status != '200') {
-      }
-      // this.getListItems(listId)
     },
     async addListItem(item) {
       let json = parseIngredient(item)[0]
@@ -413,7 +434,8 @@ export const useStore = defineStore('store', {
           id: tempId,
           ingredientName: ingredientName,
           quantity: json.quantity,
-          unitOfMeasure: json.unitOfMeasure
+          unitOfMeasure: json.unitOfMeasure,
+          category: json.category
         }
 
         this.currentListItems.push(itemDetails)
@@ -424,6 +446,28 @@ export const useStore = defineStore('store', {
         }
       }
 
+    },
+    async categorizeManyItems(listId, items) {
+      try {
+        const response = await fetch(`/api/lists/${listId}/items/categorize`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+          },
+          body: JSON.stringify({ items })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const { categorizedItems } = await response.json();
+        return categorizedItems;
+      } catch (error) {
+        console.error('Error categorizing items:', error);
+        throw error;
+      }
     }
   }
 })

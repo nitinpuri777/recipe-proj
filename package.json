@@ -23,6 +23,7 @@
     "fraction-parser": "^1.0.6",
     "fs": "^0.0.1-security",
     "meilisearch": "^0.38.0",
+    "openai": "^4.77.0",
     "parse-ingredient": "^1.2.0",
     "pg": "^8.11.4",
     "pg-hstore": "^2.3.4",

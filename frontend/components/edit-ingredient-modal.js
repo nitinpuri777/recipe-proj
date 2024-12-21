@@ -17,6 +17,7 @@ const EditIngredientModal = {
           <option v-for="uom, key in unitsOfMeasure" :value="uom.short"> {{key}}</option>
         </select>
       </div>  
+      <input type="text" v-model="inputCategory" placeholder="Category" class="border border_color_gray rounded_8px pad_8 width_fill"/>
     </div>
     <div class="row width_fill gap_fill pad_top_16">
       <img @click="deleteItem(id)" src="/assets/icons/trash-2.svg" class="icon">
@@ -32,7 +33,8 @@ props: {
   ingredientName: String,
   quantity: Number,
   unitOfMeasure: String,
-  showModal: Boolean
+  showModal: Boolean,
+  category: String
 },
 async mounted() {
   console.log(this.unitsOfMeasure)
@@ -43,6 +45,7 @@ data() {
     inputIngredientName: this.ingredientName,
     inputQuantity: this.quantity,
     inputUnitOfMeasure: this.unitOfMeasure,
+    inputCategory: this.category || '',
   }
 },
 watch: {
@@ -55,6 +58,9 @@ watch: {
   unitOfMeasure(newVal) {
     this.inputUnitOfMeasure = newVal;
   },
+  category(newVal) {
+    this.inputCategory = newVal;
+  },
 },
 computed: {
   unitsOfMeasure() {
@@ -66,6 +72,7 @@ computed: {
       ingredientName: this.inputIngredientName,
       quantity: this.inputQuantity,
       unitOfMeasure: this.inputUnitOfMeasure,
+      category: this.inputCategory,
       id: this.id
     }
   },
