@@ -1,13 +1,23 @@
 import amplitude from 'amplitude';
-import { AMPLITUDE_API_KEY } from '.env';
 
-// Initialize Amplitude
-amplitude.getInstance().init(AMPLITUDE_API_KEY, null, {
-  fetchRemoteConfig: true,
-  autocapture: {
-    elementInteractions: true
-  }
-});
+// Fetch the API key from the backend
+async function getAmplitudeApiKey() {
+  const response = await fetch('/api/env');
+  const data = await response.json();
+  return data.AMPLITUDE_API_KEY;
+}
+
+(async () => {
+  const AMPLITUDE_API_KEY = await getAmplitudeApiKey();
+
+  // Initialize Amplitude
+  amplitude.getInstance().init(AMPLITUDE_API_KEY, null, {
+    fetchRemoteConfig: true,
+    autocapture: {
+      elementInteractions: true
+    }
+  });
+})();
 
 // Function to identify users
 export function identifyUser(userId, userTraits = {}) {
