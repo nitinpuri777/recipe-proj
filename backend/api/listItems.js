@@ -61,7 +61,7 @@ async function categorize(req, res, next) {
       messages: [{ role: "user", content: prompt }],
       model: "gpt-3.5-turbo",
       temperature: 0.7,
-      max_tokens: 500
+      max_tokens: 4000
     });
 
     const responseContent = completion.choices[0].message.content;
