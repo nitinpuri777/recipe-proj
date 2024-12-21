@@ -3,6 +3,7 @@ import router from './router.js'
 import stytchClient from './components/auth/stytch-client.js'
 import { parseIngredient, unitsOfMeasure } from "parse-ingredient"
 import { capitalizeFirstLetter } from './globals.js'
+import { identifyUser } from './analytics.js'
 
 
 export const useStore = defineStore('store', { 
@@ -468,6 +469,18 @@ export const useStore = defineStore('store', {
         console.error('Error categorizing items:', error);
         throw error;
       }
+    },
+    async handleAuthenticationSuccess(sessionToken, userData) {
+      // Existing auth logic
+      localStorage.setItem("authToken", sessionToken);
+
+      // Identify the user in Amplitude
+      identifyUser(userData.user_id, {
+        email: userData.user.email,
+        // Add other user traits as needed
+      });
+
+      this.goToApp();
     }
   }
 })
