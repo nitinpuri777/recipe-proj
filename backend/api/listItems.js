@@ -55,7 +55,7 @@ async function categorize(req, res, next) {
     for (let i = 0; i < items.length; i += batchSize) {
       const batch = items.slice(i, i + batchSize);
       const prompt = `Please categorize these grocery items by store section/aisle. 
-      Return only a JSON object where the keys are the item names and the values are their categories.
+      Return only a JSON object where the keys are the item names and the values are their categories. Make sure to include every single item I send you and return the item name identically including all punctuation and spacing.
       Use these categories only: Produce, Meat & Seafood, Dairy & Eggs, Pantry, Frozen, Beverages, Bakery, Snacks, Condiments, Spices & Seasonings, Other.
       
       Items to categorize:

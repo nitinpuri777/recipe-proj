@@ -44,18 +44,21 @@ const ShoppingListPage = {
         <input type="text" class="row width_fill pad_8 pad_left_32 rounded_20px border border_color_gray add_item_input"  v-model="inputItem" @keypress.enter="addListItem" placeholder="Add Item"> 
       </div>
       <div class="column bg_gray gap_2 pad_left_8 pad_right_8 pad_top_16 pad_bottom_16">
-        <div v-if="hasUncheckedItems" class="row width_fill align_right pad_bottom_8">
-          <button 
-            @click="autoCategorizeItems" 
-            :disabled="isAutoCategorizing"
-            class="button rounded border text_nowrap pad_left_12 pad_right_12"
-          >
-            {{ isAutoCategorizing ? 'Categorizing...' : 'Auto-categorize' }}
-          </button>
-        </div>
         <template v-for="(items, category) in groupedItems" :key="category">
           <template v-if="items.some(item => !item.checked)">
-            <div class="font_bold pad_top_16 pad_bottom_8">{{ category }}</div>
+            <div class="row gap_fill width_fill pad_top_8 pad_bottom_8 font_bold">
+            <div class="font_bold">{{ category }}</div>
+            <div v-if="category == 'Uncategorized'" class="row align_right width_fill">
+              <div 
+                @click="autoCategorizeItems" 
+                :disabled="isAutoCategorizing"
+                class="border pointer row rounded gap_4 pad_left_12 pad_right_12 align_center_y font_12"
+              > 
+                <img src="/assets/icons/wand-magic-sparkles-solid.svg" height="12px" width="12px">
+                {{ isAutoCategorizing ? 'Categorizing...' : 'Auto-categorize' }}
+                </div>
+              </div>
+            </div>
             <template v-for="item in items" :key="item.id">
               <div v-if="!item.checked" class="row align_center_y width_fill gap_fill pad_8 rounded bg_white">
                 <div @click="showEditModal(item)" class="row gap_8 align_center_y align_left_x width_fill pointer">
@@ -74,7 +77,7 @@ const ShoppingListPage = {
           <div class="row gap_fill width_fill pad_top_8 pad_bottom_8 font_bold">
             <div class="text_nowrap">Checked Items</div>
             <div class="row align_right width_fill">
-              <div @click="deleteCheckedItems" class="border row rounded gap_4 pad_left_12 pad_right_12 align_center_y font_12">
+              <div @click="deleteCheckedItems" class="border pointer row rounded gap_4 pad_left_12 pad_right_12 align_center_y font_12">
                 <img src="/assets/icons/x.svg" height="12px" width="12px">
                 <div>Clear</div>
               </div>
@@ -143,8 +146,9 @@ const ShoppingListPage = {
   },
   methods: {
     async addListItem() {
-      await this.$store.addListItem(this.inputItem)
+      const itemToAdd = this.inputItem
       this.inputItem=""
+      await this.$store.addListItem(itemToAdd)
     },
     showEditModal(item) {
       this.editIngredientName = item.ingredientName
@@ -312,11 +316,11 @@ const ShoppingListPage = {
         grouped[category].push(item);
       });
       
-      // Sort categories alphabetically, but keep "Uncategorized" at the end
+      // Sort categories alphabetically, but keep "Uncategorized" at the beginning
       return Object.keys(grouped)
         .sort((a, b) => {
-          if (a === "Uncategorized") return 1;
-          if (b === "Uncategorized") return -1;
+          if (a === "Uncategorized") return -1;
+          if (b === "Uncategorized") return 1;
           return a.localeCompare(b);
         })
         .reduce((acc, category) => {
