@@ -19,7 +19,14 @@ const RecipeDetail = {
           <img src="/assets/icons/trash-2.svg" class="height_28px width_28px icon" @click="showDeleteConfirm">
         </div>
         <div v-if="!hasRecipeId" class="row align_right gap_16">
-            <img src="/assets/icons/bookmark.svg" class="height_28px width_28px icon" @click="saveRecipe">
+          <a v-if="!saving" @click="saveRecipe" class="row pad_8 gap_8 button__secondary font_bold rounded border">
+            <img src="/assets/icons/bookmark.svg" class="height_20px width_20px" >
+            <div class="font_16 font_bold">Save</div>
+          </a>
+          <a v-else class="row pad_8 gap_8 button__secondary font_bold rounded border">
+            <img src="/assets/icons/bookmark.svg" class="height_20px width_20px">
+            <div class="font_16 font_bold">Saving...</div>
+          </a>
         </div>
       </div> 
       <div class="row gap_16">
@@ -91,6 +98,7 @@ const RecipeDetail = {
       loading: false,
       scaleFactor: 1,
       desiredServings: 0,
+      saving: false,
     }
   },
   computed: {
@@ -217,8 +225,17 @@ const RecipeDetail = {
     showModal() {
       this.$emit('show-modal', this.scaledIngredients)
     },
-    saveRecipe() {
-      this.$router.replace({ path: '/save-recipe', query: { url: this.recipeUrl } });
+    async saveRecipe() {
+      this.saving = true; // Set loading state to true
+      try {
+        const recipe = await this.$store.scrapeRecipe(this.recipeUrl);
+        const createdRecipe = await this.$store.addRecipe(recipe);
+        this.$router.replace({ path: `/app/recipe/${createdRecipe.id}` }); // Update the URL without redirecting
+      } catch (error) {
+        console.error("An error occurred while saving the recipe:", error);
+      } finally {
+        this.saving = false; // Reset loading state
+      }
     }
   }
 }
