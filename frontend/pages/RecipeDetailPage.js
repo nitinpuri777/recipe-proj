@@ -10,7 +10,9 @@ const RecipeDetailPage = {
     <recipe-detail @show-modal="showModal" class="max_width_1200px height_fill width_fill" />
     <right-overlay />
     <delete-modal />
-    <generic-modal title="" :showModal="isModalVisible" confirmButtonText="Add to List" @close="hideModal" @confirm="addIngredientsToList" >
+    <generic-modal title="" :showModal="isModalVisible" 
+      :confirmButtonText="isAddingIngredients ? 'Adding...' : 'Add to List'" 
+      @close="hideModal" @confirm="addIngredientsToList" >
         <div class="column scroll">
             <div class="row font_24 font_bold gap_8 position_relative"> 
               <div  class="underline"> 
@@ -54,7 +56,8 @@ const RecipeDetailPage = {
       isModalVisible: false,
       ingredientsToAdd: [],
       isCreateNewListModalVisible: false,
-      isDropDownOfListsVisible: false
+      isDropDownOfListsVisible: false,
+      isAddingIngredients: false
     }
   },
   methods: {
@@ -78,6 +81,7 @@ const RecipeDetailPage = {
       this.isModalVisible = false;
     },
     async addIngredientsToList(){
+      this.isAddingIngredients = true;
       if (!this.$store.currentList || !this.$store.currentList.id) {
         await this.$store.createList('Shopping List');
         await this.$store.getLists();
@@ -93,7 +97,7 @@ const RecipeDetailPage = {
       }
     
       this.hideModal();
-      
+      this.isAddingIngredients = false;
     },
     async addListItem(listId, ingredientString) {
       let json = parseIngredient(ingredientString)[0]
