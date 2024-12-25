@@ -481,6 +481,22 @@ export const useStore = defineStore('store', {
       });
 
       this.goToApp();
-    }
+    },
+    async createMealPlan(mealPlanData) {
+      const url = '/api/meal-plans';
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+        },
+        body: JSON.stringify(mealPlanData)
+      };
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error('Failed to create meal plan');
+      }
+      return await response.json();
+    },
   }
 })

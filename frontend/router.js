@@ -8,6 +8,7 @@ import ScrapeRecipePage from './pages/ScrapeRecipePage.js'
 import ScrapeDetailPage from './pages/ScrapeDetailPage.js'
 import SaveRecipePage from './pages/SaveRecipePage.js'
 import ShoppingListPage from './pages/ShoppingListPage.js'
+import MealPlanPage from './pages/MealPlanPage.js'
 
 const routes = [
   { 
@@ -51,9 +52,15 @@ const routes = [
     component: Authenticate
   },
   { 
+    path: '/meal-plan', 
+    component: MealPlanPage,
+    meta: { requiresAuth: true }
+  },
+  { 
     path: '/:catchAll(.*)', 
     redirect: '/app' 
-  },
+  }
+  
 ];
 
 const router = createRouter({

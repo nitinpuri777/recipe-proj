@@ -8,6 +8,7 @@ import ApiScrape from './api/scrape.js';
 import sequelize from './models/sequelize.js';
 import ApiLists from './api/lists.js';
 import ApiListItems from './api/listItems.js';
+import ApiMealPlans from './api/mealPlans.js';
 
 const STYTCH_ENV_PREFIX = process.env.STYTCH_ENV_PREFIX
 
@@ -49,5 +50,8 @@ app.use('/api', Middleware.handleError)
 app.use(express.static('frontend'))
 app.get('*', Middleware.loadContent)
 app.post('/api/lists/:listId/items/categorize', ApiListItems.categorize)
+app.post('/api/meal-plans', ApiMealPlans.create);
+app.put('/api/meal-plans/:id', ApiMealPlans.update);
+app.delete('/api/meal-plans/:id', ApiMealPlans.delete_);
 
 export default app

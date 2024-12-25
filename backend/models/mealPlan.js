@@ -36,7 +36,15 @@ class MealPlan extends Model {
   }
 
   static async createMealPlan(data) {
-    return await MealPlan.create(data);
+    console.log('Creating meal plan with data:', data);
+    try {
+      const mealPlan = await MealPlan.create(data);
+      console.log('Meal plan created in database:', mealPlan);
+      return mealPlan;
+    } catch (error) {
+      console.error('Error during meal plan creation:', error);
+      throw error;
+    }
   }
 
   static async updateMealPlan(id, data) {

@@ -28,8 +28,8 @@
 --color_button_primary_text_hover: var(--white);
 --color_button_secondary: var(--white);
 --color_button_text_secondary: var(--prussian-blue);
---color_svg_primary: invert(14%) sepia(5%) saturate(5902%) hue-rotate(170deg) brightness(94%) contrast(87%);
---color_svg_primary_hover: invert(64%) sepia(2%) saturate(2469%) hue-rotate(147deg) brightness(90%) contrast(93%);
+--color_svg_primary_hover: invert(14%) sepia(5%) saturate(5902%) hue-rotate(170deg) brightness(94%) contrast(87%);
+--color_svg_primary: invert(64%) sepia(2%) saturate(2469%) hue-rotate(147deg) brightness(90%) contrast(93%);
 }
 
 /* RESETS copied from Jangle */

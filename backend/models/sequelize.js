@@ -5,6 +5,7 @@ import User from './user.js';
 import Recipe from './recipe.js';
 import List from './list.js';
 import ListItem from './listItem.js';
+import MealPlan from './mealPlan.js';
 
 
 
@@ -32,6 +33,7 @@ User.initModel(sequelize)
 Recipe.initModel(sequelize)
 List.initModel(sequelize)
 ListItem.initModel(sequelize)
+MealPlan.initModel(sequelize)
 
 List.hasMany(ListItem, { foreignKey: 'listId' });
 ListItem.belongsTo(List, { foreignKey: 'listId' });
