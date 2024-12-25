@@ -147,6 +147,13 @@ body {
   background-position: 8px;
   background-size: 20px;
 }
+.search_input {
+  background-image: url('/assets/icons/search.svg');
+  background-repeat: no-repeat;
+  background-position: 8px;
+  background-size: 20px;
+}
+
 
 
 /* PADDING */
@@ -160,6 +167,7 @@ body {
 .pad_left_12 { padding-left: 12px; }
 .pad_left_16 { padding-left: 16px; }
 .pad_left_32 { padding-left: 32px; }
+.pad_left_36 { padding-left: 36px; }
 
 
 .pad_right_8 { padding-right: 8px; }
@@ -742,6 +750,50 @@ body {
 .panel--hidden {
   transform: translateX(100%);
 }
+
+.round {
+  position: relative;
+}
+
+.round label {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 28px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 28px;
+}
+
+.round label:after {
+  border: 2px solid var(--antiflash-white);
+  border-top: none;
+  border-right: none;
+  content: "";
+  height: 6px;
+  left: 7px;
+  opacity: 0;
+  position: absolute;
+  top: 8px;
+  transform: rotate(-45deg);
+  width: 12px;
+}
+
+.round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.round input[type="checkbox"]:checked + label {
+  background-color: var(--prussian-blue);
+  border-color: var(--prussian-blue);
+}
+
+.round input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
+
 
 
 
