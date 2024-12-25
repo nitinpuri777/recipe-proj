@@ -215,9 +215,11 @@ body {
 .width_160px { width: 160px; }
 .width_188px { width: 188px; }
 .width_200px { width:200px; }
+.width_280px { width:280px; }
 .width_fill { width:100%; }
 .min_width_300px {min-width:300px;}
 .min_width_400px {min-width:400px;}
+.min_width_600px {min-width:600px;}
 .max_width_fill { max-width:100%; }
 .max_width_280px {max-width: 280px}
 .max_width_400px {max-width: 400px}
@@ -348,10 +350,10 @@ body {
   transition: color 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
 }
 
-.selected {
+/* .selected {
   color: var(--desert-sand);
   transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out, font-weight 0.2s ease-in-out;
-}
+} */
 
 
 .nav_link.selected:hover {
@@ -752,7 +754,13 @@ body {
 }
 
 .round {
-  position: relative;
+  position: absolute;            /* absolutely center this container */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;                   /* match label size */
+  height: 28px;
+  z-index: 2;
 }
 
 .round label {
@@ -795,7 +803,24 @@ body {
 }
 
 
+/* Make sure .recipe_tile is positioned so the pseudo-element can be centered */
+.recipe_tile {
+  position: relative;
+  cursor: pointer;
+}
 
+.recipe_tile.selected::after {
+  content: "";
+  position: absolute;
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(128, 128, 128, 0.5); /* semi-transparent gray */
+  pointer-events: none; /* allow clicks to pass through if you like */
+  border-radius: inherit; /* if you want to match rounded corners */
+  z-index:1;
+}
 
 
 

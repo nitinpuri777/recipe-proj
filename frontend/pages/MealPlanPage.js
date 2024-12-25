@@ -46,20 +46,28 @@ const MealPlanPage = {
         </div>
     </div>
     <generic-modal :showModal="isRecipeModalVisible" @close="isRecipeModalVisible = false" @confirm="addRecipeToMealPlan(selectedRecipe)" title="Add Recipe" confirmButtonText="Add Recipe">
-      <div class="column width_fill min_width_400px pad_left_8 pad_right_8">
-        <!-- <input type="text" class="row width_fill pad_8 pad_left_36 rounded_20px border border_color_gray search_input" placeholder="Search recipes">  -->
-        <div class="column width_fill gap_16">
-            <div v-for="(recipe, index) in recipes.slice(0,4)" :key="recipe.id" class="row width_fill align_center_y gap_16">
-                <div class="round pad_right_8">
-                    <input type="checkbox" :id="'checkbox-' + index" v-model="recipe.checked" />
-                    <label :for="'checkbox-' + index"></label>
-                </div>
-                <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
-                <div class="row height_fill align_center_y font_bold pad_8">
+      <div class="column width_fill pad_left_8 pad_right_8">
+
+      <div class="grid gap_16">
+        <div v-for="recipe in recipes" class="border_invisible rounded recipe_tile tile_grid max_width_500px" :class="{ 'selected': selectedRecipeIds.includes(recipe.id) }">
+          <div class="column gap_fill height_fill width_fill align_top" @click="toggleSelectedRecipe(recipe.id)">
+            <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
+            <div class="row font_bold pad_8">
               {{recipe.name}}
-                    </div>
-                </div>
             </div>
+            <div 
+        v-if="selectedRecipeIds.includes(recipe.id)"
+        class="round"
+      >
+
+        <input
+          type="checkbox"
+          :id="'round-checkbox-' + recipe.id"
+          checked
+        />
+        <label :for="'round-checkbox-' + recipe.id"></label>
+      </div>
+          </div>
         </div>
       </div>
     </generic-modal>
@@ -71,6 +79,7 @@ const MealPlanPage = {
     return {
         recipes: [],
         isRecipeModalVisible: true,
+        selectedRecipeIds: [], // track multiple selected tiles
     };
   },
   components: {
@@ -94,7 +103,16 @@ const MealPlanPage = {
         console.error('Error creating meal plan:', error);
         alert('Failed to create meal plan.');
       }
-    }
+    },
+    toggleSelectedRecipe(id) {
+        if (this.selectedRecipeIds.includes(id)) {
+          // remove it from array
+          this.selectedRecipeIds = this.selectedRecipeIds.filter(rid => rid !== id);
+        } else {
+          // add it to array
+          this.selectedRecipeIds.push(id);
+        }
+      },
   }
 };
 
