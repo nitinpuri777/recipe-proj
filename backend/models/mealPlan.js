@@ -1,4 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
+import Recipe from './recipe.js';
 
 class MealPlan extends Model {
   static initModel(sequelize) {
@@ -22,17 +23,20 @@ class MealPlan extends Model {
       },
       meal_time: {
         type: DataTypes.ENUM('breakfast', 'lunch', 'dinner', 'snack'),
-        allowNull: false
+        allowNull: true
       },
       servings: {
         type: DataTypes.INTEGER,
-        defaultValue: 1
+        defaultValue: null,
+        allowNull: true
       }
     }, {
       sequelize,
       modelName: 'mealPlan',
       tableName: 'meal_plans'
     });
+
+    MealPlan.belongsTo(Recipe, { foreignKey: 'recipe_id', as: 'recipe' });
   }
 
   static async createMealPlan(data) {
@@ -62,6 +66,16 @@ class MealPlan extends Model {
       return true;
     }
     throw new Error('MEAL_PLAN_NOT_FOUND');
+  }
+  static async getMealPlans(userId) {
+    return await MealPlan.findAll({
+        where: { user_id: userId },
+        include: [{
+            model: Recipe,
+            as: 'recipe',
+            attributes: ['id', 'name', 'ingredients', 'steps', 'image_url', 'hostname', 'url', 'serving_size']
+        }]
+    });
   }
 }
 

@@ -6,6 +6,7 @@ import StytchClient from "./stytch/stytch-client.js";
 // const __dirname = dirname(__filename);
 
 async function authenticateSession(req, res, next) {
+  console.log('Authenticating session with token:', req.cookies.stytch_session);
   let token = req.cookies.stytch_session
 
   StytchClient.sessions.authenticate({session_token: token, session_duration_minutes: 43200})
@@ -35,6 +36,7 @@ async function authenticateSession(req, res, next) {
 }
 
 async function handleError(err, req, res, next) {
+  console.error('Error occurred:', err);
   switch (err) {
       case 'USER_NOT_FOUND':
           res.status(403).json({message: "User not authorized"})

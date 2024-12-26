@@ -2,14 +2,11 @@ import MealPlan from "../models/mealPlan.js";
 
 export const create = async (req, res) => {
   try {
-    console.log('Received request to create meal plan:', req.body);
     const userId = req.user.id;
     const mealPlanData = { ...req.body, user_id: userId };
     const mealPlan = await MealPlan.createMealPlan(mealPlanData);
-    console.log('Meal plan created successfully:', mealPlan);
     res.status(201).json({ mealPlan });
   } catch (error) {
-    console.error('Error in creating meal plan:', error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -32,10 +29,20 @@ export const delete_ = async (req, res) => {
   }
 };
 
+export const get = async (req, res) => {
+  try {
+    const mealPlans = await MealPlan.getMealPlans(req.user.id);
+    res.status(200).json({ mealPlans });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch meal plans' });
+  }
+};
+
 const ApiMealPlans = {
   create,
   update,
-  delete_
+  delete_,
+  get
 };
 
 export default ApiMealPlans; 

@@ -10,6 +10,7 @@ import ApiLists from './api/lists.js';
 import ApiListItems from './api/listItems.js';
 import ApiMealPlans from './api/mealPlans.js';
 
+
 const STYTCH_ENV_PREFIX = process.env.STYTCH_ENV_PREFIX
 
 //initialize db connection
@@ -46,12 +47,14 @@ app.put('/api/lists/:listId/items/:itemId', ApiListItems.update)
 app.get('/api/lists', ApiLists.find)
 app.post('/api/lists', ApiLists.create)
 app.delete('/api/lists/:id', ApiLists.delete_)
-app.use('/api', Middleware.handleError)
-app.use(express.static('frontend'))
-app.get('*', Middleware.loadContent)
 app.post('/api/lists/:listId/items/categorize', ApiListItems.categorize)
 app.post('/api/meal-plans', ApiMealPlans.create);
 app.put('/api/meal-plans/:id', ApiMealPlans.update);
 app.delete('/api/meal-plans/:id', ApiMealPlans.delete_);
+app.get('/api/meal-plans', ApiMealPlans.get);
+app.use('/api', Middleware.handleError)
+app.use(express.static('frontend'))
+app.get('*', Middleware.loadContent)
+
 
 export default app

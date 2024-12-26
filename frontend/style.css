@@ -221,6 +221,7 @@ body {
 .min_width_400px {min-width:400px;}
 .min_width_600px {min-width:600px;}
 .max_width_fill { max-width:100%; }
+.max_width_200px {max-width: 200px}
 .max_width_280px {max-width: 280px}
 .max_width_400px {max-width: 400px}
 .max_width_480px { max-width: 480px; }

@@ -2,12 +2,13 @@ import Recipe from "../models/recipe.js"
 
 export const get = async (req, res) => { 
   try {
-          let user = req.user
-          let recipes = await Recipe.findAllForUser(user)
-          return res.status(200).json({recipes})
-      
+    console.log('Fetching recipes for user:', req.user.id);
+    let recipes = await Recipe.findAllForUser(req.user);
+    console.log('Recipes fetched successfully:', recipes);
+    return res.status(200).json({ recipes });
   } catch (error) {
-      return res.status(400).json({error})
+    console.error('Error fetching recipes:', error);
+    return res.status(400).json({ error });
   }
 }
 export const find = async (req, res) => { 

@@ -493,10 +493,20 @@ export const useStore = defineStore('store', {
         body: JSON.stringify(mealPlanData)
       };
       const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error('Failed to create meal plan');
-      }
-      return await response.json();
+      const json = await response.json();
+      return json;
     },
+    async fetchMealPlans() {
+      const url = '/api/meal-plans'
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+        }
+      };
+      const response = await fetch(url, options);
+      return await response.json();
+    }
   }
 })

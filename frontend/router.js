@@ -44,17 +44,17 @@ const routes = [
     meta: { requiresAuth: true }
   },
   { 
+    path: '/app/meal-plan', 
+    component: MealPlanPage,
+    meta: { requiresAuth: true }
+  },
+  { 
     path: `/sign-in`, 
     component: SignInPage
   },
   { 
     path: `/authenticate`, 
     component: Authenticate
-  },
-  { 
-    path: '/meal-plan', 
-    component: MealPlanPage,
-    meta: { requiresAuth: true }
   },
   { 
     path: '/:catchAll(.*)', 
