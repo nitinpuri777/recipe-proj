@@ -8,79 +8,47 @@ const MealPlanPage = {
   template: `
     <app-header />
     <div class="row width_fill align_center_x height_fill" id="container">
-        <div class="column max_width_800px width_fill pad_left_16 pad_right_16 pad_top_16 pad_bottom_16">
-            <div class="row width_fill font_28 font_bold pad_bottom_16"> Meal Planner </div>
-            <div class="row width_fill gap_fill pad_top_16 pad_bottom_16">
-                <img class="row align_left align_center_y icon" height="24" width="24" src="../assets/icons/chevron-left.svg" @click="decrementWeek" />
-                <div class="row align_center_x align_center_y font_20 font_bold"> {{weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}} - {{weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}}</div>
-                <img class="row align_right align_center_y icon" height="24" width="24" src="../assets/icons/chevron-right.svg" @click="incrementWeek" />
-            </div> 
-            <div class="column width_fill">
-              <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
-                <div class="row align_left font_20 font_bold">Sunday</div>
-                <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(weekStart)" />
-              </div>
-              <div class="grid gap_16">
-                <div v-for="recipe in sundayMeals" class="border_invisible rounded tile_grid max_width_280px">
-                  <div class="column gap_fill height_fill width_fill align_top">
-                    <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
-                    <div class="row font_bold pad_8">
-                      {{recipe.name}}
-                    </div>
-                  </div>
+      <div class="column max_width_800px width_fill pad_left_16 pad_right_16 pad_top_16 pad_bottom_16">
+        <div class="row width_fill font_28 font_bold pad_bottom_16"> Meal Planner </div>
+        <div class="row width_fill gap_fill pad_top_16 pad_bottom_16">
+          <img class="row align_left align_center_y icon" height="24" width="24" src="../assets/icons/chevron-left.svg" @click="decrementWeek" />
+          <div class="row align_center_x align_center_y font_20 font_bold"> {{weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}} - {{weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}}</div>
+          <img class="row align_right align_center_y icon" height="24" width="24" src="../assets/icons/chevron-right.svg" @click="incrementWeek" />
+        </div> 
+        <div v-for="(day, index) in daysOfWeekWithMeals" :key="day.name" class="column width_fill">
+          <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
+            <div class="row align_left font_20 font_bold">{{ day.name }}</div>
+            <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(day.date)" />
+          </div>
+          <div class="grid gap_16">
+            <div v-for="recipe in day.meals" :key="recipe.id" class="border_invisible rounded tile_grid max_width_280px">
+              <div class="column gap_fill height_fill width_fill align_top">
+                <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
+                <div class="row font_bold pad_8">
+                  {{recipe.name}}
                 </div>
               </div>
             </div>
-            <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
-                <div class="row align_left font_20 font_bold"> Monday </div>
-                <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(mondayDate)" />
-            </div>
-            <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
-                <div class="row align_left font_20 font_bold"> Tuesday </div>
-                <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(tuesdayDate)" />
-            </div>
-            <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
-                <div class="row align_left font_20 font_bold"> Wednesday </div>
-                <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(wednesdayDate)" />
-            </div>
-            <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
-                <div class="row align_left font_20 font_bold"> Thursday </div>
-                <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(thursdayDate)" />
-            </div>
-            <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
-                <div class="row align_left font_20 font_bold"> Friday </div>
-                <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(fridayDate)" />
-            </div>
-            <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
-                <div class="row align_left font_20 font_bold"> Saturday </div>
-                <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(saturdayDate)" />
-            </div>
+          </div>
         </div>
+      </div>
     </div>
     <generic-modal :showModal="isRecipeModalVisible" @close="isRecipeModalVisible = false" @confirm="addRecipesToMealPlan(selectedRecipeIds)" title="Add Recipe" confirmButtonText="Add Recipe">
       <div class="column width_fill pad_left_8 pad_right_8">
         <div class="grid gap_16">
-        <div v-for="recipe in recipes" class="border_invisible rounded recipe_tile tile_grid max_width_500px" :class="{ 'selected': selectedRecipeIds.includes(recipe.id) }">
-          <div class="column gap_fill height_fill width_fill align_top" @click="toggleSelectedRecipe(recipe.id)">
-            <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
-            <div class="row font_bold pad_8">
-              {{recipe.name}}
+          <div v-for="recipe in recipes" :key="recipe.id" class="border_invisible rounded recipe_tile tile_grid max_width_500px" :class="{ 'selected': selectedRecipeIds.includes(recipe.id) }">
+            <div class="column gap_fill height_fill width_fill align_top" @click="toggleSelectedRecipe(recipe.id)">
+              <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
+              <div class="row font_bold pad_8">
+                {{recipe.name}}
+              </div>
+              <div v-if="selectedRecipeIds.includes(recipe.id)" class="round">
+                <input type="checkbox" :id="'round-checkbox-' + recipe.id" checked />
+                <label :for="'round-checkbox-' + recipe.id"></label>
+              </div>
             </div>
-            <div 
-        v-if="selectedRecipeIds.includes(recipe.id)"
-        class="round"
-      >
-
-        <input
-          type="checkbox"
-          :id="'round-checkbox-' + recipe.id"
-          checked
-        />
-        <label :for="'round-checkbox-' + recipe.id"></label>
-      </div>
           </div>
         </div>
-      </div>
       </div>
     </generic-modal>
   `,
@@ -88,72 +56,35 @@ const MealPlanPage = {
     this.recipes = await this.$store.fetchRecipes();
     this.mealPlans = (await this.$store.fetchMealPlans()).mealPlans;
     this.setWeekStartAndEnd();
-    console.log(this.weekStart);
-    console.log(this.weekEnd);
-    console.log(this.mealPlans);
   },
   data() {
     return {
-        recipes: [],
-        isRecipeModalVisible: false,
-        addRecipeToDate: null,
-        selectedRecipeIds: [], 
-        weekStart: new Date(new Date().setHours(0, 0, 0, 0)),
-        weekEnd: new Date(new Date().setHours(0, 0, 0, 0)),
-        mealPlans: null
+      recipes: [],
+      isRecipeModalVisible: false,
+      addRecipeToDate: null,
+      selectedRecipeIds: [], 
+      weekStart: new Date(new Date().setHours(0, 0, 0, 0)),
+      weekEnd: new Date(new Date().setHours(0, 0, 0, 0)),
+      mealPlans: null,
+      daysOfWeek: [
+        { name: 'Sunday', offset: 0 },
+        { name: 'Monday', offset: 1 },
+        { name: 'Tuesday', offset: 2 },
+        { name: 'Wednesday', offset: 3 },
+        { name: 'Thursday', offset: 4 },
+        { name: 'Friday', offset: 5 },
+        { name: 'Saturday', offset: 6 }
+      ]
     };
   },
   computed: {
-    mondayDate() {
-      const date = new Date(this.weekStart);
-      date.setDate(date.getDate() + 1);
-      return date;
-    },
-    tuesdayDate() {
-      const date = new Date(this.weekStart);
-      date.setDate(date.getDate() + 2);
-      return date;
-    },
-    wednesdayDate() {
-      const date = new Date(this.weekStart);
-      date.setDate(date.getDate() + 3);
-      return date;
-    },
-    thursdayDate() {
-      const date = new Date(this.weekStart);
-      date.setDate(date.getDate() + 4);
-      return date;
-    },
-    fridayDate() {
-      const date = new Date(this.weekStart);
-      date.setDate(date.getDate() + 5);
-      return date;
-    },
-    saturdayDate() {
-      const date = new Date(this.weekStart);
-      date.setDate(date.getDate() + 6);
-      return date;
-    },
-    sundayMeals() {
-      return this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === this.weekStart.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
-    },
-    mondayMeals() {
-      return this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === this.mondayDate.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
-    },
-    tuesdayMeals() {
-      return this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === this.tuesdayDate.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
-    },
-    wednesdayMeals() {
-      return this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === this.wednesdayDate.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
-    },
-    thursdayMeals() {
-      return this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === this.thursdayDate.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
-    },
-    fridayMeals() {
-      return this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === this.fridayDate.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
-    },
-    saturdayMeals() {
-      return this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === this.saturdayDate.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
+    daysOfWeekWithMeals() {
+      return this.daysOfWeek.map(day => {
+        const date = new Date(this.weekStart);
+        date.setDate(date.getDate() + day.offset);
+        const meals = this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === date.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
+        return { ...day, date, meals };
+      });
     }
   },
   components: {
@@ -183,14 +114,12 @@ const MealPlanPage = {
       }
     },
     toggleSelectedRecipe(id) {
-        if (this.selectedRecipeIds.includes(id)) {
-          // remove it from array
-          this.selectedRecipeIds = this.selectedRecipeIds.filter(rid => rid !== id);
-        } else {
-          // add it to array
-          this.selectedRecipeIds.push(id);
-        }
-      },
+      if (this.selectedRecipeIds.includes(id)) {
+        this.selectedRecipeIds = this.selectedRecipeIds.filter(rid => rid !== id);
+      } else {
+        this.selectedRecipeIds.push(id);
+      }
+    },
     setWeekStartAndEnd() {
       const today = new Date();
       const dayOfWeek = today.getDay();
