@@ -40,9 +40,15 @@ const MealPlanPage = {
       </div>
     </div>
     <generic-modal :showModal="isRecipeModalVisible" @close="isRecipeModalVisible = false" @confirm="addRecipesToMealPlan(selectedRecipeIds)" title="Add Recipe" confirmButtonText="Add Recipe">
+      <!-- Search Bar -->
+      <div class="search-bar-container">
+        <input type="text" v-model="searchQuery" placeholder="Search recipes..." class="search-bar" />
+      </div>
+      
+      <!-- Recipe List -->
       <div class="column width_fill pad_left_8 pad_right_8">
         <div class="grid gap_16">
-          <div v-for="recipe in recipes" :key="recipe.id" class="border_invisible rounded recipe_tile tile_grid max_width_500px" :class="{ 'selected': selectedRecipeIds.includes(recipe.id) }">
+          <div v-for="(recipe, index) in filteredRecipes"  :key="recipe.id || index" class="border_invisible rounded recipe_tile tile_grid max_width_500px" :class="{ 'selected': selectedRecipeIds.includes(recipe.id) }">
             <div class="column gap_fill height_fill width_fill align_top" @click="toggleSelectedRecipe(recipe.id)">
               <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
               <div class="row font_bold pad_8">
@@ -83,6 +89,7 @@ const MealPlanPage = {
       ],
       menuVisibleForRecipe: null,
       menuVisibleForMealPlan: null,
+      searchQuery: ''
     };
   },
   computed: {
@@ -100,6 +107,11 @@ const MealPlanPage = {
         }) : [];
         return { ...day, date, meals };
       });
+    },
+    filteredRecipes() {
+      return this.recipes.filter(recipe => 
+        recipe.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     }
   },
   components: {

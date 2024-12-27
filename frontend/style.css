@@ -449,6 +449,7 @@ body {
 
 .modal {
   transition: visibility 300ms ease-in-out, opacity 300ms ease-in-out;
+  z-index: 1000;
 }
 .modal--hidden { 
   visibility: hidden;
@@ -457,6 +458,7 @@ body {
 
 .modal_overlay {
   transition: width 0.3s ease, height 0.3s ease, max-width 0.3s ease, transform 0.3s ease, border-radius 0.3s ease;
+  overflow-y: scroll;
 }
 
 .modal_overlay--hidden {
@@ -526,7 +528,6 @@ body {
 
 /* Grid */
 .grid {
-
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
@@ -854,6 +855,21 @@ body {
 
 .menu div:hover {
   background-color: #f0f0f0;
+}
+
+.search-bar-container {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  padding: 8px 0;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 
