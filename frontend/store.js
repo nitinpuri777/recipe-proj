@@ -507,6 +507,18 @@ export const useStore = defineStore('store', {
       };
       const response = await fetch(url, options);
       return await response.json();
+    },
+    async deleteMealPlan(mealPlanId) {
+      const url = `/api/meal-plans/${mealPlanId}`;
+      const options = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+        }
+      };
+      const response = await fetch(url, options);
+      return await response.json();
     }
   }
 })

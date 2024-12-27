@@ -21,11 +21,17 @@ const MealPlanPage = {
             <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(day.date)" />
           </div>
           <div class="grid gap_16">
-            <div v-for="recipe in day.meals" :key="recipe.id" class="border_invisible rounded tile_grid max_width_280px">
+            <div v-for="meal in day.meals" :key="meal.meal_plan_id" class="border_invisible rounded tile_grid max_width_280px recipe_tile">
               <div class="column gap_fill height_fill width_fill align_top">
-                <img :src="recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
+                <img v-if="meal.recipe && meal.recipe.image_url" :src="meal.recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
                 <div class="row font_bold pad_8">
-                  {{recipe.name}}
+                  {{ meal.recipe ? meal.recipe.name : 'Unnamed Recipe' }}
+                </div>
+                <div class="more-options-icon row align_center" @click="toggleMenu(meal.meal_plan_id)">
+                  <img src="../assets/icons/more-horizontal.svg" class="icon" />
+                </div>
+                <div v-if="isMenuVisible(meal.meal_plan_id)" class="menu">
+                  <div @click="deleteMealPlan(meal.meal_plan_id)">Delete</div>
                 </div>
               </div>
             </div>
@@ -65,7 +71,7 @@ const MealPlanPage = {
       selectedRecipeIds: [], 
       weekStart: new Date(new Date().setHours(0, 0, 0, 0)),
       weekEnd: new Date(new Date().setHours(0, 0, 0, 0)),
-      mealPlans: null,
+      mealPlans: [],
       daysOfWeek: [
         { name: 'Sunday', offset: 0 },
         { name: 'Monday', offset: 1 },
@@ -74,7 +80,9 @@ const MealPlanPage = {
         { name: 'Thursday', offset: 4 },
         { name: 'Friday', offset: 5 },
         { name: 'Saturday', offset: 6 }
-      ]
+      ],
+      menuVisibleForRecipe: null,
+      menuVisibleForMealPlan: null,
     };
   },
   computed: {
@@ -82,7 +90,14 @@ const MealPlanPage = {
       return this.daysOfWeek.map(day => {
         const date = new Date(this.weekStart);
         date.setDate(date.getDate() + day.offset);
-        const meals = this.mealPlans ? this.mealPlans.filter(meal => meal.meal_date === date.toISOString().split('T')[0]).map(meal => meal.recipe) : [];
+        const meals = this.mealPlans ? this.mealPlans.filter(meal => {
+          return meal.meal_date === date.toISOString().split('T')[0];
+        }).map(meal => {
+          return {
+            meal_plan_id: meal.meal_plan_id,
+            recipe: meal.recipe
+          };
+        }) : [];
         return { ...day, date, meals };
       });
     }
@@ -95,10 +110,40 @@ const MealPlanPage = {
   },
   methods: {
     async addRecipesToMealPlan(recipeIds) {
-      for (const recipeId of recipeIds) {
-        await this.submitMealPlan(recipeId, this.addRecipeToDate);
-      }
+      const dateString = this.addRecipeToDate.toISOString().split('T')[0];
+      const newMealPlans = recipeIds.map(recipeId => ({
+        recipe_id: recipeId,
+        meal_date: dateString,
+        meal_plan_id: `temp-${recipeId}-${this.addRecipeToDate}`,
+        recipe: { ...this.recipes.find(recipe => recipe.id === recipeId) }
+      }));
+
+      // Optimistically update the UI
+      this.mealPlans = [...this.mealPlans, ...newMealPlans];
+      console.log('After optimistic update:', this.mealPlans);
       this.hideAddRecipeModal();
+
+      try {
+        for (const recipeId of recipeIds) {
+          const mealPlanData = {
+            recipe_id: recipeId,
+            meal_date: this.addRecipeToDate
+          };
+          const createdMealPlan = await this.$store.createMealPlan(mealPlanData);
+          console.log('Created Meal Plan:', createdMealPlan);
+
+          // Replace temporary ID with actual ID from the server
+          this.mealPlans = this.mealPlans.map(mealPlan => 
+            mealPlan.meal_plan_id === `temp-${recipeId}-${this.addRecipeToDate}` 
+              ? { ...mealPlan, meal_plan_id: createdMealPlan.mealPlan.meal_plan_id } 
+              : mealPlan
+          );
+          console.log('After server response:', this.mealPlans);
+        }
+      } catch (error) {
+        console.error('Error creating meal plan:', error);
+        this.mealPlans = (await this.$store.fetchMealPlans()).mealPlans;
+      }
       this.clearSelectedRecipes();
     },
     async submitMealPlan(recipeId, mealDate) {
@@ -149,6 +194,30 @@ const MealPlanPage = {
     },
     clearSelectedRecipes() {
       this.selectedRecipeIds = [];
+    },
+    toggleMenu(mealPlanId) {
+      this.menuVisibleForMealPlan = this.menuVisibleForMealPlan === mealPlanId ? null : mealPlanId;
+    },
+    isMenuVisible(mealPlanId) {
+      return this.menuVisibleForMealPlan === mealPlanId;
+    },
+    async deleteMealPlan(mealPlanId) {
+      // Optimistically remove the meal plan from the UI
+      this.mealPlans = this.mealPlans.filter(mp => mp.meal_plan_id !== mealPlanId);
+      this.menuVisibleForMealPlan = null;
+
+      try {
+        // Make the API call to delete
+        await this.$store.deleteMealPlan(mealPlanId);
+        // Refresh the meal plans to ensure consistency
+        const { mealPlans } = await this.$store.fetchMealPlans();
+        this.mealPlans = mealPlans;
+      } catch (error) {
+        console.error('Error deleting meal plan:', error);
+        // Refresh meal plans to restore correct state
+        const { mealPlans } = await this.$store.fetchMealPlans();
+        this.mealPlans = mealPlans;
+      }
     }
   }
 };
