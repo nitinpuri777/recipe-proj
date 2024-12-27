@@ -4,10 +4,14 @@ import AppHeader from "../components/app-header.js"
 import GenericModal from "../components/generic-modal.js"
 import RecipeList from "../components/recipe-list.js"
 import SearchHeader from "../components/search-header.js"
+import Loader from "../components/loader.js"
 const MealPlanPage = {
   template: `
     <app-header />
-    <div class="row width_fill align_center_x height_fill" id="container">
+    <div v-if="isLoading"class="row width_fill height_fill">
+      <loader/>
+    </div>
+    <div v-else class="row width_fill align_center_x height_fill" id="container">
       <div class="column max_width_800px width_fill pad_left_16 pad_right_16 pad_top_16 pad_bottom_16">
         <div class="row width_fill font_28 font_bold pad_bottom_16"> Meal Planner </div>
         <div class="row width_fill gap_fill pad_top_16 pad_bottom_16">
@@ -65,9 +69,11 @@ const MealPlanPage = {
     </generic-modal>
   `,
   async mounted() {
+    this.isLoading = true;
     this.recipes = await this.$store.fetchRecipes();
     this.mealPlans = (await this.$store.fetchMealPlans()).mealPlans;
     this.setWeekStartAndEnd();
+    this.isLoading = false;
   },
   data() {
     return {
@@ -89,7 +95,8 @@ const MealPlanPage = {
       ],
       menuVisibleForRecipe: null,
       menuVisibleForMealPlan: null,
-      searchQuery: ''
+      searchQuery: '',
+      isLoading: false
     };
   },
   computed: {

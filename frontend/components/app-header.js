@@ -14,6 +14,7 @@ const AppHeader = {
          
           <router-link :to="{path: '/app'}" :class="{'selected' : this.$route.path === '/app'}" class="font_20 font_bold row height_fill align_center_y pointer nav_link"> Home </router-link>
           <router-link :to="{path: '/app/shopping'}" :class="{'selected' : this.$route.path === '/app/shopping'}" class="font_20 font_bold row height_fill align_center_y pointer nav_link"> Shopping </router-link>
+          <router-link :to="{path: '/app/meal-plan'}" :class="{'selected' : this.$route.path === '/app/meal-plan'}" class="font_20 font_bold row height_fill align_center_y pointer nav_link"> Planner </router-link>
         </div>
         <!-- End navigation Items -->
         <!-- Sign Out -->
@@ -40,6 +41,10 @@ const AppHeader = {
             <router-link :to="{path: '/app/shopping'}" class="font_32 font_bold pointer row gap_8"> 
             <img src="/assets/icons/shopping-cart.svg" class="width_24px height_24px">  
             <div> Shopping </div>
+            </router-link>
+            <router-link :to="{path: '/app/meal-plan'}" class="font_32 font_bold pointer row gap_8"> 
+            <img src="/assets/icons/calendar.svg" class="width_24px height_24px">  
+            <div> Planner </div>
             </router-link>
             <div @click="signOut" class="font_32 font_bold pointer row gap_8">
             <img src="/assets/icons/log-out.svg" class="width_24px height_24px">
