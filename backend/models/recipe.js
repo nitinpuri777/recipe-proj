@@ -30,7 +30,8 @@ class Recipe extends Model {
       return await Recipe.findAll({
         where: {
           userId: user.id
-        }
+        },
+        order: [['createdAt', 'DESC']]
       })
   }
   static async findRecipe(recipeId, userId) {
