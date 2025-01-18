@@ -62,7 +62,9 @@ const RecipeDetail = {
               </div>
             </div> 
             <div class="row width_fill align_right position_relative">
+              <template v-if="hasRecipeId">
                 <img @click.stop="showModal" src="/assets/icons/shopping-cart.svg" class="icon">
+              </template>
             </div>
           </div>  
           <div class="column gap_8">
