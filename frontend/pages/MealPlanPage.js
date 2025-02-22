@@ -27,15 +27,17 @@ const MealPlanPage = {
           <div class="grid gap_16">
             <div v-for="meal in day.meals" :key="meal.meal_plan_id" class="border_invisible rounded tile_grid max_width_280px recipe_tile">
               <div class="column gap_fill height_fill width_fill align_top">
+                <router-link :to="'/app/recipe/' + meal.recipe.id">
                 <img v-if="meal.recipe && meal.recipe.image_url" :src="meal.recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
                 <div class="row font_bold pad_8">
                   {{ meal.recipe ? meal.recipe.name : 'Unnamed Recipe' }}
                 </div>
+                </router-link>
                 <div class="more-options-icon row align_center" @click="toggleMenu(meal.meal_plan_id)">
                   <img src="../assets/icons/more-horizontal.svg" class="icon" />
                 </div>
                 <div v-if="isMenuVisible(meal.meal_plan_id)" class="menu">
-                  <div @click="deleteMealPlan(meal.meal_plan_id)">Delete</div>
+                  <div @click="deleteMealPlan(meal.meal_plan_id)">Remove from Plan</div>
                 </div>
               </div>
             </div>
