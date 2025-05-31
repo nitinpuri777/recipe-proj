@@ -171,7 +171,7 @@ const RecipeDetail = {
         return true
       }
       else {
-        false
+        return false
       }
     },
     recipeUrl() {
@@ -179,7 +179,7 @@ const RecipeDetail = {
         return this.$route.query.url
       }
       else {
-        ""
+        return ""
       }
     },
     recipeToView() {
