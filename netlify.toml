@@ -2,6 +2,9 @@
   external_node_modules = ["express"]
   node_bundler = "esbuild"
   directory = "backend/netlify/functions/"
+  
+[functions."api"]
+  timeout = 30
 [[redirects]]
   force = true
   from = "/api/*"
