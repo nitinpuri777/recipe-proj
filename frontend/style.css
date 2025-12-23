@@ -450,6 +450,10 @@ body {
 .modal {
   transition: visibility 300ms ease-in-out, opacity 300ms ease-in-out;
   z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .modal--hidden { 
   visibility: hidden;
@@ -698,7 +702,8 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
-    max-width: none; /* Overrides any existing max-width */
+    max-width: none !important; /* Overrides any existing max-width */
+    max-height: 100vh !important;
     transform: none; /* Reset transformations to fill the screen */
     border-radius: 0; /* Optional: remove border-radius for a full-screen look */
     padding: 16px; /* Remove padding if desired for a true full-screen experience */
@@ -712,6 +717,22 @@ body {
   .slot_container {
     max-height: calc(100vh - 50px); /* Adjust based on your modal's header/footer height */
     overflow-y: auto; /* Ensures content is scrollable if it exceeds the view height */
+  }
+
+  .week-selector-width {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .week-selector-height {
+    max-height: 100vh !important;
+    height: 100% !important;
+  }
+
+  .meal-tile-small {
+    width: 140px;
+    min-width: 140px;
+    flex-shrink: 0;
   }
 
   #listOfLists {
@@ -896,6 +917,155 @@ body {
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+/* Date Confirmation Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Date Picker Popover */
+.date-picker-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+}
+
+.date-picker-wrapper {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 320px;
+  max-width: 90vw;
+}
+
+.date-input-field {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--prussian-blue);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.date-input-field:focus {
+  outline: none;
+  border-color: var(--cadet-gray);
+}
+
+.picker-button-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.picker-btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.picker-btn.primary-btn {
+  background-color: var(--prussian-blue);
+  color: white;
+}
+
+.picker-btn.primary-btn:hover:not(:disabled) {
+  background-color: var(--cadet-gray);
+}
+
+.picker-btn.primary-btn:disabled {
+  background-color: var(--antiflash-white);
+  color: var(--cadet-gray);
+  cursor: not-allowed;
+}
+
+.picker-btn.secondary-btn {
+  background-color: white;
+  color: var(--prussian-blue);
+  border: 1px solid var(--prussian-blue);
+}
+
+.picker-btn.secondary-btn:hover {
+  background-color: var(--subtle-gray);
+}
+
+/* Week Selector Modal */
+.week-selector-width {
+  max-width: 500px;
+  width: 90%;
+}
+
+.week-selector-height {
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.week-selector-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.meal-tile-small {
+  width: 140px;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.meal-tile-small img {
+  height: 100px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.meal-tile-small .font_bold {
+  font-size: 13px;
+  padding: 6px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.text_center {
+  text-align: center;
 }
 
 
