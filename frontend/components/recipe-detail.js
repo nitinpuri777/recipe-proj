@@ -69,10 +69,10 @@ const RecipeDetail = {
             </div> 
             <div class="row width_fill align_right position_relative gap_16">
               <template v-if="hasRecipeId">
-                <div style="position: relative; display: inline-block;">
-                  <img @click="openDatePicker" src="/assets/icons/calendar.svg" class="icon pointer" title="Add to Meal Plan">
+                <label style="position: relative; display: inline-block; cursor: pointer;">
+                  <img src="/assets/icons/calendar.svg" class="icon pointer" title="Add to Meal Plan" style="pointer-events: none;">
                   <input ref="datePicker" type="date" @change="addToMealPlan" style="position: absolute; top: 0; left: 0; width: 28px; height: 28px; opacity: 0; cursor: pointer;">
-                </div>
+                </label>
                 <img @click.stop="showModal" src="/assets/icons/shopping-cart.svg" class="icon" title="Add to Shopping List">
               </template>
             </div>
@@ -238,9 +238,6 @@ const RecipeDetail = {
     },
     showModal() {
       this.$emit('show-modal', this.scaledIngredients)
-    },
-    openDatePicker() {
-      this.$refs.datePicker.showPicker();
     },
     async addToMealPlan(event) {
       const selectedDate = event.target.value;
