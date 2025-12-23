@@ -10,6 +10,12 @@ const RecipeDetail = {
     <loader />
   </div>
     <div v-else class="column gap_16 width_fill pad_left_16 pad_top_16 pad_right_16">
+      <!-- Toast Notification -->
+      <transition name="fade">
+        <div v-if="showToast" class="toast">
+          {{ toastMessage }}
+        </div>
+      </transition>
       <div class="row width_fill gap_fill">
         <div class="row align_left">
           <img src="/assets/icons/arrow-left.svg" class="height_28px width_28px icon" @click="goBack">
@@ -61,9 +67,13 @@ const RecipeDetail = {
                 <button @click="incrementDesiredServings" class="button font_12 rounded_right">+</button>
               </div>
             </div> 
-            <div class="row width_fill align_right position_relative">
+            <div class="row width_fill align_right position_relative gap_16">
               <template v-if="hasRecipeId">
-                <img @click.stop="showModal" src="/assets/icons/shopping-cart.svg" class="icon">
+                <div style="position: relative; display: inline-block;">
+                  <img @click="openDatePicker" src="/assets/icons/calendar.svg" class="icon pointer" title="Add to Meal Plan">
+                  <input ref="datePicker" type="date" @change="addToMealPlan" style="position: absolute; top: 0; left: 0; width: 28px; height: 28px; opacity: 0; cursor: pointer;">
+                </div>
+                <img @click.stop="showModal" src="/assets/icons/shopping-cart.svg" class="icon" title="Add to Shopping List">
               </template>
             </div>
           </div>  
@@ -101,6 +111,8 @@ const RecipeDetail = {
       scaleFactor: 1,
       desiredServings: 0,
       saving: false,
+      showToast: false,
+      toastMessage: ''
     }
   },
   computed: {
@@ -226,6 +238,37 @@ const RecipeDetail = {
     },
     showModal() {
       this.$emit('show-modal', this.scaledIngredients)
+    },
+    openDatePicker() {
+      this.$refs.datePicker.showPicker();
+    },
+    async addToMealPlan(event) {
+      const selectedDate = event.target.value;
+      if (!selectedDate) return;
+
+      try {
+        const mealPlanData = {
+          recipe_id: this.recipeToView.id,
+          meal_date: selectedDate
+        };
+
+        await this.$store.createMealPlan(mealPlanData);
+
+        // Reset the date picker
+        this.$refs.datePicker.value = '';
+
+        this.displayToast('Recipe added to meal plan!');
+      } catch (error) {
+        console.error('Error adding recipe to meal plan:', error);
+        this.displayToast('Failed to add recipe to meal plan.');
+      }
+    },
+    displayToast(message) {
+      this.toastMessage = message;
+      this.showToast = true;
+      setTimeout(() => {
+        this.showToast = false;
+      }, 3000);
     },
     async saveRecipe() {
       this.saving = true; // Set loading state to true

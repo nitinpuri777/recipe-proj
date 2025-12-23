@@ -10,8 +10,8 @@ const RecipeDetailPage = {
     <recipe-detail @show-modal="showModal" class="max_width_1200px height_fill width_fill" />
     <right-overlay />
     <delete-modal />
-    <generic-modal title="" :showModal="isModalVisible" 
-      :confirmButtonText="isAddingIngredients ? 'Adding...' : 'Add to List'" 
+    <generic-modal title="" :showModal="isModalVisible"
+      :confirmButtonText="isAddingIngredients ? 'Adding...' : 'Add to List'"
       @close="hideModal" @confirm="addIngredientsToList" >
         <div class="column scroll">
             <div class="row font_24 font_bold gap_8 position_relative"> 
@@ -116,7 +116,7 @@ const RecipeDetailPage = {
       if (index !== -1) {
         this.$store.currentListItems[index] = { ...this.$store.currentListItems[index], ...listItemResponse };
       }
-      
+
     }
   }
 
