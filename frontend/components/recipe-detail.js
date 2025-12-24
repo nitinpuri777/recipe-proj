@@ -41,14 +41,21 @@ const RecipeDetail = {
                 <img class="row align_right font_20 font_bold icon" height="24" width="24" src="/assets/icons/plus.svg" @click="selectDay(day.date)" />
               </div>
               <div class="row gap_8 pad_bottom_8 wrap">
-                <div v-for="meal in day.meals" :key="meal.meal_plan_id" class="border_invisible rounded recipe_tile meal-tile-small">
-                  <div class="column height_fill width_fill align_top">
-                    <img v-if="meal.recipe && meal.recipe.image_url" :src="meal.recipe.image_url" class="border_invisible rounded crop_center">
-                    <div class="font_bold">
-                      {{ meal.recipe ? meal.recipe.name : 'Unnamed Recipe' }}
+                <template v-for="meal in day.meals">
+                  <router-link v-if="meal.recipe && meal.recipe.id" :key="meal.meal_plan_id"
+                    :to="{ path: '/app/recipe/' + meal.recipe.id, query: meal.servings ? { servings: meal.servings } : {} }"
+                    class="border_invisible rounded recipe_tile meal-tile-small">
+                    <div class="column height_fill width_fill align_top">
+                      <img v-if="meal.recipe.image_url" :src="meal.recipe.image_url" class="border_invisible rounded crop_center">
+                      <div class="font_bold">
+                        {{ meal.recipe.name }}
+                      </div>
+                      <div v-if="meal.servings" class="font_12 secondary_text">
+                        {{ meal.servings }} {{ meal.servings === 1 ? 'serving' : 'servings' }}
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </router-link>
+                </template>
               </div>
             </div>
           </div>
@@ -81,19 +88,22 @@ const RecipeDetail = {
       </div> 
       <div class="row gap_16">
         <div>
-          <img :src="recipeToView.image_url" class="width_160px height_160px crop_center rounded">
+          <img v-if="recipeToView.image_url" :src="recipeToView.image_url" class="width_160px height_160px crop_center rounded">
+          <div v-else class="row width_160px height_160px border_invisible rounded bg_gray align_center_x align_center_y">
+            <div class="font_48">🍽️</div>
+          </div>
         </div>
         <div class="column gap_8">
           <div class="font_28 font_bold ">
             {{recipeToView.name}}
           </div>
-          <div class="font_16 secondary_link">
+          <div v-if="recipeToView.url" class="font_16 secondary_link">
             from <a :href="recipeToView.url" target="_blank" class="dotted_underline"> {{recipeToView.hostname}}</a>
           </div>
         </div>
       </div>
       <div class="row gap_fill gap_16 wrap">
-        <div class="column align_left gap_16 min_width_300px max_width_400px">
+        <div class="column align_left gap_16 min_width_300px max_width_400px width_fill">
           <div class="row gap_32 align_center_y width_fill">
             <div class="font_24 font_bold">Ingredients</div>
             <div v-if="!recipeToView.serving_size" class="row"> 
@@ -118,18 +128,18 @@ const RecipeDetail = {
               </template>
             </div>
           </div>  
-          <div class="column gap_8">
+          <div class="column gap_8 width_fill">
             <div v-for="ingredient in this.scaledIngredients" class="row border_bottom border_color_gray">
               <div :class="{'font_italic':ingredient.modified}"> {{ingredient.string}} </div>
             </div>
           </div>
         </div>
-        <div class="column align_right gap_16 min_width_300px max_width_700px">
+        <div class="column align_right gap_16 min_width_300px max_width_700px width_fill">
           <div class="row align_left width_fill font_24 font_bold">Steps</div>
-          <div class="column gap_16">
-            <div  v-for="(step, index) in recipeToView.steps" class="row font_16 gap_16">
-              <div class="font_20 font_bold">{{index+1}}</div>
-              <div>{{step}}</div>
+          <div class="column gap_16 width_fill">
+            <div v-for="(step, index) in recipeSteps" class="row font_16 gap_16 align_top">
+              <div class="font_20 font_bold shrink_none">{{index+1}}</div>
+              <div class="width_fill">{{step}}</div>
             </div>
           </div>
         </div>
@@ -144,7 +154,12 @@ const RecipeDetail = {
     console.log(this.recipeToView)
     this.loading = false;
     }
-    this.desiredServings = this.recipeToView.serving_size
+    // Set servings from URL query parameter if present, otherwise use recipe default
+    if(this.$route.query.servings) {
+      this.desiredServings = parseInt(this.$route.query.servings);
+    } else {
+      this.desiredServings = this.recipeToView.serving_size;
+    }
   },
   data() {
     return {
@@ -188,7 +203,8 @@ const RecipeDetail = {
         }).map(meal => {
           return {
             meal_plan_id: meal.meal_plan_id,
-            recipe: meal.recipe
+            recipe: meal.recipe,
+            servings: meal.servings
           };
         }) : [];
         return { ...day, meals };
@@ -274,6 +290,15 @@ const RecipeDetail = {
     },
     recipeToView() {
       return this.$store.recipeToView; // Access the recipeToView state from the $store
+    },
+    recipeSteps() {
+      // Handle both array and string formats for steps
+      if (!this.recipeToView.steps) return [];
+      if (Array.isArray(this.recipeToView.steps)) {
+        return this.recipeToView.steps;
+      }
+      // If steps is a string, split by newlines
+      return this.recipeToView.steps.split('\n').filter(s => s.trim());
     }
   },
   components: {
@@ -301,7 +326,13 @@ const RecipeDetail = {
       this.$store.showDeleteConfirm(this.recipeToView); // Call the showDeleteConfirm action from the $store
     },
     showEditForm() {
-      this.$store.showEditForm(this.recipeToView); // Call the showEditForm action from the $store
+      // Navigate to the edit recipe page
+      this.$router.push({
+        path: `/app/recipe/edit/${this.recipeToView.id}`,
+        query: {
+          redirect: `/app/recipe/${this.recipeToView.id}`
+        }
+      });
     },
     async scrapeRecipe(url) {
         this.$store.recipeToView = await this.$store.scrapeRecipe(url)
@@ -362,14 +393,16 @@ const RecipeDetail = {
       try {
         const mealPlanData = {
           recipe_id: this.recipeToView.id,
-          meal_date: date.toISOString().split('T')[0]
+          meal_date: date.toISOString().split('T')[0],
+          servings: this.desiredServings
         };
 
         // Optimistically add to local state
         const tempMealPlan = {
           meal_plan_id: `temp-${Date.now()}`,
           meal_date: date.toISOString().split('T')[0],
-          recipe: this.recipeToView
+          recipe: this.recipeToView,
+          servings: this.desiredServings
         };
         this.mealPlans.push(tempMealPlan);
 

@@ -296,6 +296,10 @@ body {
 .bg_gray {
   background-color: var(--subtle-gray);
 }
+
+.bg_light_gray {
+  background-color: var(--antiflash-white);
+}
 /* End GPT Suggestion for right column */
 
 /* Recipe Link */

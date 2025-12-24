@@ -9,6 +9,7 @@ import ScrapeDetailPage from './pages/ScrapeDetailPage.js'
 import SaveRecipePage from './pages/SaveRecipePage.js'
 import ShoppingListPage from './pages/ShoppingListPage.js'
 import MealPlanPage from './pages/MealPlanPage.js'
+import CreateRecipePage from './pages/CreateRecipePage.js'
 
 const routes = [
   { 
@@ -43,13 +44,25 @@ const routes = [
     component: ShoppingListPage,
     meta: { requiresAuth: true }
   },
-  { 
-    path: '/app/meal-plan', 
+  {
+    path: '/app/meal-plan',
     component: MealPlanPage,
     meta: { requiresAuth: true }
   },
-  { 
-    path: `/sign-in`, 
+  {
+    path: '/app/recipe/create',
+    name: 'createRecipe',
+    component: CreateRecipePage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/app/recipe/edit/:id',
+    name: 'editRecipe',
+    component: CreateRecipePage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: `/sign-in`,
     component: SignInPage
   },
   { 

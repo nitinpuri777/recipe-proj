@@ -20,18 +20,30 @@ const MealPlanPage = {
           <img class="row align_right align_center_y icon" height="24" width="24" src="../assets/icons/chevron-right.svg" @click="incrementWeek" />
         </div> 
         <div v-for="(day, index) in daysOfWeekWithMeals" :key="day.name" class="column width_fill">
-          <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray"> 
+          <div class="row width_fill gap_fill font_20 font_bold pad_top_16 pad_bottom_16 border_top border_color_gray">
             <div class="row align_left font_20 font_bold">{{ day.name }}</div>
-            <img class="row align_right font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="showAddRecipeModal(day.date)" />
+            <div class="row align_right position_relative">
+              <img class="font_20 font_bold icon" height="24" width="24" src="../assets/icons/plus.svg" @click="toggleAddMenu(day.date)" />
+              <div v-if="isAddMenuVisible(day.date)" class="dropdown-menu-right rounded_8px border_color_gray pad_8 column gap_4" @click.stop>
+                <div class="primary_link pad_8 pointer" @click="showAddRecipeModal(day.date)">Add from Saved Recipe</div>
+                <div class="primary_link pad_8 pointer" @click="showCustomMealModal(day.date)">Create New Recipe</div>
+              </div>
+            </div>
           </div>
           <div class="grid gap_16">
             <div v-for="meal in day.meals" :key="meal.meal_plan_id" class="border_invisible rounded tile_grid max_width_280px recipe_tile">
               <div class="column gap_fill height_fill width_fill align_top">
-                <router-link :to="'/app/recipe/' + meal.recipe.id">
-                <img v-if="meal.recipe && meal.recipe.image_url" :src="meal.recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center"> 
-                <div class="row font_bold pad_8">
-                  {{ meal.recipe ? meal.recipe.name : 'Unnamed Recipe' }}
-                </div>
+                <router-link v-if="meal.recipe" :to="{ path: '/app/recipe/' + meal.recipe.id, query: meal.servings ? { servings: meal.servings } : {} }">
+                  <img v-if="meal.recipe.image_url" :src="meal.recipe.image_url" class="row width_fill height_140px border_invisible rounded crop_center">
+                  <div v-else class="row width_fill height_140px border_invisible rounded bg_gray align_center_x align_center_y">
+                    <div class="font_48">🍽️</div>
+                  </div>
+                  <div class="row font_bold pad_8">
+                    {{ meal.recipe.name }}
+                  </div>
+                  <div v-if="meal.servings" class="row pad_left_8 pad_bottom_8 font_12 secondary_text">
+                    {{ meal.servings }} {{ meal.servings === 1 ? 'serving' : 'servings' }}
+                  </div>
                 </router-link>
                 <div class="more-options-icon row align_center" @click="toggleMenu(meal.meal_plan_id)">
                   <img src="../assets/icons/more-horizontal.svg" class="icon" />
@@ -82,7 +94,8 @@ const MealPlanPage = {
       recipes: [],
       isRecipeModalVisible: false,
       addRecipeToDate: null,
-      selectedRecipeIds: [], 
+      addMenuVisibleForDate: null,
+      selectedRecipeIds: [],
       weekStart: new Date(new Date().setHours(0, 0, 0, 0)),
       weekEnd: new Date(new Date().setHours(0, 0, 0, 0)),
       mealPlans: [],
@@ -111,7 +124,8 @@ const MealPlanPage = {
         }).map(meal => {
           return {
             meal_plan_id: meal.meal_plan_id,
-            recipe: meal.recipe
+            recipe: meal.recipe,
+            servings: meal.servings
           };
         }) : [];
         return { ...day, date, meals };
@@ -239,6 +253,27 @@ const MealPlanPage = {
         const { mealPlans } = await this.$store.fetchMealPlans();
         this.mealPlans = mealPlans;
       }
+    },
+    toggleAddMenu(date) {
+      const dateString = date.toISOString().split('T')[0];
+      this.addMenuVisibleForDate = this.addMenuVisibleForDate === dateString ? null : dateString;
+    },
+    isAddMenuVisible(date) {
+      const dateString = date.toISOString().split('T')[0];
+      return this.addMenuVisibleForDate === dateString;
+    },
+    showCustomMealModal(date) {
+      // Navigate to create recipe page with query params to add to meal plan
+      const dateString = date.toISOString().split('T')[0];
+      this.addMenuVisibleForDate = null;
+      this.$router.push({
+        path: '/app/recipe/create',
+        query: {
+          addToMealPlan: 'true',
+          mealDate: dateString,
+          redirect: '/app/meal-plan'
+        }
+      });
     }
   }
 };

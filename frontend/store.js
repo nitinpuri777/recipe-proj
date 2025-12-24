@@ -190,6 +190,22 @@ export const useStore = defineStore('store', {
       const json = await response.json()
       return json.createdRecipe
     },
+    async updateRecipe(recipe) {
+      let url = `/api/recipes/${recipe.id}`
+      let token = localStorage.getItem("authToken")
+      let body = { recipe }
+      let options = {
+        method: 'PUT',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      const response = await fetch(url, options)
+      const json = await response.json()
+      return json.updatedRecipe || recipe
+    },
     showAddForm() {
       this.overlayInput.overlayType = "add"
     },
